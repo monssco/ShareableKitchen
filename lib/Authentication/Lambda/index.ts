@@ -18,7 +18,7 @@ export class CognitoLambda extends cdk.Stack {
             code: lambda.Code.fromAsset(path.join(__dirname, 'PreSignUp')),
             handler: 'index.handler',
             runtime: lambda.Runtime.NODEJS_12_X,
-            description: 'Custom Message Lambda for Cognito',
+            description: 'PreSignUp Lambda for Cognito',
         });
 
         this.PreSignUp = preSignUp;
@@ -42,12 +42,13 @@ export class CognitoLambda extends cdk.Stack {
 
         this.PostConfirmation = postConfirmation;
 
-
+        // Is this really needed? I think in the post confirmation lambda we can put that event in some kind of sqs queue, this might not be necessary.
+        // This was used in the original stack to put users into ES.
         const populateUsers = new lambda.Function(this, 'PopulateUsers', {
             code: lambda.Code.fromAsset(path.join(__dirname, 'PopulateUsers')),
             handler: 'index.handler',
             runtime: lambda.Runtime.NODEJS_12_X,
-            description: 'Post Confirmation Lambda for Cognito',
+            description: 'Populate User Lambda for Cognito',
         });
 
         this.PopulateUsers = populateUsers;

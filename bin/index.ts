@@ -1,9 +1,18 @@
 #!/usr/bin/env node
 import * as cdk from '@aws-cdk/core';
-import { CognitoStack } from '../lib/Cognito';
+import { CognitoStack } from '../lib/Authentication';
+import { S3Stack } from '../lib/ObjectStorage';
 
 const app = new cdk.App();
 
-new CognitoStack(app, 'CognitoStack', {
+const cognito = new CognitoStack(app, 'CognitoStack', {
     description:'Cognito Stack that handles auth'
+})
+
+let authRole = cognito.authenticatedRole
+let unAuthRole = cognito.unauthenticatedRole
+
+const s3 = new S3Stack(app, 'S3Stack', {
+    authenticatedRole: authRole,
+    unauthenticatedRole: unAuthRole
 })

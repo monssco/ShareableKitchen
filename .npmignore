@@ -4,3 +4,6 @@
 # CDK asset staging directory
 .cdk.staging
 cdk.out
+
+# Ignore the API, it will have its own npm
+lib/API/Apollo/

@@ -1,13 +1,13 @@
 import { User } from "./entity/User";
-import {getRepository} from 'typeorm';
 
 // Provide resolver functions for your schema fields
 export const resolvers = {
     Query: {
         getUser: async (_: any, args: any) => {
             const { id } = args;
+            
 
-            return await getRepository(User).findOne(id);
+            return await User.findOne(id);;
         }
     },
     Mutation: {
@@ -16,9 +16,11 @@ export const resolvers = {
 
             // return true;
             try {
-                const user = getRepository(User).create({age, firstName, lastName});
+                const user = 
 
-                await getRepository(User).save(user);
+                User.create({age, firstName, lastName})
+
+                await User.save(user);
 
                 return true;
             } catch (error) {

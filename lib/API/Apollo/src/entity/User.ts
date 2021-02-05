@@ -15,4 +15,7 @@ export class User extends BaseEntity {
     @Column("int")
     age: number;
 
+    @Column("varchar", {length: 255})
+    street: string;
+
 }

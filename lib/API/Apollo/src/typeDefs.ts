@@ -4,16 +4,21 @@ import { gql } from "apollo-server-express";
 export const typeDefs = gql`
     type Query {
         getUser(id: Int!): User
-        getAllUsers: [User]
     }
     type Mutation {
-        addUser(firstName: String!, lastName: String!, age: Int!, street: String!): Boolean!
+        addUser(id: String!, email: String!, signup: String!, active: Boolean!): Boolean!
     }
     type User {
-        id: Int!
-        firstName: String!
-        lastName: String!
-        age: Int!
-        street: String!
+        id: String!
+        email: String!
+        signup: String!
+        active: Boolean!
+        first_name: String
+        last_name: String
+        city: String
+        province: String
+        country: String
+        stripe_customer: String
+        stripe_account: String
     }
 `;

@@ -1,12 +1,9 @@
 import "reflect-metadata";
-
-
 import * as express from 'express';
 import {ApolloServer} from 'apollo-server-express';
 
-
-import { typeDefs } from "./typeDefs";
-import { resolvers } from "./resolvers";
+import { typeDefs } from "./graphql/entity/typeDefs";
+import { resolvers } from "./graphql/entity/resolvers";
 
 
 const startServer = async () => {

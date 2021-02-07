@@ -1,26 +1,16 @@
-import dbClient from './postgres/client'
+// Kind of an ugly notation, but come back to this
+import dbClient from '../../../postgres/client'
 
-
-export const resolvers = {
+export const resolver = {
     Query: {
-        getUser: async (_: any, args: any) => {
-            const { id } = args;
-            
-            console.log("arg", args)
-
-            const query = {
-                // give the query a unique name
-                name: 'fetch-user',
-                text: 'SELECT * FROM user WHERE id = $1',
-                values: [id],
-                }
-
-            const user = await dbClient.query(query)
-            console.log("Found user", user.rows[0]);
-            return user.rows[0];
-        }
+        getListing: async (_: any, args:any) => {
+            return []
+        },
     },
     Mutation: {
+        addListing: async(_:any, args: any) => {
+            return "success"
+        },
         addUser: async (_: any, args: any) => {
             const { id, email, signup, active } = args;
 
@@ -38,11 +28,11 @@ export const resolvers = {
 
                 console.log(result);
 
-                return true;
+                return result.rows[0];
             // } catch (error) {
             //     console.log(error);
             //     return false;
             // }
         }
     }
-};
+}

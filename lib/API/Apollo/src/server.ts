@@ -4,14 +4,16 @@ import {ApolloServer } from 'apollo-server-express';
 
 
 import { createSchema } from "./graphql/utils";
+import { ormClient } from "./postgres/client";
 
 const startServer = async () => {
 
-     const schema = await createSchema();
+    // Connect to database using the ORM.
 
-    // Passing the database connection as a client to each resolver.
-    // We could pass other stuff in here as well, such as the 
+    await ormClient();
 
+
+    const schema = await createSchema();
     const server = new ApolloServer({
         schema
     })

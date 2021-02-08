@@ -1,15 +1,39 @@
 // Kind of an ugly notation, but come back to this
 
-import {Query, Resolver} from 'type-graphql';
-import { User } from '../../entity/User';
+import {Arg, Field, InputType, Mutation, Query, Resolver} from 'type-graphql';
+import { User } from '../../../entities/User';
 
+import {ormClient} from '../../../postgres/client'
+
+// import {EntityManager} from '@mikro-orm/postgresql'
+
+@InputType()
+class UserInput implements Partial<User> {
+    @Field()
+    id: string;
+
+    @Field()
+    email: string;
+}
 
 @Resolver()
 export class MeResolver {
 
     @Query(() => User)
     async me(): Promise<User> {
-        return new User()
+        return new User('udid', "munibrhmn@gmail.com")
+    }
+
+    @Mutation(()=> User, {nullable: true})
+    async registerUser(@Arg("user") user: UserInput) {
+        console.log(user)
+        const orm = await ormClient();
+        await orm.connect()
+        const result = await orm.em.flush()
+        console.log(result)
+        
+        return new User('udid', 'munibrhmn@gmail.com')
+
     }
 }
 

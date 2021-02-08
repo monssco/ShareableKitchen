@@ -12,7 +12,7 @@ function connectToDB() {
     })
 
     try {
-        console.info("Connecting to DB")
+        console.info("Connected to DB")
         client.connect()
         client.query('SELECT NOW()')
         

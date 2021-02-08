@@ -1,14 +1,29 @@
 import "reflect-metadata";
 import * as express from 'express';
-import {ApolloServer} from 'apollo-server-express';
+import {ApolloServer } from 'apollo-server-express';
 
-import { typeDefs } from "./graphql/entity/typeDefs";
-import { resolvers } from "./graphql/entity/resolvers";
 
+import { createSchema } from "./graphql/utils";
 
 const startServer = async () => {
 
-    const server = new ApolloServer({ typeDefs, resolvers });
+     const schema = await createSchema();
+
+    // Passing the database connection as a client to each resolver.
+    // We could pass other stuff in here as well, such as the 
+
+    const server = new ApolloServer({
+        schema
+    })
+
+    // const server = new ApolloServer({ typeDefs, 
+    //     resolvers, 
+    //     context: ({ req }) => {
+    //         console.log("Request:",req.headers)
+    //         return {
+    //             client: dbClient
+    //         }
+    // } });
 
     const app = express();
 

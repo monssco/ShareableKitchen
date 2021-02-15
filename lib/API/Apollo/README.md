@@ -1,7 +1,13 @@
-# Awesome Project Build with TypeORM
+# Awesome API built with GraphQL Apollo (Express)
 
 Steps to run this project:
 
 1. Run `npm i` command
 2. Run `docker-compose up` command
 3. Run `npm start` command
+
+
+# Docker-Compose Resources
+
+Postgresql container
+API Container (Node js)

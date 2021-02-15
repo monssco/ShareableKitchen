@@ -3,8 +3,8 @@ import * as express from 'express';
 import {ApolloServer } from 'apollo-server-express';
 
 
-import { createSchema } from "./graphql/utils";
-import { ormClient } from "./postgres/client";
+import { createSchema } from "./utils/createSchema";
+import { ormClient } from "./utils/createDatabaseConn";
 
 const startServer = async () => {
 

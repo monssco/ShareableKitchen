@@ -32,6 +32,9 @@
    "scripts": {
       "prod": "cross-env NODE_ENV=production ts-node-dev --respawn --no-notify src/server.ts",
       "dev": "cross-env NODE_ENV=development ts-node-dev --debug --exit-child src/server.ts",
-      "test": "cross-env NODE_ENV=test jest --watch"
+      "test": "cross-env NODE_ENV=test jest --watch",
+      "migrate": "npx mikro-orm migration:create",
+      "migrate up": "npx mikro-orm migration:up",
+      "migrate down": "npx mikro-orm migration:down"
    }
 }

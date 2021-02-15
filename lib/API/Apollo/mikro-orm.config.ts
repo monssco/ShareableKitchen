@@ -5,7 +5,7 @@ import { Listing } from './src/entities/Listing';
 
 export default {
     migrations: {
-        path: path.join(__dirname, "./src/migrations"),
+        path: path.join(__dirname, "./src/orm/migrations"),
         pattern: /^[\w-]+\d+\.[tj]s$/, // regex pattern for the migration files
     },
     entities: [User, Listing],

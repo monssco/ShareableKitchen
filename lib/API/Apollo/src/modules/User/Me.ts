@@ -1,9 +1,9 @@
 // Kind of an ugly notation, but come back to this
 
 import {Arg, Field, InputType, Mutation, Query, Resolver} from 'type-graphql';
-import { User } from '../../../entities/User';
+import { User } from '../../entities/User';
 
-import {ormClient} from '../../../postgres/client'
+import {ormClient} from '../../utils/createDatabaseConn'
 
 // import {EntityManager} from '@mikro-orm/postgresql'
 

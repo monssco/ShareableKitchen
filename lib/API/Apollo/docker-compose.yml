@@ -10,7 +10,7 @@ services:
   #     - .env
   #   links:
   #     - postgres
-  #   command: ['npm', 'start']
+  #   command: npm run dev
 
   postgres:
     image: "postgres:9.6.1"

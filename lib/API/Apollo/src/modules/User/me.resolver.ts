@@ -1,40 +1,38 @@
 // Kind of an ugly notation, but come back to this
 
-import {Arg, Field, InputType, Mutation, Query, Resolver} from 'type-graphql';
-import { User } from '../../entities/User';
+import {Query, Resolver} from 'type-graphql';
+// import { User } from '../../entities/User';
 
-import {ormClient} from '../../utils/createDatabaseConn'
+// import {ormClient} from '../../utils/createDatabaseConn'
 
-// import {EntityManager} from '@mikro-orm/postgresql'
+// @InputType()
+// class UserInput implements Partial<User> {
+//     @Field()
+//     id: string;
 
-@InputType()
-class UserInput implements Partial<User> {
-    @Field()
-    id: string;
-
-    @Field()
-    email: string;
-}
+//     @Field()
+//     email: string;
+// }
 
 @Resolver()
 export class MeResolver {
 
-    @Query(() => User)
-    async me(): Promise<User> {
-        return new User('udid', "munibrhmn@gmail.com")
+    @Query(() => Boolean)
+    async me() {
+        return true;
     }
 
-    @Mutation(()=> User, {nullable: true})
-    async registerUser(@Arg("user") user: UserInput) {
-        console.log(user)
-        const orm = await ormClient();
-        await orm.connect()
-        const result = await orm.em.flush()
-        console.log(result)
+    // @Mutation(()=> User, {nullable: true})
+    // async registerUser(@Arg("user") user: UserInput) {
+    //     console.log(user)
+    //     const orm = await ormClient();
+    //     await orm.connect()
+    //     const result = await orm.em.flush()
+    //     console.log(result)
         
-        return new User('udid', 'munibrhmn@gmail.com')
+    //     return new User('udid', 'munibrhmn@gmail.com')
 
-    }
+    // }
 }
 
 // export const resolver = {

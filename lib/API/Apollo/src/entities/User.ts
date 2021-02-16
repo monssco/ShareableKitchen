@@ -1,5 +1,5 @@
 import {Field, ID, ObjectType} from 'type-graphql';
-import {DateType, Entity, PrimaryKey, Property} from '@mikro-orm/core';
+import {Entity, PrimaryKey, Property} from '@mikro-orm/core';
 
 @ObjectType()
 @Entity()
@@ -27,7 +27,7 @@ export class User {
     email!: string;
 
     @Field({nullable: true})
-    @Property() // Is this the right type of property?
+    @Property({columnType: "date"})
     date_of_birth?: Date;
 
     // Good idea to have them separate or all together?
@@ -52,13 +52,14 @@ export class User {
     @Property()
     stripe_account_id?: string
 
-    // Notice there are no field decorators, we don't want to expose this to the API
-    @Property({type: DateType, nullable: false})
-    created = new Date().toISOString();
+    // Field decorator is emitted, this property will not be exposed via the api
+    // timestampz = time with timezone in postgresql lingo
+    @Property({columnType: "timestamptz", nullable: false})
+    created = new Date().toUTCString();
 
 
-    @Property({onUpdate: () => new Date().toISOString() })
-    modified = new Date().toISOString();
+    @Property({columnType: "timestamptz" ,onUpdate: () => new Date().toISOString() })
+    modified = new Date().toUTCString();
 
     @Property()
     status!: boolean

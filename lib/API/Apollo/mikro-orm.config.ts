@@ -1,14 +1,12 @@
-import {User} from './src/entities/User';
 import * as path from 'path';
 import { MikroORM } from '@mikro-orm/core';
-import { Listing } from './src/entities/Listing';
 
 export default {
     migrations: {
         path: path.join(__dirname, "./src/orm/migrations"),
-        pattern: /^[\w-]+\d+\.[tj]s$/, // regex pattern for the migration files
+        pattern: /^[\w-]+\d+\.[tj]s$/, // regex pattern for the migration files, need this for typescript extension files
     },
-    entities: [User, Listing],
+    entities: ['./src/entities/*.ts'],
     type: 'postgresql',
     dbName: process.env.DATABASE_NAME || 'postgres',
     clientUrl: process.env.DATABASE_URL ||  'http://127.0.0.1',

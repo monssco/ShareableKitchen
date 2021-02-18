@@ -1,5 +1,6 @@
 import {Field, ID, ObjectType} from 'type-graphql';
-import {Entity, PrimaryKey, Property} from '@mikro-orm/core';
+import {Entity, OneToOne, PrimaryKey, Property} from '@mikro-orm/core';
+import { ProfileImage } from './Image';
 
 @ObjectType()
 @Entity()
@@ -14,6 +15,20 @@ export class User {
     @PrimaryKey()
     id!: string;
 
+    /*
+    A user is not allowed to update their email after sign up.
+    */
+    @Field()
+    @Property()
+    email!: string;
+
+    /*
+    https://mikro-orm.io/docs/relationships#onetoone
+    */
+    @Field(()=> ProfileImage, {nullable: true})
+    @OneToOne(()=> ProfileImage, (image)=> image.user, {owner: true})
+    profile_image?: ProfileImage;
+
     @Field({nullable: true})
     @Property({nullable: true})
     first_name?: string;
@@ -21,10 +36,6 @@ export class User {
     @Field({nullable: true})
     @Property({nullable: true})
     last_name?: string;
-
-    @Field()
-    @Property()
-    email!: string;
 
     @Field({nullable: true})
     @Property({columnType: "date", nullable: true})
@@ -55,11 +66,11 @@ export class User {
     // Field decorator is emitted, this property will not be exposed via the api
     // timestampz = time with timezone in postgresql lingo
     @Property({columnType: "timestamptz", nullable: false})
-    created = new Date().toUTCString();
+    created = new Date();
 
 
-    @Property({columnType: "timestamptz" ,onUpdate: () => new Date().toISOString() })
-    modified = new Date().toUTCString();
+    @Property({columnType: "timestamptz", onUpdate: () => new Date().toISOString() })
+    modified = new Date();
 
     @Property({columnType: "boolean"})
     status = true

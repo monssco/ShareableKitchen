@@ -27,7 +27,7 @@ const startServer = async () => {
                         emitSchemaFile: {
                             path: __dirname + '/../schema.graphql',
                             commentDescriptions: true,
-                            sortedSchema: true
+                            sortedSchema: false
                         }
                     })
 

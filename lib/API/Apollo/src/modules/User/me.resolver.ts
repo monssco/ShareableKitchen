@@ -1,38 +1,37 @@
-// Kind of an ugly notation, but come back to this
+import { User } from '../../entities/User';
+import { MyContext } from 'src/types';
+import {Arg, Ctx, Field, InputType, Mutation, Query, Resolver} from 'type-graphql';
 
-import {Query, Resolver} from 'type-graphql';
-// import { User } from '../../entities/User';
 
-// import {ormClient} from '../../utils/createDatabaseConn'
+@InputType()
+class UserInput implements Partial<User> {
+    @Field()
+    id: string;
 
-// @InputType()
-// class UserInput implements Partial<User> {
-//     @Field()
-//     id: string;
-
-//     @Field()
-//     email: string;
-// }
+    @Field()
+    email: string;
+}
 
 @Resolver()
 export class MeResolver {
 
     @Query(() => Boolean)
-    async me() {
+    async me(
+        @Ctx() {req, res}: MyContext
+    ) {
+        console.log('req', req);
+        console.log('res', res);
         return true;
     }
 
-    // @Mutation(()=> User, {nullable: true})
-    // async registerUser(@Arg("user") user: UserInput) {
-    //     console.log(user)
-    //     const orm = await ormClient();
-    //     await orm.connect()
-    //     const result = await orm.em.flush()
-    //     console.log(result)
-        
-    //     return new User('udid', 'munibrhmn@gmail.com')
-
-    // }
+    @Mutation(()=> User, {nullable: true})
+    async registerUser(
+        @Arg("user") user: UserInput,
+        @Ctx() {em}: MyContext) {
+        const newUser = new User(user.id, user.email)
+        await em.persistAndFlush(newUser);
+        return newUser
+    }
 }
 
 // export const resolver = {

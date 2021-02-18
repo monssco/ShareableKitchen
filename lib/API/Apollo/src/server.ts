@@ -6,12 +6,13 @@ import { ApolloServer } from 'apollo-server-express';
 import { ormClient } from "./utils/createDatabaseConn";
 import { buildSchema } from "type-graphql";
 import { MeResolver } from "./modules/User/me.resolver";
+import { MyContext } from "./types";
 
 const startServer = async () => {
 
     // Connect to database using the ORM.
 
-    await ormClient();
+    const client = await ormClient();
 
 
     /* There is a way to include resolvers using glob paths
@@ -22,12 +23,25 @@ const startServer = async () => {
     const schema = await buildSchema({
                         resolvers: [
                             MeResolver
-                        ]
+                        ],
+                        emitSchemaFile: {
+                            path: __dirname + '/../schema.graphql',
+                            commentDescriptions: true,
+                            sortedSchema: true
+                        }
                     })
 
 
+    /* You can also pass in the redis cache in context here too.
+        https://github.com/benawad/lireddit/blob/18_change-password/server/src/index.ts
+    */
     const server = new ApolloServer({
-        schema
+        schema,
+        context: ({req, res}) : MyContext => ({
+            em: client.em,
+            req,
+            res
+        })
     })
 
     // const server = new ApolloServer({ typeDefs, 

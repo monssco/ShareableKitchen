@@ -18,7 +18,8 @@
     "experimentalDecorators": true,
     "strictPropertyInitialization":false,
     "noEmit": true,
-    "typeRoots": ["./node_modules/@types"]
+    "typeRoots": ["./node_modules/@types"],
+    "outDir": "./js/"
   },
   "exclude": ["cdk.out"]
 }

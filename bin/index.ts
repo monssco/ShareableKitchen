@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import * as cdk from '@aws-cdk/core';
 import { CognitoStack } from '../lib/Authentication';
+import { RDSStack } from '../lib/Database';
 import { S3Stack } from '../lib/ObjectStorage';
 
 const app = new cdk.App();
@@ -16,3 +17,5 @@ const s3 = new S3Stack(app, 'S3Stack', {
     authenticatedRole: authRole,
     unauthenticatedRole: unAuthRole
 })
+
+const rds = new RDSStack(app, 'RDSStack')

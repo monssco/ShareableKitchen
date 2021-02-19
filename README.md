@@ -34,3 +34,15 @@ Database: RDS running postgres
  * `cdk deploy`      deploy this stack to your default AWS account/region
  * `cdk diff`        compare deployed stack with current state
  * `cdk synth`       emits the synthesized CloudFormation template
+
+
+## Image in my mind
+
+
+
+    FRONTEND                        BACKEND
+User -> Rect App ->  (API) exposed via  ALB -> Fargate Cluster (Apollo + business logic) -> Database
+  |                                                                     |-> Stripe
+ \ / 
+  .
+ Cognito

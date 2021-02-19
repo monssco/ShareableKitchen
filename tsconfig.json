@@ -19,7 +19,10 @@
     "strictPropertyInitialization":false,
     "noEmit": true,
     "typeRoots": ["./node_modules/@types"],
-    "outDir": "./js/"
+    "outDir": "./build/" // For some reason this isn't working, I can't see anything in the build directory.
   },
-  "exclude": ["cdk.out"]
+  "exclude": [
+    "cdk.out",
+    "./lib/App/**/" // Ignore the api and web app
+  ]
 }

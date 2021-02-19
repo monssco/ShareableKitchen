@@ -1,6 +1,11 @@
 {
   "name": "shareable-kitchen",
   "version": "0.1.0",
+  "author": {
+    "name": "Munib Sonny Rahman",
+    "email": "murahman@ucalgary.ca",
+    "url": "http://www.munib.ca"
+  },
   "bin": {
     "shareable-kitchen": "bin/index.js"
   },

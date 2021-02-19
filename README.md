@@ -1,6 +1,6 @@
-# Shareable Kitchen
+# Base CDK Application Infrastructure
 
-This repo will contain everything needed to get shareablekitchen.com up and running. 
+This repo will contain everything needed to get a sample application up and running. 
 
 I will start off by making the api / orm for the database. Then move over cognito for authentication and create some sort of rds for database storage.
 

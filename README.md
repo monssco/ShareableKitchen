@@ -1,13 +1,28 @@
 # Base CDK Application Infrastructure
 
-This repo will contain everything needed to get a sample application up and running. 
+Sample app repo for a full-stack TypeScript application.
 
-I will start off by making the api / orm for the database. Then move over cognito for authentication and create some sort of rds for database storage.
+I want to develop things locally and push them out fast, while keeping costs down.
 
-My goal is to use a postgres database for storing user and listing information. Including their stripe information. 
+## High level image
+
+    FRONTEND                        BACKEND
+User -> Rect App ->  (API) exposed via  ALB -> Fargate Cluster (Apollo + business logic) -> Database
+  |                                                                     |-> Stripe
+ \ / 
+  .
+ Cognito
+
+## Roadmap
+
+Goal is to get a skeleton running locally and over the cloud so that I can test quickly and then upload the prod version to the cloud.
+Get api running locally
+Push onto cloud and run it using ECR, Fargate etc etc
+Authenticate it using Cognito (Figure out login, lougout, authenticated routes etc, just a basic app nothing crazy)
+Figure out how to mock cognito locally, so that local development doesn't get hindered.
 
 
-# Requirements
+## Requirements
 Application requirements are documented elsewhere (Notion / OneNote).
 
 This repo will only worry about technical requirements. For example, what kind of tools are we using and why?
@@ -34,15 +49,3 @@ Database: RDS running postgres
  * `cdk deploy`      deploy this stack to your default AWS account/region
  * `cdk diff`        compare deployed stack with current state
  * `cdk synth`       emits the synthesized CloudFormation template
-
-
-## Image in my mind
-
-
-
-    FRONTEND                        BACKEND
-User -> Rect App ->  (API) exposed via  ALB -> Fargate Cluster (Apollo + business logic) -> Database
-  |                                                                     |-> Stripe
- \ / 
-  .
- Cognito

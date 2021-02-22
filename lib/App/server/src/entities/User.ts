@@ -1,6 +1,6 @@
 import {Field, ID, ObjectType} from 'type-graphql';
 import {Entity, OneToOne, PrimaryKey, Property} from '@mikro-orm/core';
-import { ProfileImage } from './Image';
+import { ProfileImage } from './ProfileImage';
 
 @ObjectType()
 @Entity()

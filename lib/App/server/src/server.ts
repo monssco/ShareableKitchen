@@ -36,6 +36,7 @@ const startServer = async () => {
         https://github.com/benawad/lireddit/blob/18_change-password/server/src/index.ts
     */
     const server = new ApolloServer({
+        
         schema,
         context: ({req, res}) : MyContext => ({
             em: client.em,
@@ -55,9 +56,16 @@ const startServer = async () => {
 
     const app = express();
 
-    server.applyMiddleware({app})
+    /**
+     * This health check for target group when uploading to ecs (aws)
+     */
+    app.get('/health-check', (_, res) => {
+        res.sendStatus(200)
+    })
 
-    app.listen({ port: 4000 }, () =>
+    server.applyMiddleware({app, path: '/'})
+
+    app.listen({ port: 80 }, () =>
     console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`)
     );
 };

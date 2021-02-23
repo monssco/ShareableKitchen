@@ -3,6 +3,7 @@ import * as ec2 from "@aws-cdk/aws-ec2";
 import * as ecs from "@aws-cdk/aws-ecs";
 import * as ecs_patterns from "@aws-cdk/aws-ecs-patterns";
 import path = require('path');
+import { Duration } from '@aws-cdk/core';
 
 /**
  * Small problem, there is some kind of misconfiguration with the target group and the health check listener
@@ -54,7 +55,7 @@ export class APIStack extends cdk.Stack {
                     taskImageOptions: {
                         // This is where you can pass in environment variables to the container.
                         image: ecs.ContainerImage.fromAsset(path.resolve(__dirname, "server")),
-                        containerPort: 4000,
+                        containerPort: 80,
                         environment: {
                             DB_HOST: 'http://68.145.64.93:5432'
                         }
@@ -64,6 +65,17 @@ export class APIStack extends cdk.Stack {
                     assignPublicIp: true
             });
 
-            // alb.loadBalancer.connections.se
+            /**
+             * Health checks are used by target groups to ensure that the containers haven't crashed etc.
+             */
+            alb.targetGroup.configureHealthCheck({
+                path: '/health-check',
+                port: '80',
+                healthyHttpCodes: '200,304', // both success and non modified
+                enabled: true,
+                healthyThresholdCount: 5,
+                interval: Duration.seconds(120),
+                timeout: Duration.seconds(60)
+            })
     }
 }

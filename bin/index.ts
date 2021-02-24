@@ -21,6 +21,17 @@ const app = new cdk.App();
 
 // const rds = new RDSStack(app, 'RDSStack')
 
+let domain = 'shareablekitchen.com'
+let subDomain = 'api'
+
+let hostedZoneId= 'Z05002012DN7N9WCCLM98'
+let hostedZoneName = 'shareablekitchen.com'
+
 const api = new APIStack(app, 'MyStack', {
-    description: 'API Stack (c) Munib Rahman, All rights reserved.'
+    domain,
+    subDomain,
+    hostedZoneName,
+    hostedZoneId
+
+
 })

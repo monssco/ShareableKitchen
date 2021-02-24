@@ -3,7 +3,6 @@ import * as cognito from '@aws-cdk/aws-cognito';
 import * as iam from '@aws-cdk/aws-iam'
 
 import {CognitoLambda} from './Lambda/index'
-import { OAuthScope } from '@aws-cdk/aws-cognito';
 
 // Most of stack copied from: https://stackoverflow.com/questions/55784746/how-to-create-cognito-identitypool-with-cognito-userpool-as-one-of-the-authentic
 

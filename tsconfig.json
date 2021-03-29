@@ -1,8 +1,10 @@
 {
   "compilerOptions": {
-    "target":"ES2018",
+    "target": "ES2018",
     "module": "commonjs",
-    "lib": ["es2018"],
+    "lib": [
+      "es2018"
+    ],
     "declaration": true,
     "strict": true,
     "noImplicitAny": true,
@@ -16,14 +18,15 @@
     "inlineSourceMap": true,
     "inlineSources": true,
     "experimentalDecorators": true,
-    "strictPropertyInitialization":false,
-    "noEmit": true,
-    "typeRoots": ["./node_modules/@types"],
-    "outDir": "build/dist" // For some reason this isn't working, I can't see anything in the build directory.
+    "strictPropertyInitialization": false,
+    "noEmitOnError": true,
+    "typeRoots": [
+      "./node_modules/@types"
+    ]
   },
   "exclude": [
     "cdk.out",
-    "./lib/App/**/", // Ignore the api and web app
+    "./lib/APP/*",
     "build"
   ]
 }

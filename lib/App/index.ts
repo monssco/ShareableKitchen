@@ -6,9 +6,13 @@ import path = require('path');
 import { Duration } from '@aws-cdk/core';
 import * as route53 from '@aws-cdk/aws-route53'
 import * as acm from '@aws-cdk/aws-certificatemanager'
+import * as elbv2 from '@aws-cdk/aws-elasticloadbalancingv2';
+import { ICertificate } from '@aws-cdk/aws-certificatemanager';
+import { ListenerAction, ListenerCondition } from '@aws-cdk/aws-elasticloadbalancingv2';
+import { UserPool, UserPoolClient, UserPoolDomain } from '@aws-cdk/aws-cognito';
 
 /**
- * Small problem, there is some kind of misconfiguration with the target group and the health check listener
+ * Small problem, there is some kind of misconfiguration with the target group and the health check listener (done, we have a health-check endpoint now)
  * This causes issues with the container as it get shut down almost immidietly
  * Don't use their higher level Application Load Balancer, 
  * switch to the FargateService instead
@@ -17,15 +21,20 @@ import * as acm from '@aws-cdk/aws-certificatemanager'
  */
 
     interface APIStackProps {
+        certificate: acm.DnsValidatedCertificate
+        hostedZone: route53.IHostedZone
         domain: string
         subDomain: string
-        hostedZoneId: string
-        hostedZoneName: string
+        user?: {
+            Pool: UserPool
+            Client: UserPoolClient
+            Domain: UserPoolDomain
+        }
     }
 
 export class APIStack extends cdk.Stack {
 
-
+    public readonly domainName: string
 
     constructor(scope: cdk.Construct, id: string, props: APIStackProps) {
         super(scope, id)
@@ -33,33 +42,9 @@ export class APIStack extends cdk.Stack {
         let domain = props.domain
         let subDomain = props.subDomain
 
-        let hostedZoneId= props.hostedZoneId
-        let zoneName = props.hostedZoneName
-
-
-        /**
-         * Route 53 zone from lookup
-         * is not working, so must pass in these hard coded values instead for now
-         * https://github.com/aws-samples/aws-cdk-examples/issues/238
-         * https://github.com/aws/aws-cdk/issues/5547
-         */
-        const zone = route53.HostedZone.fromHostedZoneAttributes(this, 'HostedZone', {
-            hostedZoneId,
-            zoneName
-        })
-
         const domainName = subDomain + '.' + domain
 
-        /**
-         * This is where you can come to implement things like ssl 
-         * pinning in iOS or Android app.
-         */
-        const certificate = new acm.DnsValidatedCertificate(this, 'SiteCertificate', {
-            domainName,
-            subjectAlternativeNames: [domain],
-            hostedZone: zone,
-            region: 'us-east-1', // Cloudfront only checks this region for certificates.
-        });
+        this.domainName = domainName
 
         const vpc = new ec2.Vpc(this, "MyVpc", {
             maxAzs: 2, // Default is all AZs in region
@@ -71,6 +56,7 @@ export class APIStack extends cdk.Stack {
                 }
             ]
         });
+
 
         const cluster = new ecs.Cluster(this, "APICluster", {
             vpc: vpc
@@ -88,7 +74,11 @@ export class APIStack extends cdk.Stack {
             
         // })
 
-        
+        /**
+         * If we are in production, let it sit on port 80.
+         * Otherwise for development we can use port 8000.
+         */
+        let port = 80
 
         // Create a load-balanced Fargate service and make it public
         const alb = new ecs_patterns.ApplicationLoadBalancedFargateService(this, "GraphQLAPI", {
@@ -98,17 +88,21 @@ export class APIStack extends cdk.Stack {
                 taskImageOptions: {
                     // This is where you can pass in environment variables to the container.
                     image: ecs.ContainerImage.fromAsset(path.resolve(__dirname, "server")),
-                    containerPort: 80,
+                    containerPort: port,
                     environment: {
-                        DB_HOST: 'http://68.145.64.93:5432' // This is the port on my laptop, in production it should be replaced with an rds instance or something else.
+                        DB_HOST: process.env.DB_HOST!,
+                        DB_NAME: process.env.DB_NAME!,
+                        DB_PORT: process.env.DB_PORT!,
+                        DB_USER: process.env.DB_USER!,
+                        DB_PASS: process.env.DB_PASS!
                     }
                 },
                 memoryLimitMiB: 512, // Default is 512
                 publicLoadBalancer: true, // Default is false
                 assignPublicIp: true,
                 domainName,
-                domainZone: zone,
-                certificate,
+                domainZone: props.hostedZone,
+                certificate: props.certificate,
         });
 
         /**
@@ -120,8 +114,71 @@ export class APIStack extends cdk.Stack {
             healthyHttpCodes: '200,304', // both success and non modified
             enabled: true,
             healthyThresholdCount: 5,
-            interval: Duration.seconds(120),
-            timeout: Duration.seconds(60)
+            interval: Duration.seconds(60),
+            timeout: Duration.seconds(59)
+        })
+
+        const lbSecurityGroup = alb.loadBalancer.connections.securityGroups[0]
+
+        lbSecurityGroup.addEgressRule(ec2.Peer.anyIpv4(), ec2.Port.tcp(443), 'Outbound HTTPS traffic to get to cognito')
+
+        alb.targetGroup.setAttribute('deregistration_delay.timeout_seconds', '10')
+
+        new elbv2.CfnListenerRule(this, 'LoadBalancerAPIDispatchRule', {
+            priority: 20,
+            listenerArn: alb.listener.listenerArn,
+            conditions: [
+                {
+                    field: 'path-pattern',
+                    values: ['/graphql', '/graphql/*']
+                }
+            ],
+            actions: [
+                {
+                    type:'authenticate-cognito',
+                    order: 100,
+                    authenticateCognitoConfig: {
+                        userPoolArn: props.user!.Pool.userPoolArn,
+                        userPoolClientId: props.user!.Client.userPoolClientId,
+                        userPoolDomain: props.user!.Domain.domainName,
+                        onUnauthenticatedRequest: 'deny'
+                    }
+                }, {
+                    type: 'forward',
+                    order: 200,
+                    targetGroupArn: alb.targetGroup.targetGroupArn
+                }
+            ]
+        })
+
+        /**
+         * This might need to be removed in production apps, we don't want them to login to the api. But rather, through the auth endpoint.
+         */
+        new elbv2.CfnListenerRule(this, 'LoadBalancerLoginDispatchRule', {
+            priority: 10,
+            listenerArn: alb.listener.listenerArn,
+            conditions: [
+                {
+                    field: 'path-pattern',
+                    values: ['/login']
+                }
+            ],
+            actions: [
+                {
+                    type:'authenticate-cognito',
+                    order: 100,
+                    authenticateCognitoConfig: {
+                        userPoolArn: props.user!.Pool.userPoolArn,
+                        userPoolClientId: props.user!.Client.userPoolClientId,
+                        userPoolDomain: props.user!.Domain.domainName,
+                        onUnauthenticatedRequest: 'authenticate'
+                    }
+                }, {
+                    type: 'forward',
+                    order: 200,
+                    targetGroupArn: alb.targetGroup.targetGroupArn
+                }
+            ]
         })
 
     }

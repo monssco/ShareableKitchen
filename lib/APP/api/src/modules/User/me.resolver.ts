@@ -9,52 +9,52 @@ Problem: So when you attach listings to a user, and that user's information is m
 
 @InputType()
 class RegisterUserInput implements Partial<User> {
-    @Field(()=> ID)
+    @Field(()=> ID, {nullable: false})
     id: string;
 
-    @Field()
+    @Field({nullable: false})
     email: string;
 
-    @Field({nullable: true})
+    @Field()
     first_name: string;
 
-    @Field({nullable: true})
+    @Field()
     last_name: string;
 
-    @Field({nullable: true})
+    @Field()
     date_of_birth: Date;
 }
 
 @InputType()
 class UpdateUserInput implements Partial<User> {
-    @Field(()=> ID)
+    @Field(()=> ID, {nullable: false})
     id: string;
 
-    @Field({nullable: true})
+    @Field()
     first_name?: string;
 
-    @Field({nullable: true})
+    @Field()
     last_name?: string;
 
-    @Field( {nullable: true})
+    @Field()
     date_of_birth?: Date;
 }
 
 @Resolver()
 export class MeResolver {
 
-    @Query(() => User)
+    @Query(() => User, {nullable: false})
     async me(
-        @Arg("id") id: string,
+        @Arg("id", {nullable: false}) id: string,
         @Ctx() {em}: MyContext
     ) {
         const me = await em.findOneOrFail(User, {id})
         return me;
     }
 
-    @Mutation(()=> User)
+    @Mutation(()=> User, {nullable: false})
     async registerUser(
-        @Arg("user") user: RegisterUserInput,
+        @Arg("user", {nullable: false}) user: RegisterUserInput,
         @Ctx() {em}: MyContext) {
         const newUser = new User(user.id, user.email)
         newUser.first_name = user.first_name
@@ -64,9 +64,9 @@ export class MeResolver {
         return newUser
     }
 
-    @Mutation(()=> User)
+    @Mutation(()=> User, {nullable: false})
     async updateUser(
-        @Arg("user") {id, date_of_birth, first_name, last_name}: UpdateUserInput,
+        @Arg("user", {nullable: false}) {id, date_of_birth, first_name, last_name}: UpdateUserInput,
         @Ctx() {em}: MyContext
     ) {
         const me = await em.findOne(User, {id})

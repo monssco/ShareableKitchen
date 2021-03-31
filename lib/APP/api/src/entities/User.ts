@@ -11,14 +11,14 @@ export class User {
         this.email = email
     }
 
-    @Field(() => ID)
+    @Field(() => ID, {nullable: false})
     @PrimaryKey()
     id!: string;
 
     /*
     A user is not allowed to update their email after sign up.
     */
-    @Field()
+    @Field({nullable: false})
     @Property()
     email!: string;
 
@@ -29,37 +29,37 @@ export class User {
     @OneToOne(()=> ProfileImage, (image)=> image.user, {owner: true})
     profile_image?: ProfileImage;
 
-    @Field({nullable: true})
+    @Field()
     @Property({nullable: true})
     first_name?: string;
 
-    @Field({nullable: true})
+    @Field()
     @Property({nullable: true})
     last_name?: string;
 
-    @Field({nullable: true})
+    @Field()
     @Property({columnType: "date", nullable: true})
     date_of_birth?: Date;
 
     // Good idea to have them separate or all together?
-    @Field({nullable: true})
+    @Field()
     @Property({nullable: true})
     city?: string;
 
-    @Field({nullable: true})
+    @Field()
     @Property({nullable: true})
     province?: string;
 
-    @Field({nullable: true})
+    @Field()
     @Property({nullable: true})
     country?: string
 
     // Stripe related ids
-    @Field({nullable: true})
+    @Field()
     @Property({nullable: true})
     stripe_customer_id?: string
 
-    @Field({nullable: true})
+    @Field()
     @Property({nullable: true})
     stripe_account_id?: string
 

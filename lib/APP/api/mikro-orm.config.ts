@@ -8,10 +8,10 @@ export default {
     },
     entities: ['./src/entities/*.ts'],
     type: 'postgresql',
-    dbName: process.env.DB_NAME,
-    clientUrl: process.env.DB_HOST,
-    port: process.env.DB_PORT,
-    user: process.env.DB_USER,
-    password: process.env.DB_PASS,
+    dbName: process.env.DB_NAME || 'postgres',
+    clientUrl: process.env.DB_HOST || 'http://localhost:5432',
+    port: process.env.DB_PORT || 5432,
+    user: process.env.DB_USER || "test",
+    password: process.env.DB_PASS || "test",
 
 } as Parameters<typeof MikroORM.init>[0];

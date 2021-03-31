@@ -28,7 +28,8 @@ const startServer = async () => {
                             path: __dirname + '/../schema.graphql',
                             commentDescriptions: true,
                             sortedSchema: false
-                        }
+                        },
+                        nullableByDefault: true
                     })
 
 

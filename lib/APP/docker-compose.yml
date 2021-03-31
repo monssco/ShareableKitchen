@@ -12,23 +12,23 @@ services:
       POSTGRES_PASSWORD: 'test'
       POSTGRES_DB: 'postgres'
 
-# graphql api
-  api:
-    container_name: graphql_api
-    build: ./api
-    restart: always
-    volumes: 
-      - ./api:/api
-    ports: 
-      - "4000:80"
-    depends_on:
-      - db
-    environment:
-      DB_HOST: 'http://db:5432'
-      DB_NAME: 'postgres'
-      DB_PORT: '5432'
-      DB_USER: 'test'
-      DB_PASS: 'test'
+# # graphql api
+#   api:
+#     container_name: graphql_api
+#     build: ./api
+#     restart: always
+#     volumes: 
+#       - ./api:/api
+#     ports: 
+#       - "4000:80"
+#     depends_on:
+#       - db
+#     environment:
+#       DB_HOST: 'http://db:5432'
+#       DB_NAME: 'postgres'
+#       DB_PORT: '5432'
+#       DB_USER: 'test'
+#       DB_PASS: 'test'
 
 # # React app
 #   app:

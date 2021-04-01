@@ -43,7 +43,7 @@ class UpdateUserInput implements Partial<User> {
 @Resolver()
 export class MeResolver {
 
-    @Query(() => User, {nullable: false})
+    @Query(() => User, {nullable: true})
     async me(
         @Arg("id", {nullable: false}) id: string,
         @Ctx() {em}: MyContext

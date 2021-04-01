@@ -1,6 +1,7 @@
 import {Field, ID, ObjectType} from 'type-graphql';
 import {Entity, OneToOne, PrimaryKey, Property} from '@mikro-orm/core';
 import { ProfileImage } from './ProfileImage';
+import { UserLocation } from './UserLocation';
 
 @ObjectType()
 @Entity()
@@ -26,8 +27,12 @@ export class User {
     https://mikro-orm.io/docs/relationships#onetoone
     */
     @Field(()=> ProfileImage, {nullable: true})
-    @OneToOne(()=> ProfileImage, (image)=> image.user, {owner: true})
+    @OneToOne(()=> ProfileImage, (image)=> image.user, {owner: true, nullable: true})
     profile_image?: ProfileImage;
+
+    @Field(()=> UserLocation, {nullable: true})
+    @OneToOne(()=> UserLocation, (image)=> image.user, {owner: true, nullable: true})
+    location?: UserLocation;
 
     @Field()
     @Property({nullable: true})
@@ -40,19 +45,6 @@ export class User {
     @Field()
     @Property({columnType: "date", nullable: true})
     date_of_birth?: Date;
-
-    // Good idea to have them separate or all together?
-    @Field()
-    @Property({nullable: true})
-    city?: string;
-
-    @Field()
-    @Property({nullable: true})
-    province?: string;
-
-    @Field()
-    @Property({nullable: true})
-    country?: string
 
     // Stripe related ids
     @Field()

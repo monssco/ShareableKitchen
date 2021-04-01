@@ -3,37 +3,108 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
-type Query {
-  me(id: String!): User!
+type Booking {
+  buyer: String
 }
 
-type User {
-  id: ID!
-  email: String!
-  profile_image: ProfileImage
-  first_name: String
-  last_name: String
-  date_of_birth: DateTime
-  city: String
-  province: String
-  country: String
-  stripe_customer_id: String
-  stripe_account_id: String
-}
-
-type ProfileImage {
+type ListingImage implements Image {
   original_key: String!
   resized_medium: String
   resized_small: String
   resized_large: String
 }
 
+type ListingLocation implements Location {
+  original_key: String!
+  country: String
+  city: String
+  province: String
+  postal: String
+}
+
+type ProfileImage implements Image {
+  original_key: String!
+  resized_medium: String
+  resized_small: String
+  resized_large: String
+}
+
+type UserLocation implements Location {
+  original_key: String!
+  country: String
+  city: String
+  province: String
+  postal: String
+}
+
+type User {
+  id: ID!
+  email: String!
+  profile_image: ProfileImage
+  location: UserLocation
+  first_name: String
+  last_name: String
+  date_of_birth: DateTime
+  stripe_customer_id: String
+  stripe_account_id: String
+}
+
 # The javascript `Date` as string. Type represents date and time as the ISO Date string.
 scalar DateTime
 
-type Mutation {
-  registerUser(user: RegisterUserInput!): User!
-  updateUser(user: UpdateUserInput!): User!
+type Listing {
+  id: ID!
+  author: User!
+  title: String
+  description: String
+  photos: ListingImage
+  location: ListingLocation
+  price: Float
+  features: [PropertyFeatures]
+  propertyType: PropertyType
+  sqFtArea: Float
+}
+
+# Features of a given kitchen
+enum PropertyFeatures {
+  microwave
+  conveyorOven
+  tripleSink
+  doughSheeter
+  standUpCooler
+  walkInCooler
+  stonePizzaOven
+  kitchenOven
+  doubleSink
+  freezer
+  prepTables
+  deepFryer
+  other
+  doughMixer
+}
+
+# Self-explanatory
+enum PropertyType {
+  cafe
+  church
+  commercialKitchen
+  communityCenter
+  restaurant
+}
+
+interface Image {
+  original_key: String!
+  resized_medium: String
+  resized_small: String
+  resized_large: String
+}
+
+interface Location {
+  original_key: String!
+  country: String
+  city: String
+  province: String
+  postal: String
 }
 
 input RegisterUserInput {
@@ -49,4 +120,13 @@ input UpdateUserInput {
   first_name: String
   last_name: String
   date_of_birth: DateTime
+}
+
+type Query {
+  me(id: String!): User
+}
+
+type Mutation {
+  registerUser(user: RegisterUserInput!): User!
+  updateUser(user: UpdateUserInput!): User!
 }

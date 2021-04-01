@@ -107,6 +107,11 @@ interface Location {
   postal: String
 }
 
+input ListingsInput {
+  first: Int
+  limit: Int
+}
+
 input RegisterUserInput {
   id: ID!
   email: String!
@@ -116,14 +121,14 @@ input RegisterUserInput {
 }
 
 input UpdateUserInput {
-  id: ID!
   first_name: String
   last_name: String
   date_of_birth: DateTime
 }
 
 type Query {
-  me(id: String!): User
+  myListings(input: ListingsInput!): [Listing]
+  me: User
 }
 
 type Mutation {

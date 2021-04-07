@@ -4,37 +4,58 @@
 # -----------------------------------------------
 
 type Booking {
-  buyer: String
+  buyer: String!
 }
 
 type ListingImage implements Image {
   original_key: String!
-  resized_medium: String
-  resized_small: String
-  resized_large: String
+  resized_medium: String!
+  resized_small: String!
+  resized_large: String!
+}
+
+type CountryType {
+  id: ID!
+  name: String!
+  currency: String!
+  currencySymbol: String!
+}
+
+type StateType {
+  country: CountryType!
+  name: String!
+}
+
+type CityType {
+  state: StateType!
+  name: String!
+  currency: String!
+  currencySymbol: String!
 }
 
 type ListingLocation implements Location {
   original_key: String!
-  country: String
-  city: String
-  province: String
-  postal: String
+  address: String!
+  country: CountryType!
+  state: StateType!
+  city: CityType!
+  postal: String!
 }
 
 type ProfileImage implements Image {
   original_key: String!
-  resized_medium: String
-  resized_small: String
-  resized_large: String
+  resized_medium: String!
+  resized_small: String!
+  resized_large: String!
 }
 
 type UserLocation implements Location {
   original_key: String!
-  country: String
-  city: String
-  province: String
-  postal: String
+  address: String!
+  country: CountryType!
+  state: StateType!
+  city: CityType!
+  postal: String!
 }
 
 type User {
@@ -42,11 +63,11 @@ type User {
   email: String!
   profile_image: ProfileImage
   location: UserLocation
-  first_name: String
-  last_name: String
-  date_of_birth: DateTime
-  stripe_customer_id: String
-  stripe_account_id: String
+  first_name: String!
+  last_name: String!
+  date_of_birth: DateTime!
+  stripe_customer_id: String!
+  stripe_account_id: String!
 }
 
 # The javascript `Date` as string. Type represents date and time as the ISO Date string.
@@ -55,14 +76,14 @@ scalar DateTime
 type Listing {
   id: ID!
   author: User!
-  title: String
-  description: String
-  photos: ListingImage
-  location: ListingLocation
-  price: Float
-  features: [PropertyFeatures]
-  propertyType: PropertyType
-  sqFtArea: Float
+  title: String!
+  description: String!
+  photos: [ListingImage!]!
+  location: ListingLocation!
+  price: Int!
+  sqFtArea: Int!
+  features: [PropertyFeatures!]!
+  propertyType: PropertyType!
 }
 
 # Features of a given kitchen
@@ -94,44 +115,82 @@ enum PropertyType {
 
 interface Image {
   original_key: String!
-  resized_medium: String
-  resized_small: String
-  resized_large: String
+  resized_medium: String!
+  resized_small: String!
+  resized_large: String!
 }
 
 interface Location {
   original_key: String!
-  country: String
-  city: String
-  province: String
-  postal: String
+  address: String!
+  country: CountryType!
+  state: StateType!
+  city: CityType!
+  postal: String!
+}
+
+input CountryInput {
+  id: ID!
+  name: String!
+  currency: String!
+  currencySymbol: String!
+}
+
+input StateInput {
+  country: CountryInput!
+  name: String!
+}
+
+input CityInput {
+  state: StateInput!
+  name: String!
+  currency: String!
+  currencySymbol: String!
+}
+
+input ListingLocationInput {
+  address: String!
+  city: CityInput!
+  state: StateInput!
+  country: CountryInput!
+}
+
+input CreateListingInput {
+  title: String!
+  description: String!
+  price: Int!
+  sqFtArea: Int!
+  features: [PropertyFeatures!]!
+  propertyType: PropertyType!
+  location: ListingLocationInput!
 }
 
 input ListingsInput {
-  first: Int
-  limit: Int
+  first: Int!
+  limit: Int!
 }
 
 input RegisterUserInput {
   id: ID!
   email: String!
-  first_name: String
-  last_name: String
-  date_of_birth: DateTime
+  first_name: String!
+  last_name: String!
+  date_of_birth: DateTime!
 }
 
 input UpdateUserInput {
-  first_name: String
-  last_name: String
-  date_of_birth: DateTime
+  first_name: String!
+  last_name: String!
+  date_of_birth: DateTime!
 }
 
 type Query {
-  myListings(input: ListingsInput!): [Listing]
+  myListings(input: ListingsInput!): [Listing!]!
   me: User
 }
 
 type Mutation {
+  createListing(input: CreateListingInput!): Listing!
   registerUser(user: RegisterUserInput!): User!
   updateUser(user: UpdateUserInput!): User!
 }

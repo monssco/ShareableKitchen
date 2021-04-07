@@ -1,5 +1,6 @@
 import { PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, InterfaceType } from "type-graphql";
+import { v4 } from "uuid";
 
 /**
  * Base image class, every image class will extend this class and
@@ -8,8 +9,11 @@ import { Field, InterfaceType } from "type-graphql";
 @InterfaceType()
 export abstract class Image {
 
+    @PrimaryKey({nullable: false})
+    id: string = v4();
+
     @Field({nullable: false})
-    @PrimaryKey()
+    @Property({nullable: false})
     original_key!: string;
 
     @Field()

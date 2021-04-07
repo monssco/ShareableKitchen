@@ -1,11 +1,15 @@
-import {Field, ID, ObjectType, registerEnumType} from 'type-graphql';
+import {Field, ID, ObjectType, registerEnumType, Int} from 'type-graphql';
 import {Entity, Enum, ManyToOne, OneToMany, OneToOne, PrimaryKey, Property} from '@mikro-orm/core';
 import { ListingImage } from './ListingImage';
 import { ListingLocation } from './ListingLocation';
 import { User } from './User';
+import {v4} from 'uuid';
+import { PropertyFeatures } from './Enums/PropertyFeatures.enum';
+import { PropertyType } from './Enums/PropertyType.enum'
 
 /**
- * TODO: Add availability OR calender option
+ * A listing is a kitchen that has been posted for rent.
+ * TODO: Add availability options such as a calendar or start-end date etc
  */
 
 @ObjectType()
@@ -13,7 +17,7 @@ import { User } from './User';
 export class Listing {
     @Field(() => ID, {nullable: false})
     @PrimaryKey({nullable: false})
-    id!: string;
+    id: string = v4();
 
     @Field(() => User, {nullable: false})
     @ManyToOne(() => User, {nullable: false})
@@ -21,86 +25,63 @@ export class Listing {
 
     @Field()
     @Property()
-    title?: string;
+    title: string;
 
     @Field()
     @Property()
-    description?: string;
+    description: string;
 
 
-    @Field()
-    @OneToMany(()=> ListingImage, (image) => image.listing)
-    photos?: ListingImage
+    @Field(() => [ListingImage])
+    @OneToMany(()=> ListingImage, (image) => image.listing, {nullable: true})
+    photos?: ListingImage[]
 
     @Field(()=> ListingLocation)
     @OneToOne(()=> ListingLocation, (location) => location.listing, {owner: true})
-    location?: ListingLocation;
+    location: Partial<ListingLocation>;
 
-    @Field()
+    @Field(() => Int)
     @Property()
-    price?: number;
+    price: number;
+
+    @Field(() => Int)
+    @Property()
+    sqFtArea: number
 
     @Field(() => [PropertyFeatures])
-    @Enum({items: () => PropertyFeatures, array: true})
+    @Enum({items: () => PropertyFeatures, array: true, nullable: true})
     features?: PropertyFeatures[];
 
     @Field(() => PropertyType)
     @Enum({items: () => PropertyType})
-    propertyType?: PropertyType
+    propertyType: PropertyType
 
-    @Field()
-    @Property({nullable: true})
-    sqFtArea?: number
-
-    @Property({columnType: "timestamptz", nullable: false})
+    @Property({columnType: "timestamptz"})
     published: Date = new Date();
 
     // Field decorator is emitted, this property will not be exposed via the api
     // timestampz = time with timezone in postgresql lingo
-    @Property({columnType: "timestamptz", nullable: false})
+    @Property({columnType: "timestamptz"})
     created: Date = new Date();
 
-    @Property({columnType: "timestamptz", onUpdate: () => new Date().toISOString() })
+    @Property({columnType: "timestamptz", onUpdate: () => new Date().toISOString()})
     modified: Date = new Date();
 
     @Property({columnType: "boolean"})
     status = true
 
-    constructor(id: string, title: string ) {
-        this.id = id
+    constructor(title: string, description: string ) {
         this.title = title
+        this.description = description
     }
 }
 
-enum PropertyFeatures {
-    microwave =  "Microwave",
-    conveyorOven = "Conveyor Oven",
-    tripleSink = "Triple Sink",
-    doughSheeter = "Dough Sheeter",
-    standUpCooler = "Stand-up Cooler",
-    walkInCooler = "Walk-in Cooler",
-    stonePizzaOven = "Stone Pizza Oven",
-    kitchenOven = "Kitchen Oven",
-    doubleSink = "Double Sink",
-    freezer = "Freezer",
-    prepTables = "Prep Tables",
-    deepFryer = "Deep Fryer",
-    other = "Other - Found in description",
-    doughMixer = "Dough Mixer"
-}
 
 registerEnumType(PropertyFeatures,{
     name: "PropertyFeatures",
     description: "Features of a given kitchen"
 })
 
-enum PropertyType {
-    cafe = "Cafe",
-    church = "Church",
-    commercialKitchen = "Commercial Kitchen",
-    communityCenter = "Community Center",
-    restaurant = "Restaurant"
-}
 
 registerEnumType(PropertyType, {
     name: "PropertyType",

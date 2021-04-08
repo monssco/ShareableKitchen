@@ -12,7 +12,7 @@ import { City } from './City';
 @Entity()
 export class State {
     
-    @Field()
+    // @Field(() => Country)
     @ManyToOne(() => Country, {primary: true})
     country!: Country;
 
@@ -23,6 +23,7 @@ export class State {
     @Property({nullable: false})
     name!: string;
 
+    @Field(() => [City])
     @OneToMany(() => City, city => city.state, {cascade: [Cascade.ALL]})
     cities = new Collection<City>(this);
 

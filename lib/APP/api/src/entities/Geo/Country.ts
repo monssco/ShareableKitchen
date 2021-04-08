@@ -28,6 +28,7 @@ export class Country {
     @Property({nullable: false})
     currencySymbol!: string
 
+    @Field(() => [State])
     @OneToMany(() => State, state => state.country, { cascade: [Cascade.ALL] })
     states = new Collection<State>(this);
 

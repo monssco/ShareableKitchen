@@ -1,6 +1,6 @@
 import { Migration } from '@mikro-orm/migrations';
 
-export class Migration20210407041527 extends Migration {
+export class Migration20210408015708 extends Migration {
 
   async up(): Promise<void> {
     this.addSql('create table "country" ("id" serial primary key, "name" varchar(255) not null, "currency" varchar(255) not null, "currency_symbol" varchar(255) not null);');
@@ -8,16 +8,11 @@ export class Migration20210407041527 extends Migration {
     this.addSql('create table "state" ("country_id" int4 not null, "id" int4 not null, "name" varchar(255) not null);');
     this.addSql('alter table "state" add constraint "state_pkey" primary key ("country_id", "id");');
 
-    this.addSql('create table "city" ("state_country_id" int4 not null, "state_id" int4 not null, "id" int4 not null, "name" varchar(255) not null, "currency" varchar(255) not null, "currency_symbol" varchar(255) not null);');
+    this.addSql('create table "city" ("state_country_id" int4 not null, "state_id" int4 not null, "id" int4 not null, "name" varchar(255) not null);');
     this.addSql('alter table "city" add constraint "city_pkey" primary key ("state_country_id", "state_id", "id");');
 
     this.addSql('create table "user_location" ("original_key" varchar(255) not null, "address" varchar(255) not null, "country" jsonb not null, "state" jsonb not null, "city" jsonb not null, "postal" varchar(255) not null);');
     this.addSql('alter table "user_location" add constraint "user_location_pkey" primary key ("original_key");');
-
-    this.addSql('create table "article" ("id" serial primary key, "title" varchar(255) not null);');
-
-    this.addSql('create table "article_attribute" ("article_id" int4 not null, "attribute" varchar(255) not null, "value" varchar(255) not null);');
-    this.addSql('alter table "article_attribute" add constraint "article_attribute_pkey" primary key ("article_id", "attribute");');
 
     this.addSql('create table "profile_image" ("id" varchar(255) not null, "original_key" varchar(255) not null, "resized_medium" varchar(255) null, "resized_small" varchar(255) null, "resized_large" varchar(255) null);');
     this.addSql('alter table "profile_image" add constraint "profile_image_pkey" primary key ("id");');
@@ -43,8 +38,6 @@ export class Migration20210407041527 extends Migration {
     this.addSql('alter table "state" add constraint "state_country_id_foreign" foreign key ("country_id") references "country" ("id") on update cascade;');
 
     this.addSql('alter table "city" add constraint "city_state_country_id_state_id_foreign" foreign key ("state_country_id", "state_id") references "state" ("country_id", "id") on update cascade;');
-
-    this.addSql('alter table "article_attribute" add constraint "article_attribute_article_id_foreign" foreign key ("article_id") references "article" ("id") on update cascade;');
 
     this.addSql('alter table "user" add constraint "user_profile_image_id_foreign" foreign key ("profile_image_id") references "profile_image" ("id") on update cascade on delete set null;');
     this.addSql('alter table "user" add constraint "user_location_original_key_foreign" foreign key ("location_original_key") references "user_location" ("original_key") on update cascade on delete set null;');

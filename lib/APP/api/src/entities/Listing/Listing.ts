@@ -2,10 +2,10 @@ import {Field, ID, ObjectType, registerEnumType, Int} from 'type-graphql';
 import {Entity, Enum, ManyToOne, OneToMany, OneToOne, PrimaryKey, Property} from '@mikro-orm/core';
 import { ListingImage } from './ListingImage';
 import { ListingLocation } from './ListingLocation';
-import { User } from './User';
+import { User } from '../User/User';
 import {v4} from 'uuid';
-import { PropertyFeatures } from './Enums/PropertyFeatures.enum';
-import { PropertyType } from './Enums/PropertyType.enum'
+import { PropertyFeatures } from '../Enums/PropertyFeatures.enum';
+import { PropertyType } from '../Enums/PropertyType.enum'
 
 /**
  * A listing is a kitchen that has been posted for rent.
@@ -15,11 +15,11 @@ import { PropertyType } from './Enums/PropertyType.enum'
 @ObjectType()
 @Entity()
 export class Listing {
-    @Field(() => ID, {nullable: false})
+    @Field(() => ID)
     @PrimaryKey({nullable: false})
     id: string = v4();
 
-    @Field(() => User, {nullable: false})
+    @Field(() => User)
     @ManyToOne(() => User, {nullable: false})
     author!: User;
 
@@ -32,13 +32,13 @@ export class Listing {
     description: string;
 
 
-    @Field(() => [ListingImage])
+    @Field(() => [ListingImage], {nullable: true})
     @OneToMany(()=> ListingImage, (image) => image.listing, {nullable: true})
     photos?: ListingImage[]
 
     @Field(()=> ListingLocation)
     @OneToOne(()=> ListingLocation, (location) => location.listing, {owner: true})
-    location: Partial<ListingLocation>;
+    location: ListingLocation;
 
     @Field(() => Int)
     @Property()

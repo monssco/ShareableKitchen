@@ -34,15 +34,15 @@ export class User {
     @OneToOne(()=> UserLocation, (image)=> image.user, {owner: true, nullable: true})
     location?: UserLocation;
 
-    @Field()
+    @Field({nullable: true})
     @Property({nullable: true})
     first_name?: string;
 
-    @Field()
+    @Field({nullable: true})
     @Property({nullable: true})
     last_name?: string;
 
-    @Field()
+    @Field({nullable: true})
     @Property({columnType: "date", nullable: true})
     date_of_birth?: Date;
 
@@ -51,7 +51,7 @@ export class User {
     @Property({nullable: true})
     stripe_customer_id?: string
 
-    @Field()
+    @Field({nullable: true})
     @Property({nullable: true})
     stripe_account_id?: string
 

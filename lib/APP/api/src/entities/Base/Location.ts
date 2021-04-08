@@ -12,7 +12,7 @@ export class Location {
 
     @Field({nullable: false})
     @PrimaryKey()
-    original_key!: string;
+    id!: string;
 
     @Field({nullable: false})
     @Property()

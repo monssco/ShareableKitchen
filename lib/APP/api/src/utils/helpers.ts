@@ -6573,7 +6573,9 @@ const STATE_JSON = [
 
 /**
  * 
- * Seeds the database with values that are needed.
+ * Seeds the database with values that are needed for the
+ * app to function properly. Things such as dummy users, geo info
+ * like country, states, cities and so on.
  * 
  * @param em Entity manager
  */

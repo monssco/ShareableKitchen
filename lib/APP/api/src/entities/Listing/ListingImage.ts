@@ -1,6 +1,6 @@
 import { ManyToOne, Entity } from "@mikro-orm/core";
 import { ObjectType } from "type-graphql";
-import { Image } from "./Base/Image";
+import { Image } from "../Base/Image";
 import { Listing } from "./Listing";
 
 @ObjectType({implements: Image})

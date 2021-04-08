@@ -1,5 +1,5 @@
-import { Listing } from "../../entities/Listing"
-import { User } from "../../entities/User"
+import { Listing } from "../../entities/Listing/Listing"
+import { User } from "../../entities/User/User"
 import { MyContext } from "src/types"
 import { Arg, Ctx, Field, InputType, Int, Query } from "type-graphql"
 

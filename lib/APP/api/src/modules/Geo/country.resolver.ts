@@ -4,16 +4,17 @@ import { MyContext } from "src/types"
 import { Ctx, FieldResolver, Query, Resolver, Root } from "type-graphql"
 import { Country } from "../../entities/Geo/Country"
 
+/**
+ * Resolver for fetching countries, states and so on.
+ */
 @Resolver(() => Country)
-export class GetCountriesResolver {
+export class CountryResolver {
 
     @Query(() => [Country])
     async getCountries(
         @Ctx() {em}: MyContext
     ): Promise<Country[]> {
-
         const countries = await em.find(Country, {})
-        console.log(countries)
         return countries
     }
 

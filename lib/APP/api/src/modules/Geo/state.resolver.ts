@@ -10,17 +10,7 @@ export class StateResolver {
         @Root() state: State,
         @Ctx() {em}: MyContext
     ): Promise<City[]> {
-        console.log("STATE", state);
-        const s = await em.getReference(State, [state.country.id, state.id])
-
-        try {
-            await em.find(City, {state: s})
-        } catch (error) {
-            console.log("Error, not foind", error)
-        }
-        const cities = await em.find(City, {state: s})
-        // let c = new City(1, "poopville")
-        console.log('cities', cities)
+        const cities = await em.find(City, {state})
         return cities
     }
 }

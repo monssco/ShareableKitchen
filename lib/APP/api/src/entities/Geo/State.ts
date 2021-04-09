@@ -23,7 +23,7 @@ export class State {
     @Property({nullable: false})
     name!: string;
 
-    @Field(() => [City])
+    @Field(() => [City], {nullable: true})
     @OneToMany(() => City, city => city.state, {cascade: [Cascade.ALL]})
     cities = new Collection<City>(this);
 

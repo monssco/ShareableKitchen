@@ -56,8 +56,11 @@ export class Listing {
     @Enum({items: () => PropertyType})
     propertyType: PropertyType
 
+    /**
+     * A listing has 1 availability schedule.
+     */
     @Field(()=> Availability)
-    @OneToOne(() => Availability, availability => availability.listing, {cascade: [Cascade.ALL]})
+    @OneToOne(() => Availability, availability => availability.listing, {owner: true, cascade: [Cascade.ALL]})
     availability: Availability
 
     /**
@@ -66,6 +69,14 @@ export class Listing {
     @Field(()=> [Booking], {nullable: true})
     @OneToMany(() => Booking, booking => booking.listing, {nullable: true, cascade: [Cascade.ALL]})
     bookings = new Collection<Booking>(this);
+
+
+    /**
+     * If the listing is still a draft, this will be true.
+     */
+    @Field()
+    @Property({nullable: false})
+    draft: boolean
 
     @Property({columnType: "timestamptz"})
     published: Date = new Date();

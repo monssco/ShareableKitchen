@@ -3,21 +3,37 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+type UserImage implements Image {
+  original_key: String!
+  resized_medium: String!
+  resized_small: String!
+  resized_large: String!
+}
+
 type CountryType {
   id: ID!
   name: String!
   currency: String!
   currencySymbol: String!
-  states: [StateType!]!
+  states: [StateType!]
 }
 
 type StateType {
   name: String!
-  cities: [CityType!]!
+  cities: [CityType!]
 }
 
 type CityType {
   name: String!
+}
+
+type UserLocation implements Location {
+  id: String!
+  address: String!
+  country: CountryType!
+  state: StateType!
+  city: CityType!
+  postal: String!
 }
 
 type ListingImage implements Image {
@@ -36,36 +52,9 @@ type ListingLocation implements Location {
   postal: String!
 }
 
-type UserImage implements Image {
-  original_key: String!
-  resized_medium: String!
-  resized_small: String!
-  resized_large: String!
-}
-
-type UserLocation implements Location {
-  id: String!
-  address: String!
-  country: CountryType!
-  state: StateType!
-  city: CityType!
-  postal: String!
-}
-
-type Booking {
-  id: ID!
-}
-
-type User {
-  id: ID!
-  email: String!
-  profile_image: UserImage
-  location: UserLocation
-  first_name: String
-  last_name: String
-  date_of_birth: DateTime
-  stripe_customer_id: String!
-  stripe_account_id: String
+type Availability {
+  startDate: DateTime!
+  endDate: DateTime!
 }
 
 # The javascript `Date` as string. Type represents date and time as the ISO Date string.
@@ -84,6 +73,7 @@ type Listing {
   propertyType: PropertyType!
   availability: Availability!
   bookings: [Booking!]
+  draft: Boolean!
 }
 
 # Features of a given kitchen
@@ -113,9 +103,22 @@ enum PropertyType {
   restaurant
 }
 
-type Availability {
+type Booking {
   startDate: DateTime!
   endDate: DateTime!
+  paymentDate: DateTime!
+}
+
+type User {
+  id: ID!
+  email: String!
+  profile_image: UserImage
+  location: UserLocation
+  first_name: String
+  last_name: String
+  date_of_birth: DateTime
+  stripe_customer_id: String!
+  stripe_account_id: String
 }
 
 interface Image {

@@ -1,6 +1,7 @@
 /**
- * A user can book a listing.
- * User books listing. PK from user and booking as foregin key.
+ * A listing has one availability.
+ * Availability has a start date and end date.
+ * Later on we can add more attributes here as our requirements grow.
  */
 
 import { Entity, OneToOne, PrimaryKeyType, Property } from "@mikro-orm/core";
@@ -11,7 +12,7 @@ import { Listing } from "./Listing/Listing";
 @Entity()
 export class Availability {
 
-    @OneToOne({primary: true})
+    @OneToOne(()=> Listing, listing => listing.availability, {primary: true})
     listing: Listing
 
     @Field()

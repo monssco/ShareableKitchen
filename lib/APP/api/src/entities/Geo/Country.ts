@@ -12,11 +12,11 @@ import { State } from './State';
 @ObjectType("CountryType")
 @Entity()
 export class Country {
-    @Field(() => ID, {nullable: false})
+    @Field(() => ID)
     @PrimaryKey({nullable: false})
     id!: number;
 
-    @Field({nullable: false})
+    @Field()
     @Property({nullable: false})
     name!: string;
 
@@ -28,8 +28,8 @@ export class Country {
     @Property({nullable: false})
     currencySymbol!: string
 
-    @Field(() => [State])
-    @OneToMany(() => State, state => state.country, { cascade: [Cascade.ALL] })
+    @Field(() => [State], {nullable: true})
+    @OneToMany(() => State, state => state.country, { cascade: [Cascade.ALL], nullable: true })
     states = new Collection<State>(this);
 
     constructor(id: number, name: string, currency: string, currencySymbol: string ) {

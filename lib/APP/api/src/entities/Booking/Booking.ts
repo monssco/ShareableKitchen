@@ -4,8 +4,8 @@
  * User books listing. PK from user and booking as foregin key.
  */
 
-import { Entity, ManyToOne, PrimaryKey, PrimaryKeyType } from "@mikro-orm/core";
-import { Field, ID, ObjectType } from "type-graphql";
+import { Entity, ManyToOne, PrimaryKey, PrimaryKeyType, Property } from "@mikro-orm/core";
+import { Field, ObjectType } from "type-graphql";
 import { v4 } from "uuid";
 import { Listing } from "../Listing/Listing";
 import { User } from "../User/User";
@@ -20,7 +20,6 @@ export class Booking {
     @ManyToOne(() => User, {primary: true})
     buyer: User
 
-    @Field(() => ID)
     @PrimaryKey({nullable: false})
     id: string = v4();
 
@@ -30,11 +29,23 @@ export class Booking {
     /**
      * types Not finalized yet
      */
-    startDate: string;
+    @Field()
+    @Property({columnType: "timestamptz"})
+    startDate: Date;
 
-    endDate: string;
+    @Field()
+    @Property({columnType: "timestamptz"})
+    endDate: Date;
 
-    paymentId: string;
+    @Field()
+    @Property({columnType: "timestamptz"})
+    paymentDate: Date;
 
-    paymentDate: string;
+
+    /**
+     * We will get this from stripe. This is how the payment info will be 
+     * saved in our db.
+     */
+    @Property()
+    paymentId: string
 }

@@ -1,4 +1,5 @@
 import { EntityManager } from "@mikro-orm/core";
+import { User } from "../entities/User/User";
 import { City } from "../entities/Geo/City";
 import { Country } from "../entities/Geo/Country";
 import { State } from "../entities/Geo/State";
@@ -6581,6 +6582,12 @@ const STATE_JSON = [
  */
 export async function seedDatabase(em: EntityManager) {
 
+    const user = new User("3f1f8783-8e27-473d-852e-90c94c4f270b", 
+    "munibrhmn@gmail.com")
+    user.first_name = "Munib"
+    user.last_name = "Rahman"
+    
+
     const country = new Country(1, "Canada", "CAD", "$")
 
 
@@ -6594,10 +6601,13 @@ export async function seedDatabase(em: EntityManager) {
 
     try {
         await em.findOneOrFail(Country, country);
+        await em.findOneOrFail(User, user);
         console.log("Data already exists in table. Skip.")
     } catch {
         console.log("Populate tables.")
-        await em.persistAndFlush(country);
+        await em.persist(country);
+        await em.persist(user);
+        await em.flush();
     }
 
 }

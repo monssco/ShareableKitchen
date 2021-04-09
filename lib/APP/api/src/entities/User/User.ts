@@ -1,7 +1,9 @@
 import {Field, ID, ObjectType} from 'type-graphql';
-import {Entity, OneToOne, PrimaryKey, Property} from '@mikro-orm/core';
-import { ProfileImage } from './ProfileImage';
+import {Cascade, Collection, Entity, OneToMany, OneToOne, PrimaryKey, Property} from '@mikro-orm/core';
+import { UserImage } from './UserImage';
 import { UserLocation } from './UserLocation';
+import { Booking } from '../Booking/Booking';
+import { Listing } from '../Listing/Listing';
 
 @ObjectType()
 @Entity()
@@ -26,9 +28,9 @@ export class User {
     /*
     https://mikro-orm.io/docs/relationships#onetoone
     */
-    @Field(()=> ProfileImage, {nullable: true})
-    @OneToOne(()=> ProfileImage, (image)=> image.user, {owner: true, nullable: true})
-    profile_image?: ProfileImage;
+    @Field(()=> UserImage, {nullable: true})
+    @OneToOne(()=> UserImage, (image)=> image.user, {owner: true, nullable: true})
+    profile_image?: UserImage;
 
     @Field(()=> UserLocation, {nullable: true})
     @OneToOne(()=> UserLocation, (image)=> image.user, {owner: true, nullable: true})
@@ -66,5 +68,12 @@ export class User {
 
     @Property({columnType: "boolean"})
     status = true
+
+
+    @OneToMany(()=> Listing, listing => listing.author, {nullable: true, cascade: [Cascade.ALL]})
+    listings = new Collection<Listing>(this);
+
+    @OneToMany(()=> Booking, booking => booking.buyer, {nullable: true, cascade: [Cascade.ALL]})
+    bookings = new Collection<Booking>(this);
 
 }

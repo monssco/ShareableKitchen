@@ -5,7 +5,7 @@ import { User } from "./User";
 
 @ObjectType({implements: Image})
 @Entity()
-export class ProfileImage extends Image {
+export class UserImage extends Image {
 
     // One user can only have one profile image
     @OneToOne(() => User, (user) => user.profile_image)

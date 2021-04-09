@@ -1,12 +1,13 @@
 import {Field, ID, ObjectType, registerEnumType, Int} from 'type-graphql';
-import {Entity, Enum, ManyToOne, OneToMany, OneToOne, PrimaryKey, Property} from '@mikro-orm/core';
+import {Cascade, Collection, Entity, Enum, ManyToOne, OneToMany, OneToOne, PrimaryKey, Property} from '@mikro-orm/core';
 import { ListingImage } from './ListingImage';
 import { ListingLocation } from './ListingLocation';
 import { User } from '../User/User';
 import {v4} from 'uuid';
 import { PropertyFeatures } from '../Enums/PropertyFeatures.enum';
 import { PropertyType } from '../Enums/PropertyType.enum'
-
+import { Booking } from '../Booking/Booking';
+import { Availability } from '../Availability';
 /**
  * A listing is a kitchen that has been posted for rent.
  * TODO: Add availability options such as a calendar or start-end date etc
@@ -31,7 +32,6 @@ export class Listing {
     @Property()
     description: string;
 
-
     @Field(() => [ListingImage], {nullable: true})
     @OneToMany(()=> ListingImage, (image) => image.listing, {nullable: true})
     photos?: ListingImage[]
@@ -48,13 +48,24 @@ export class Listing {
     @Property()
     sqFtArea: number
 
-    @Field(() => [PropertyFeatures])
+    @Field(() => [PropertyFeatures], {nullable: true})
     @Enum({items: () => PropertyFeatures, array: true, nullable: true})
     features?: PropertyFeatures[];
 
     @Field(() => PropertyType)
     @Enum({items: () => PropertyType})
     propertyType: PropertyType
+
+    @Field(()=> Availability)
+    @OneToOne(() => Availability, availability => availability.listing, {cascade: [Cascade.ALL]})
+    availability: Availability
+
+    /**
+     * A listing can have many bookings on it.
+     */
+    @Field(()=> [Booking], {nullable: true})
+    @OneToMany(() => Booking, booking => booking.listing, {nullable: true, cascade: [Cascade.ALL]})
+    bookings = new Collection<Booking>(this);
 
     @Property({columnType: "timestamptz"})
     published: Date = new Date();

@@ -4,7 +4,7 @@ import { UserImage } from './UserImage';
 import { UserLocation } from './UserLocation';
 import { Booking } from '../Booking/Booking';
 import { Listing } from '../Listing/Listing';
-// import { Conversation } from '../Messages/Conversation';
+import { Conversation } from '../Messages/Conversation';
 // import { Message } from '../Messages/Message';
 
 @ObjectType()
@@ -81,8 +81,8 @@ export class User {
     /**
      * One user is involved in many conversations.
      */
-    // @OneToMany(() => Conversation, convo => convo.author, {nullable: true, cascade: [Cascade.ALL]})
-    // conversations = new Collection<Conversation>(this);
+    @OneToMany(() => Conversation, convo => convo.buyer)
+    conversations = new Collection<Conversation>(this);
 
     // @OneToOne(()=> Message)
     // message: Message

@@ -8,7 +8,7 @@ import { PropertyFeatures } from '../Enums/PropertyFeatures.enum';
 import { PropertyType } from '../Enums/PropertyType.enum'
 import { Booking } from '../Booking/Booking';
 import { Availability } from '../Availability';
-// import { Conversation } from '../Messages/Conversation';
+import { Conversation } from '../Messages/Conversation';
 /**
  * A listing is a kitchen that has been posted for rent.
  * TODO: Add availability options such as a calendar or start-end date etc
@@ -93,8 +93,8 @@ export class Listing {
     @Property({columnType: "boolean"})
     status = true
 
-    // @OneToOne(()=>Conversation)
-    // conversation: Conversation
+    @OneToMany(()=>Conversation, convo => convo.listing)
+    conversation: Conversation
 
     constructor(title: string, description: string ) {
         this.title = title

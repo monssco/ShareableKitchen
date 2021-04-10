@@ -9,10 +9,13 @@ async function connectToDB() {
     */
     const orm = await MikroORM.init(microConfig);
 
-    /*
-    Run Migrations on the database.
-    */
-    await orm.getMigrator().up();
+    /**
+     * Create migrations, if they are required and then also go up on them.
+     */
+    if (process.env.NODE_ENV !== "production") {
+        await orm.getMigrator().createMigration();
+        await orm.getMigrator().up();
+    }
 
 
     /**

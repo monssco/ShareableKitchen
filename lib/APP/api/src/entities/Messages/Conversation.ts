@@ -5,9 +5,9 @@
  * 
  */
 
-import { Entity, Property } from "@mikro-orm/core";
-// import { Listing } from "../Listing/Listing";
-// import { User } from "../User/User";
+import { Entity, Property, ManyToOne, PrimaryKeyType } from "@mikro-orm/core";
+import { Listing } from "../Listing/Listing";
+import { User } from "../User/User";
 // import { Message } from "./Message";
 
 @Entity()
@@ -17,17 +17,20 @@ export class Conversation {
      * Conversation is always started by the buyer.
      * There should be a cleaner way to implement this...
      */
-    // @ManyToOne(()=> User, {primary: true})
-    // author: User
+    @ManyToOne(()=> User, { primary: true})
+    buyer: User
 
-    // @OneToOne(()=>Listing, listing => listing.conversation, {owner: true, orphanRemoval: true, cascade: [Cascade.ALL]})
-    // listing: Listing
+    @ManyToOne(()=> User, { primary: true})
+    seller: User
+
+    @ManyToOne(()=>Listing, {primary: true})
+    listing: Listing
 
     // @OneToMany(() => Message, message => message.conversation, { cascade: [Cascade.ALL], nullable: true })
     // messages = new Collection<Message>(this);
 
-    @Property({columnType: "timestamptz", primary: true})
+    @Property({columnType: "timestamptz"})
     created: Date = new Date();
 
-    // [PrimaryKeyType] : [string, string]
+    [PrimaryKeyType] : [string, string]
 }

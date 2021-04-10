@@ -1,6 +1,6 @@
 import { Migration } from '@mikro-orm/migrations';
 
-export class Migration20210410000242 extends Migration {
+export class Migration20210410002430 extends Migration {
 
   async up(): Promise<void> {
     this.addSql('create table "user_location" ("id" varchar(255) not null, "address" varchar(255) not null, "country" jsonb not null, "state" jsonb not null, "city" jsonb not null, "postal" varchar(255) not null);');
@@ -14,12 +14,6 @@ export class Migration20210410000242 extends Migration {
     this.addSql('alter table "user" add constraint "user_profile_image_id_unique" unique ("profile_image_id");');
     this.addSql('alter table "user" add constraint "user_location_id_unique" unique ("location_id");');
 
-    this.addSql('create table "message" ("content" varchar(255) not null);');
-    this.addSql('alter table "message" add constraint "message_pkey" primary key ("content");');
-
-    this.addSql('create table "conversation" ("created" timestamptz not null);');
-    this.addSql('alter table "conversation" add constraint "conversation_pkey" primary key ("created");');
-
     this.addSql('create table "country" ("id" serial primary key, "name" varchar(255) not null, "currency" varchar(255) not null, "currency_symbol" varchar(255) not null);');
 
     this.addSql('create table "state" ("country_id" int4 not null, "id" int4 not null, "name" varchar(255) not null);');
@@ -27,6 +21,9 @@ export class Migration20210410000242 extends Migration {
 
     this.addSql('create table "city" ("state_country_id" int4 not null, "state_id" int4 not null, "id" int4 not null, "name" varchar(255) not null);');
     this.addSql('alter table "city" add constraint "city_pkey" primary key ("state_country_id", "state_id", "id");');
+
+    this.addSql('create table "message" ("content" varchar(255) not null);');
+    this.addSql('alter table "message" add constraint "message_pkey" primary key ("content");');
 
     this.addSql('create table "listing_location" ("id" varchar(255) not null, "address" varchar(255) not null, "country" jsonb not null, "state" jsonb not null, "city" jsonb not null, "postal" varchar(255) not null);');
     this.addSql('alter table "listing_location" add constraint "listing_location_pkey" primary key ("id");');
@@ -37,6 +34,9 @@ export class Migration20210410000242 extends Migration {
 
     this.addSql('create table "listing_image" ("id" varchar(255) not null, "original_key" varchar(255) not null, "resized_medium" varchar(255) null, "resized_small" varchar(255) null, "resized_large" varchar(255) null, "listing_id" varchar(255) not null);');
     this.addSql('alter table "listing_image" add constraint "listing_image_pkey" primary key ("id");');
+
+    this.addSql('create table "conversation" ("author_id" varchar(255) not null, "listing_id" varchar(255) not null, "created" timestamptz not null);');
+    this.addSql('alter table "conversation" add constraint "conversation_pkey" primary key ("author_id", "listing_id");');
 
     this.addSql('create table "booking" ("listing_id" varchar(255) not null, "buyer_id" varchar(255) not null, "id" varchar(255) not null, "start_date" timestamptz not null, "end_date" timestamptz not null, "payment_date" timestamptz not null, "payment_id" varchar(255) not null);');
     this.addSql('alter table "booking" add constraint "booking_pkey" primary key ("listing_id", "buyer_id", "id");');
@@ -55,6 +55,9 @@ export class Migration20210410000242 extends Migration {
     this.addSql('alter table "listing" add constraint "listing_location_id_foreign" foreign key ("location_id") references "listing_location" ("id") on update cascade;');
 
     this.addSql('alter table "listing_image" add constraint "listing_image_listing_id_foreign" foreign key ("listing_id") references "listing" ("id") on update cascade;');
+
+    this.addSql('alter table "conversation" add constraint "conversation_author_id_foreign" foreign key ("author_id") references "user" ("id") on update cascade;');
+    this.addSql('alter table "conversation" add constraint "conversation_listing_id_foreign" foreign key ("listing_id") references "listing" ("id") on update cascade;');
 
     this.addSql('alter table "booking" add constraint "booking_listing_id_foreign" foreign key ("listing_id") references "listing" ("id") on update cascade;');
     this.addSql('alter table "booking" add constraint "booking_buyer_id_foreign" foreign key ("buyer_id") references "user" ("id") on update cascade;');

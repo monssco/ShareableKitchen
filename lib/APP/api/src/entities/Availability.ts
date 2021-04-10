@@ -12,7 +12,7 @@ import { Listing } from "./Listing/Listing";
 @Entity()
 export class Availability {
 
-    @OneToOne(()=> Listing, listing => listing.availability, {primary: true})
+    @OneToOne(()=> Listing, listing => listing.availability, {owner: true, orphanRemoval: true, primary: true})
     listing: Listing
 
     @Field()

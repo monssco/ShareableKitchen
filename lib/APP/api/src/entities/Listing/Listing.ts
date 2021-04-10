@@ -8,6 +8,7 @@ import { PropertyFeatures } from '../Enums/PropertyFeatures.enum';
 import { PropertyType } from '../Enums/PropertyType.enum'
 import { Booking } from '../Booking/Booking';
 import { Availability } from '../Availability';
+// import { Conversation } from '../Messages/Conversation';
 /**
  * A listing is a kitchen that has been posted for rent.
  * TODO: Add availability options such as a calendar or start-end date etc
@@ -60,7 +61,7 @@ export class Listing {
      * A listing has 1 availability schedule.
      */
     @Field(()=> Availability)
-    @OneToOne(() => Availability, availability => availability.listing, {owner: true, cascade: [Cascade.ALL]})
+    @OneToOne(() => Availability, availability => availability.listing)
     availability: Availability
 
     /**
@@ -91,6 +92,9 @@ export class Listing {
 
     @Property({columnType: "boolean"})
     status = true
+
+    // @OneToOne(()=>Conversation)
+    // conversation: Conversation
 
     constructor(title: string, description: string ) {
         this.title = title

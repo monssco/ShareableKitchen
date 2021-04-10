@@ -3,7 +3,7 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
-type UserImage implements Image {
+type ListingImage implements Image {
   original_key: String!
   resized_medium: String!
   resized_small: String!
@@ -27,22 +27,6 @@ type CityType {
   name: String!
 }
 
-type UserLocation implements Location {
-  id: String!
-  address: String!
-  country: CountryType!
-  state: StateType!
-  city: CityType!
-  postal: String!
-}
-
-type ListingImage implements Image {
-  original_key: String!
-  resized_medium: String!
-  resized_small: String!
-  resized_large: String!
-}
-
 type ListingLocation implements Location {
   id: String!
   address: String!
@@ -52,13 +36,42 @@ type ListingLocation implements Location {
   postal: String!
 }
 
-type Availability {
+type UserImage implements Image {
+  original_key: String!
+  resized_medium: String!
+  resized_small: String!
+  resized_large: String!
+}
+
+type UserLocation implements Location {
+  id: String!
+  address: String!
+  country: CountryType!
+  state: StateType!
+  city: CityType!
+  postal: String!
+}
+
+type Booking {
   startDate: DateTime!
   endDate: DateTime!
+  paymentDate: DateTime!
 }
 
 # The javascript `Date` as string. Type represents date and time as the ISO Date string.
 scalar DateTime
+
+type User {
+  id: ID!
+  email: String!
+  profile_image: UserImage
+  location: UserLocation
+  first_name: String
+  last_name: String
+  date_of_birth: DateTime
+  stripe_customer_id: String!
+  stripe_account_id: String
+}
 
 type Listing {
   id: ID!
@@ -103,22 +116,9 @@ enum PropertyType {
   restaurant
 }
 
-type Booking {
+type Availability {
   startDate: DateTime!
   endDate: DateTime!
-  paymentDate: DateTime!
-}
-
-type User {
-  id: ID!
-  email: String!
-  profile_image: UserImage
-  location: UserLocation
-  first_name: String
-  last_name: String
-  date_of_birth: DateTime
-  stripe_customer_id: String!
-  stripe_account_id: String
 }
 
 interface Image {

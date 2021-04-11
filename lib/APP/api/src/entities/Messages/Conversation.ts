@@ -5,10 +5,10 @@
  * 
  */
 
-import { Entity, Property, ManyToOne, PrimaryKeyType } from "@mikro-orm/core";
+import { Entity, Property, ManyToOne, PrimaryKeyType, OneToMany, Collection, Cascade } from "@mikro-orm/core";
 import { Listing } from "../Listing/Listing";
 import { User } from "../User/User";
-// import { Message } from "./Message";
+import { Message } from "./Message";
 
 @Entity()
 export class Conversation {
@@ -26,11 +26,11 @@ export class Conversation {
     @ManyToOne(()=>Listing, {primary: true})
     listing: Listing
 
-    // @OneToMany(() => Message, message => message.conversation, { cascade: [Cascade.ALL], nullable: true })
-    // messages = new Collection<Message>(this);
+    @OneToMany(() => Message, message => message.conversation, { cascade: [Cascade.ALL], nullable: true })
+    messages = new Collection<Message>(this);
 
     @Property({columnType: "timestamptz"})
     created: Date = new Date();
 
-    [PrimaryKeyType] : [string, string]
+    [PrimaryKeyType] : [string, string, string]
 }

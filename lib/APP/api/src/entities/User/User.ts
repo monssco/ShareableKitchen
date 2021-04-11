@@ -5,6 +5,7 @@ import { UserLocation } from './UserLocation';
 import { Booking } from '../Booking/Booking';
 import { Listing } from '../Listing/Listing';
 import { Conversation } from '../Messages/Conversation';
+import { Message } from '../Messages/Message';
 // import { Message } from '../Messages/Message';
 
 @ObjectType()
@@ -84,7 +85,7 @@ export class User {
     @OneToMany(() => Conversation, convo => convo.buyer)
     conversations = new Collection<Conversation>(this);
 
-    // @OneToOne(()=> Message)
-    // message: Message
+    @OneToMany(()=> Message, message => message.author)
+    message = new Collection<Message>(this);
 
 }

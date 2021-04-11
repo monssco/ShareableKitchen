@@ -55,6 +55,7 @@ type UserLocation implements Location {
 type Booking {
   startDate: DateTime!
   endDate: DateTime!
+  created: DateTime!
   paymentDate: DateTime!
 }
 

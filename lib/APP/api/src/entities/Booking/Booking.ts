@@ -39,6 +39,10 @@ export class Booking {
 
     @Field()
     @Property({columnType: "timestamptz"})
+    created: Date = new Date();
+
+    @Field()
+    @Property({columnType: "timestamptz"})
     paymentDate: Date;
 
 

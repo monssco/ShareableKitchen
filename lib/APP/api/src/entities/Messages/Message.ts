@@ -5,25 +5,27 @@
  * A message has sent time.
  */
 
-import { Entity, PrimaryKey } from "@mikro-orm/core";
-// import { Entity, ManyToOne, OneToOne, PrimaryKeyType, Property } from "@mikro-orm/core";
-// import { User } from "../User/User";
-// import { Conversation } from "./Conversation";
+import { Entity, ManyToOne, PrimaryKey, Property } from "@mikro-orm/core";
+import { v4 } from "uuid";
+import { Conversation } from "./Conversation";
+import { User } from "../User/User";
 
 @Entity()
 export class Message {
 
-    // @OneToOne(()=> User, user => user.message, {primary: true})
-    // author: User
-
-    // @ManyToOne(()=> Conversation, {primary: true})
-    // conversation: Conversation
-
     @PrimaryKey({nullable: false})
+    id: string = v4();
+
+    @ManyToOne(()=> Conversation)
+    conversation: Conversation
+
+    @ManyToOne(()=> User)
+    author: User
+
+    @Property()
     content: string
 
-    // @Property({columnType: "timestamptz"})
-    // created: Date = new Date();
+    @Property({columnType: "timestamptz"})
+    created: Date = new Date();
 
-    // [PrimaryKeyType] : [string, string]
 }

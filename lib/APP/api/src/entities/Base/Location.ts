@@ -18,6 +18,13 @@ export class Location {
     @Property()
     address!: string
 
+    /**
+     * Crazy idea, what if you turn these into pk from the country
+     * state and city tables?
+     * Then you can search over these values as well. I think it will be pretty cool.
+     * Check to see if OnetoOne is possible in this.
+     * https://mikro-orm.io/docs/inheritance-mapping/
+     */
     @Field(() => Country, {nullable: false})
     @Property({nullable: false})
     country!: Country;

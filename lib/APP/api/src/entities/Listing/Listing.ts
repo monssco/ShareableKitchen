@@ -11,18 +11,18 @@ import { Availability } from '../Availability';
 import { Conversation } from '../Messages/Conversation';
 /**
  * A listing is a kitchen that has been posted for rent.
- * TODO: Add availability options such as a calendar or start-end date etc
+ * 
  */
 
 @ObjectType()
 @Entity()
 export class Listing {
     @Field(() => ID)
-    @PrimaryKey({nullable: false})
+    @PrimaryKey()
     id: string = v4();
 
     @Field(() => User)
-    @ManyToOne(() => User, {nullable: false})
+    @ManyToOne(() => User)
     author!: User;
 
     @Field()
@@ -33,12 +33,23 @@ export class Listing {
     @Property()
     description: string;
 
+    /**
+     * A listing has 1 availability schedule.
+     */
+    @Field(()=> Availability)
+    @OneToOne(() => Availability, availability => availability.listing)
+    availability: Availability
+
     @Field(() => [ListingImage], {nullable: true})
     @OneToMany(()=> ListingImage, (image) => image.listing, {nullable: true})
     photos?: ListingImage[]
 
-    @Field(()=> ListingLocation)
-    @OneToOne(()=> ListingLocation, (location) => location.listing, {owner: true})
+    /**
+     * Keeping this nullable for now, until I can move it over to
+     * just simple city.
+     */
+    @Field(()=> ListingLocation, {nullable: true})
+    @OneToOne(()=> ListingLocation, (location) => location.listing, {owner: true, nullable: true})
     location: ListingLocation;
 
     @Field(() => Int)
@@ -53,16 +64,9 @@ export class Listing {
     @Enum({items: () => PropertyFeatures, array: true, nullable: true})
     features?: PropertyFeatures[];
 
-    @Field(() => PropertyType)
-    @Enum({items: () => PropertyType})
+    @Field(() => PropertyType, {nullable: true})
+    @Enum({items: () => PropertyType, nullable: true})
     propertyType: PropertyType
-
-    /**
-     * A listing has 1 availability schedule.
-     */
-    @Field(()=> Availability)
-    @OneToOne(() => Availability, availability => availability.listing)
-    availability: Availability
 
     /**
      * A listing can have many bookings on it.
@@ -76,7 +80,7 @@ export class Listing {
      * If the listing is still a draft, this will be true.
      */
     @Field()
-    @Property({nullable: false})
+    @Property()
     draft: boolean
 
     @Property({columnType: "timestamptz"})

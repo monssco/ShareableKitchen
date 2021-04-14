@@ -5,10 +5,11 @@
  */
 
 import { Entity, OneToOne, PrimaryKeyType, Property } from "@mikro-orm/core";
-import { Field, ObjectType } from "type-graphql";
+import { Field, InputType, ObjectType } from "type-graphql";
 import { Listing } from "./Listing/Listing";
 
-@ObjectType()
+@InputType("AvailabilityInput")
+@ObjectType("AvailabilityObject")
 @Entity()
 export class Availability {
 

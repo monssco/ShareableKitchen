@@ -1,8 +1,11 @@
 import { Migration } from '@mikro-orm/migrations';
 
-export class Migration20210411015245 extends Migration {
+export class Migration20210414191138 extends Migration {
 
   async up(): Promise<void> {
+    this.addSql('create table "listing_location" ("id" varchar(255) not null, "address" varchar(255) not null, "country" jsonb not null, "state" jsonb not null, "city" jsonb not null, "postal" varchar(255) not null);');
+    this.addSql('alter table "listing_location" add constraint "listing_location_pkey" primary key ("id");');
+
     this.addSql('create table "user_location" ("id" varchar(255) not null, "address" varchar(255) not null, "country" jsonb not null, "state" jsonb not null, "city" jsonb not null, "postal" varchar(255) not null);');
     this.addSql('alter table "user_location" add constraint "user_location_pkey" primary key ("id");');
 
@@ -14,10 +17,7 @@ export class Migration20210411015245 extends Migration {
     this.addSql('alter table "user" add constraint "user_profile_image_id_unique" unique ("profile_image_id");');
     this.addSql('alter table "user" add constraint "user_location_id_unique" unique ("location_id");');
 
-    this.addSql('create table "listing_location" ("id" varchar(255) not null, "address" varchar(255) not null, "country" jsonb not null, "state" jsonb not null, "city" jsonb not null, "postal" varchar(255) not null);');
-    this.addSql('alter table "listing_location" add constraint "listing_location_pkey" primary key ("id");');
-
-    this.addSql('create table "listing" ("id" varchar(255) not null, "author_id" varchar(255) not null, "title" varchar(255) not null, "description" varchar(255) not null, "location_id" varchar(255) not null, "price" int4 not null, "sq_ft_area" int4 not null, "features" text[] null, "property_type" text check ("property_type" in (\'Cafe\', \'Church\', \'Commercial Kitchen\', \'Community Center\', \'Restaurant\')) not null, "draft" bool not null, "published" timestamptz not null, "created" timestamptz not null, "modified" timestamptz not null, "status" boolean not null);');
+    this.addSql('create table "listing" ("id" varchar(255) not null, "author_id" varchar(255) not null, "title" varchar(255) not null, "description" varchar(255) not null, "location_id" varchar(255) null, "price" int4 not null, "sq_ft_area" int4 not null, "features" text[] null, "property_type" text check ("property_type" in (\'Cafe\', \'Church\', \'Commercial Kitchen\', \'Community Center\', \'Restaurant\')) null, "draft" bool not null, "published" timestamptz not null, "created" timestamptz not null, "modified" timestamptz not null, "status" boolean not null);');
     this.addSql('alter table "listing" add constraint "listing_pkey" primary key ("id");');
     this.addSql('alter table "listing" add constraint "listing_location_id_unique" unique ("location_id");');
 
@@ -48,7 +48,7 @@ export class Migration20210411015245 extends Migration {
     this.addSql('alter table "user" add constraint "user_location_id_foreign" foreign key ("location_id") references "user_location" ("id") on update cascade on delete set null;');
 
     this.addSql('alter table "listing" add constraint "listing_author_id_foreign" foreign key ("author_id") references "user" ("id") on update cascade;');
-    this.addSql('alter table "listing" add constraint "listing_location_id_foreign" foreign key ("location_id") references "listing_location" ("id") on update cascade;');
+    this.addSql('alter table "listing" add constraint "listing_location_id_foreign" foreign key ("location_id") references "listing_location" ("id") on update cascade on delete set null;');
 
     this.addSql('alter table "listing_image" add constraint "listing_image_listing_id_foreign" foreign key ("listing_id") references "listing" ("id") on update cascade;');
 

@@ -2,39 +2,36 @@ import { Listing } from "../../entities/Listing/Listing";
 import { MyContext } from "src/types";
 import { Arg, Ctx, Field, InputType, Int, Mutation, Resolver } from "type-graphql";
 import { User } from "../../entities/User/User";
-import { ListingLocation } from "../../entities/Listing/ListingLocation";
 import { PropertyFeatures } from "../../entities/Enums/PropertyFeatures.enum";
 import { PropertyType } from "../../entities/Enums/PropertyType.enum";
-import { City } from "../../entities/Geo/City";
-import { State } from "../../entities/Geo/State";
-import { Country } from "../../entities/Geo/Country";
+import { Availability } from "../../entities/Availability";
 
 @InputType()
-class ListingLocationInput implements Partial<ListingLocation> {
+class ListingLocationInput {
 
     @Field()
     address: string
 
-    @Field(() => City)
-    city: City
+    @Field()
+    cityId: number
 
-    @Field(() => State, {nullable: false})
-    state: State
+    @Field()
+    stateId: number
 
-    @Field(() => Country, {nullable: false})
-    country: Country
+    @Field()
+    countryId: number
 }
 
 @InputType()
 class CreateListingInput implements Partial<Listing> {
 
-    @Field({nullable: false})
+    @Field()
     title!: string
 
-    @Field({nullable: false})
+    @Field()
     description!: string
 
-    @Field(() => Int, {nullable: false})
+    @Field(() => Int)
     price!: number
 
     @Field(() => Int)
@@ -43,11 +40,14 @@ class CreateListingInput implements Partial<Listing> {
     @Field(() => [PropertyFeatures])
     features: PropertyFeatures[]
 
-    @Field(() => PropertyType, {nullable: false})
+    @Field(() => PropertyType)
     propertyType: PropertyType
 
-    @Field(() => ListingLocationInput, {nullable: false})
+    @Field(() => ListingLocationInput, {nullable: true})
     listingLocation: ListingLocationInput
+
+    @Field(() => Availability)
+    availability: Availability
 
 }
 
@@ -66,17 +66,21 @@ export class CreateListingResolver {
             newListing.features = input.features
             newListing.propertyType = input.propertyType
 
-            const location = new ListingLocation()
-            location.address = input.listingLocation.address
-            location.city = input.listingLocation.city
-            location.country = input.listingLocation.country
-            location.state = input.listingLocation.state
+            newListing.availability = input.availability
+
+            // const location = new ListingLocation()
+            // location.address = input.listingLocation.address
+            // location.city = input.listingLocation.city
+            // location.country = input.listingLocation.country
+            // location.state = input.listingLocation.state
             
 
-            location.listing = newListing
+            // location.listing = newListing
+
+            newListing.draft = false
 
             
-            // await em.persistAndFlush(newListing);
+            await em.persistAndFlush(newListing);
             return newListing
     }
 }

@@ -79,13 +79,13 @@ type Listing {
   author: User!
   title: String!
   description: String!
+  availability: AvailabilityObject!
   photos: [ListingImage!]
-  location: ListingLocation!
+  location: ListingLocation
   price: Int!
   sqFtArea: Int!
   features: [PropertyFeatures!]
-  propertyType: PropertyType!
-  availability: Availability!
+  propertyType: PropertyType
   bookings: [Booking!]
   draft: Boolean!
 }
@@ -117,7 +117,7 @@ enum PropertyType {
   restaurant
 }
 
-type Availability {
+type AvailabilityObject {
   startDate: DateTime!
   endDate: DateTime!
 }
@@ -155,11 +155,16 @@ input CityInput {
   name: String!
 }
 
+input AvailabilityInput {
+  startDate: DateTime!
+  endDate: DateTime!
+}
+
 input ListingLocationInput {
   address: String!
-  city: CityInput!
-  state: StateInput!
-  country: CountryInput!
+  cityId: Float!
+  stateId: Float!
+  countryId: Float!
 }
 
 input CreateListingInput {
@@ -169,12 +174,8 @@ input CreateListingInput {
   sqFtArea: Int!
   features: [PropertyFeatures!]!
   propertyType: PropertyType!
-  listingLocation: ListingLocationInput!
-}
-
-input ListingsInput {
-  first: Int!
-  limit: Int!
+  listingLocation: ListingLocationInput
+  availability: AvailabilityInput!
 }
 
 input RegisterUserInput {
@@ -193,7 +194,7 @@ input UpdateUserInput {
 
 type Query {
   getCountries: [CountryType!]!
-  myListings(input: ListingsInput!): [Listing!]!
+  myListings: [Listing!]!
   me: User
 }
 

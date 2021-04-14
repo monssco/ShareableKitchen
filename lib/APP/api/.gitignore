@@ -25,4 +25,4 @@ node_modules/
 .DS_Store
 
 # Migrations should be ommitted
-src/orm/migrations
+src/orm/migrations/*

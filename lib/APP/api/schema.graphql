@@ -178,6 +178,17 @@ input CreateListingInput {
   availability: AvailabilityInput!
 }
 
+input EditMyListingInput {
+  id: String!
+  title: String
+  description: String
+  availability: AvailabilityInput
+  price: Int
+  sqFtArea: Int
+  features: [PropertyFeatures!]
+  propertyType: PropertyType
+}
+
 input RegisterUserInput {
   id: ID!
   email: String!
@@ -200,6 +211,10 @@ type Query {
 
 type Mutation {
   createListing(input: CreateListingInput!): Listing!
+  editMyListing(
+    # Required input for editing your own listing
+    input: EditMyListingInput!
+  ): Listing!
   registerUser(user: RegisterUserInput!): User!
   updateUser(user: UpdateUserInput!): User!
 }

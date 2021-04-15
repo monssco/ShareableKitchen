@@ -95,7 +95,7 @@ export class Listing {
     modified: Date = new Date();
 
     @Property({columnType: "boolean"})
-    status = true
+    active = true
 
     @OneToMany(()=>Conversation, convo => convo.listing)
     conversation: Conversation

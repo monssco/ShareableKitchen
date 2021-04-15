@@ -50,7 +50,7 @@ export class MyListingResolver {
          * TODO: Add arguments for pagination of listings.
          */
         const dbUser = await em.findOneOrFail(User, {id: user?.sub})
-        const listings = await em.find(Listing, {author: dbUser})
+        const listings = await em.find(Listing, {author: dbUser, active: true})
         return listings
     }
 
@@ -114,7 +114,22 @@ export class MyListingResolver {
 
     }
 
-    
+    @Mutation(() => Boolean)
+    async deleteMyListing(
+        @Arg("id") id: string,
+        @Ctx() {em, user}: MyContext
+    ) {
+        const dbUser = await em.findOneOrFail(User, {id: user?.sub})
+        const listing = await em.findOneOrFail(Listing, {id: id})
+        if (listing.author != dbUser) {
+            throw Error('Not your listing >:(')
+        }
+        listing.active = false
+
+        await em.persistAndFlush(listing)
+
+        return true
+    }
 }
 
 /**

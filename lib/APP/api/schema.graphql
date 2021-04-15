@@ -215,6 +215,7 @@ type Mutation {
     # Required input for editing your own listing
     input: EditMyListingInput!
   ): Listing!
+  deleteMyListing(id: String!): Boolean!
   registerUser(user: RegisterUserInput!): User!
   updateUser(user: UpdateUserInput!): User!
 }

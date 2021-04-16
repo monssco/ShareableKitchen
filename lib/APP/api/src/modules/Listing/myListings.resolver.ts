@@ -88,7 +88,8 @@ export class MyListingResolver {
         }
 
         if (input.availability) {
-            listing.availability = input.availability
+            listing.availability.startDate = input.availability.startDate
+            listing.availability.endDate = input.availability.endDate
         }
 
         if (input.price) {

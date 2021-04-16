@@ -1,4 +1,4 @@
-import {Field, InputType, ObjectType} from 'type-graphql';
+import {Field, InputType, Int, ObjectType} from 'type-graphql';
 import {Entity, ManyToOne, PrimaryKey, PrimaryKeyType, Property} from '@mikro-orm/core';
 import { State } from './State';
 
@@ -15,6 +15,7 @@ export class City {
     @ManyToOne(()=> State, {primary: true})
     state!: State
 
+    @Field(() => Int)
     @PrimaryKey()
     id!: number;
 
@@ -24,8 +25,9 @@ export class City {
 
     [PrimaryKeyType]: [number, number, number];
 
-    constructor(id: number, name: string ) {
+    constructor(id: number, name: string, state: State ) {
         this.id = id
         this.name = name
+        this.state = state
     }
 }

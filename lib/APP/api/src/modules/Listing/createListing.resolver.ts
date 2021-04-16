@@ -5,9 +5,10 @@ import { User } from "../../entities/User/User";
 import { PropertyFeatures } from "../../entities/Enums/PropertyFeatures.enum";
 import { PropertyType } from "../../entities/Enums/PropertyType.enum";
 import { Availability } from "../../entities/Availability";
+import { City } from "../../entities/Geo/City";
 
 @InputType()
-class ListingLocationInput {
+class LocationInput {
 
     @Field()
     address: string
@@ -43,8 +44,8 @@ class CreateListingInput implements Partial<Listing> {
     @Field(() => PropertyType)
     propertyType: PropertyType
 
-    @Field(() => ListingLocationInput, {nullable: true})
-    listingLocation: ListingLocationInput
+    @Field(() => LocationInput)
+    locationInput: LocationInput
 
     @Field(() => Availability)
     availability: Availability
@@ -59,27 +60,26 @@ export class CreateListingResolver {
         @Ctx() {em, user}: MyContext): Promise<Listing> {
             const dbUser = await em.findOneOrFail(User, {id: user?.sub})
 
-            const newListing = new Listing(input.title, input.description)
-            newListing.author = dbUser
+            const city = await em.findOneOrFail(City, {id: input.locationInput.cityId, state: {id: input.locationInput.stateId, country: input.locationInput.countryId}})
+            console.log(city);
+
+            
+
+            const availability = new Availability(input.availability.startDate, input.availability.endDate)
+            const newListing = new Listing(dbUser, input.title, input.description, availability, input.locationInput.address)
+
+            // newListing.city = city
+            // newListing.city.state = city.state
+            // newListing.city.state.country = city.state.country
             newListing.price = input.price
             newListing.sqFtArea = input.sqFtArea
             newListing.features = input.features
             newListing.propertyType = input.propertyType
 
-            newListing.availability = input.availability
-
-            // const location = new ListingLocation()
-            // location.address = input.listingLocation.address
-            // location.city = input.listingLocation.city
-            // location.country = input.listingLocation.country
-            // location.state = input.listingLocation.state
-            
-
-            // location.listing = newListing
 
             newListing.draft = false
+            newListing.active = true
 
-            
             await em.persistAndFlush(newListing);
             return newListing
     }

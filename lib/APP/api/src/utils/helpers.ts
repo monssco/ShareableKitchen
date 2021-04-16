@@ -6594,7 +6594,7 @@ export async function seedDatabase(em: EntityManager) {
     STATE_JSON.forEach(state => {
         let newState = new State(state.id, state.name, country)
         state.cities.forEach(city => {
-            newState.cities.add(new City(city.id, city.name))
+            newState.cities.add(new City(city.id, city.name, newState))
         })
         country.states.add(newState)
     })

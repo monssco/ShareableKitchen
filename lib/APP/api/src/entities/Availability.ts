@@ -26,4 +26,8 @@ export class Availability {
 
     [PrimaryKeyType] : string;
 
+    constructor(startDate: Date, endDate: Date ) {
+        this.startDate = startDate
+        this.endDate = endDate
+    }
 }

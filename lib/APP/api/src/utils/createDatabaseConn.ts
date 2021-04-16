@@ -13,7 +13,7 @@ async function connectToDB() {
      * Create migrations, if they are required and then also go up on them.
      */
     if (process.env.NODE_ENV !== "production") {
-        // await orm.getMigrator().createMigration();
+        await orm.getMigrator().createMigration();
         await orm.getMigrator().up();
     }
 

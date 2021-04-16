@@ -1,4 +1,4 @@
-import {Field, InputType, ObjectType} from 'type-graphql';
+import {Field, InputType, Int, ObjectType} from 'type-graphql';
 import {Cascade, Collection, Entity, ManyToOne, OneToMany, PrimaryKey, PrimaryKeyType, Property} from '@mikro-orm/core';
 import { Country } from './Country';
 import { City } from './City';
@@ -16,6 +16,7 @@ export class State {
     @ManyToOne(() => Country, {primary: true})
     country!: Country;
 
+    @Field(() => Int)
     @PrimaryKey()
     id!: number;
 

@@ -1,11 +1,11 @@
 import {Field, ID, ObjectType} from 'type-graphql';
-import {Cascade, Collection, Entity, OneToMany, OneToOne, PrimaryKey, Property} from '@mikro-orm/core';
+import {Cascade, Collection, Entity, ManyToOne, OneToMany, OneToOne, PrimaryKey, Property} from '@mikro-orm/core';
 import { UserImage } from './UserImage';
-import { UserLocation } from './UserLocation';
 import { Booking } from '../Booking/Booking';
 import { Listing } from '../Listing/Listing';
 import { Conversation } from '../Messages/Conversation';
 import { Message } from '../Messages/Message';
+import { City } from '../Geo/City';
 
 // import { Message } from '../Messages/Message';
 
@@ -18,14 +18,14 @@ export class User {
         this.email = email
     }
 
-    @Field(() => ID, {nullable: false})
+    @Field(() => ID)
     @PrimaryKey()
     id!: string;
 
     /*
     A user is not allowed to update their email after sign up.
     */
-    @Field({nullable: false})
+    @Field()
     @Property()
     email!: string;
 
@@ -35,10 +35,6 @@ export class User {
     @Field(()=> UserImage, {nullable: true})
     @OneToOne(()=> UserImage, (image)=> image.user, {owner: true, nullable: true})
     profile_image?: UserImage;
-
-    @Field(()=> UserLocation, {nullable: true})
-    @OneToOne(()=> UserLocation, (image)=> image.user, {owner: true, nullable: true})
-    location?: UserLocation;
 
     @Field({nullable: true})
     @Property({nullable: true})
@@ -52,7 +48,32 @@ export class User {
     @Property({columnType: "date", nullable: true})
     date_of_birth?: Date;
 
-    // Stripe related ids
+    /**
+     * Location related fields
+     */
+    @Field({nullable: true})
+    @Property({nullable: true})
+    address?: string
+
+    @Field(() => City, {nullable: true})
+    @ManyToOne(() => City, {nullable: true})
+    city?: City;
+
+    /**
+     * This is a hack solution for now.
+     * Track this issue on github:
+     * https://github.com/mikro-orm/mikro-orm/issues/1687
+     */
+    @Property({name: 'city_id', nullable: true})
+    city_id?: number
+
+    @Field({nullable: true})
+    @Property({nullable: true})
+    postal?: string;
+
+    /**
+     * Stripe related fields.
+     */
     @Field()
     @Property({nullable: true})
     stripe_customer_id?: string

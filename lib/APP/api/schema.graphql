@@ -10,46 +10,11 @@ type UserImage implements Image {
   resized_large: String!
 }
 
-type CountryType {
-  id: ID!
-  name: String!
-  currency: String!
-  currencySymbol: String!
-  states: [StateType!]
-}
-
-type StateType {
-  name: String!
-  cities: [CityType!]
-}
-
-type CityType {
-  name: String!
-}
-
-type UserLocation implements Location {
-  id: String!
-  address: String!
-  country: CountryType!
-  state: StateType!
-  city: CityType!
-  postal: String
-}
-
 type ListingImage implements Image {
   original_key: String!
   resized_medium: String!
   resized_small: String!
   resized_large: String!
-}
-
-type ListingLocation implements Location {
-  id: String!
-  address: String!
-  country: CountryType!
-  state: StateType!
-  city: CityType!
-  postal: String
 }
 
 type AvailabilityObject {
@@ -60,6 +25,25 @@ type AvailabilityObject {
 # The javascript `Date` as string. Type represents date and time as the ISO Date string.
 scalar DateTime
 
+type CountryType {
+  id: ID!
+  name: String!
+  currency: String!
+  currencySymbol: String!
+  states: [StateType!]
+}
+
+type StateType {
+  id: Int!
+  name: String!
+  cities: [CityType!]
+}
+
+type CityType {
+  id: Int!
+  name: String!
+}
+
 type Listing {
   id: ID!
   author: User!
@@ -67,7 +51,9 @@ type Listing {
   description: String!
   availability: AvailabilityObject!
   photos: [ListingImage!]
-  location: ListingLocation
+  address: String!
+  city: CityType
+  postal: String
   price: Int!
   sqFtArea: Int!
   features: [PropertyFeatures!]
@@ -114,10 +100,12 @@ type User {
   id: ID!
   email: String!
   profile_image: UserImage
-  location: UserLocation
   first_name: String
   last_name: String
   date_of_birth: DateTime
+  address: String
+  city: CityType
+  postal: String
   stripe_customer_id: String!
   stripe_account_id: String
 }
@@ -130,12 +118,14 @@ interface Image {
 }
 
 interface Location {
-  id: String!
   address: String!
-  country: CountryType!
-  state: StateType!
   city: CityType!
   postal: String
+}
+
+input AvailabilityInput {
+  startDate: DateTime!
+  endDate: DateTime!
 }
 
 input CountryInput {
@@ -147,20 +137,17 @@ input CountryInput {
 }
 
 input StateInput {
+  id: Int!
   name: String!
   cities: [CityInput!] = []
 }
 
 input CityInput {
+  id: Int!
   name: String!
 }
 
-input AvailabilityInput {
-  startDate: DateTime!
-  endDate: DateTime!
-}
-
-input ListingLocationInput {
+input LocationInput {
   address: String!
   cityId: Float!
   stateId: Float!
@@ -174,7 +161,7 @@ input CreateListingInput {
   sqFtArea: Int!
   features: [PropertyFeatures!]!
   propertyType: PropertyType!
-  listingLocation: ListingLocationInput
+  locationInput: LocationInput!
   availability: AvailabilityInput!
 }
 

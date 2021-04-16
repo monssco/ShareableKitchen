@@ -1,4 +1,4 @@
-import { PrimaryKey, Property } from "@mikro-orm/core";
+import { ManyToOne, PrimaryKey, Property } from "@mikro-orm/core";
 import { Field, InterfaceType } from "type-graphql";
 import { City } from "../Geo/City";
 import { Country } from "../Geo/Country";
@@ -10,11 +10,11 @@ import { State } from "../Geo/State";
 @InterfaceType()
 export class Location {
 
-    @Field({nullable: false})
+    @Field()
     @PrimaryKey()
     id!: string;
 
-    @Field({nullable: false})
+    @Field()
     @Property()
     address!: string
 
@@ -25,19 +25,19 @@ export class Location {
      * Check to see if OnetoOne is possible in this.
      * https://mikro-orm.io/docs/inheritance-mapping/
      */
-    @Field(() => Country, {nullable: false})
-    @Property({nullable: false})
+    @Field(() => Country)
+    @ManyToOne(() => Country)
     country!: Country;
 
-    @Field(() => State, {nullable: false})
-    @Property({nullable: false})
+    @Field(() => State)
+    @ManyToOne(() => State)
     state!: State;
 
-    @Field(() => City, {nullable: false})
-    @Property({nullable: false})
+    @Field(() => City)
+    @ManyToOne(() => City)
     city!: City;
 
-    @Field()
-    @Property()
+    @Field({nullable: true})
+    @Property({nullable: true})
     postal?: string;
 }

@@ -15,11 +15,11 @@ export class City {
     @ManyToOne(()=> State, {primary: true})
     state!: State
 
-    @PrimaryKey({nullable: false})
+    @PrimaryKey()
     id!: number;
 
     @Field()
-    @Property({nullable: false})
+    @Property()
     name!: string;
 
     [PrimaryKeyType]: [number, number, number];

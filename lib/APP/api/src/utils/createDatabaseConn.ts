@@ -1,6 +1,6 @@
 import { MikroORM } from '@mikro-orm/core';
 import microConfig from '../../mikro-orm.config';
-// import { seedDatabase } from './helpers';
+import { seedDatabase } from './helpers';
 
 async function connectToDB() {
 
@@ -13,7 +13,7 @@ async function connectToDB() {
      * Create migrations, if they are required and then also go up on them.
      */
     if (process.env.NODE_ENV !== "production") {
-        await orm.getMigrator().createMigration();
+        // await orm.getMigrator().createMigration();
         await orm.getMigrator().up();
     }
 
@@ -21,7 +21,7 @@ async function connectToDB() {
     /**
      * Seed the database with info that is required.
      */
-    // await seedDatabase(orm.em);
+    await seedDatabase(orm.em);
 
     return orm
 }

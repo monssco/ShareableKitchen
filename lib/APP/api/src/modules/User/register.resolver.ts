@@ -1,6 +1,7 @@
 import { User } from "../../entities/User/User";
 import { MyContext } from "src/types";
 import { Arg, Ctx, Field, ID, InputType, Mutation, Resolver } from "type-graphql";
+import { City } from "../../entities/Geo/City";
 
 @InputType()
 class RegisterUserInput implements Partial<User> {
@@ -30,6 +31,9 @@ export class RegisterResolver {
         newUser.first_name = user.first_name
         newUser.last_name = user.last_name
         newUser.date_of_birth = user.date_of_birth
+
+        const city = await em.findOneOrFail(City, {id: 16152})
+        newUser.city = city
         await em.persistAndFlush(newUser);
         return newUser
     }

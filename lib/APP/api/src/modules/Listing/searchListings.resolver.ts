@@ -11,18 +11,13 @@
 import { MyContext } from "../../types";
 import { Arg, Ctx, Field, InputType, Query } from "type-graphql";
 import { Listing } from "../../entities/Listing/Listing";
+import { City } from "../../entities/Geo/City";
 
 @InputType()
 class SearchListingsInput {
 
     @Field()
-    countryId: number
-
-    @Field({nullable: true})
-    stateId?: number
-
-    @Field({nullable: true})
-    cityId?: number
+    cityId: number
 }
 
 export class SearchListingsResolver {
@@ -33,16 +28,24 @@ export class SearchListingsResolver {
         @Ctx() {em}: MyContext
     ) {
 
+        let city = await em.findOneOrFail(City, {id: input.cityId})
 
-        // Find all listing in a given location.
-        // await em.find(ListingLocation, {city: {state : {country: {id: input.countryId}, id: input.stateId}, id: input.cityId}}) 
-        const listing = await em.find(Listing, {city: {id: input.cityId}}) 
+        console.log('CITY', city)
+
+        try {
+            const listing = await em.find(Listing, {city}) 
+            return listing
+        } catch (error) {
+            console.log(error)
+            const listing = await em.find(Listing, {city}) 
+            return listing
+        }
         
 
-        console.log(listing);
+        // console.log(listing);
         
 
-        // Find all listings in that location that match the more granular filters.
-        return listing
+        // // Find all listings in that location that match the more granular filters.
+        // return listing
     }
 }

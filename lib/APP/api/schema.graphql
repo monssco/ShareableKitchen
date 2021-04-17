@@ -147,11 +147,9 @@ input CityInput {
   name: String!
 }
 
-input LocationInput {
+input CreateListingLocationInput {
   address: String!
   cityId: Float!
-  stateId: Float!
-  countryId: Float!
 }
 
 input CreateListingInput {
@@ -161,15 +159,23 @@ input CreateListingInput {
   sqFtArea: Int!
   features: [PropertyFeatures!]!
   propertyType: PropertyType!
-  locationInput: LocationInput!
+  location: CreateListingLocationInput!
   availability: AvailabilityInput!
 }
 
-input EditMyListingInput {
+input EditListingLocationInput {
+  address: String
+  cityId: Float
+}
+
+input EditListingInput {
   id: String!
   title: String
   description: String
   availability: AvailabilityInput
+  address: String
+  location: EditListingLocationInput
+  postal: String
   price: Int
   sqFtArea: Int
   features: [PropertyFeatures!]
@@ -177,9 +183,7 @@ input EditMyListingInput {
 }
 
 input SearchListingsInput {
-  countryId: Float!
-  stateId: Float
-  cityId: Float
+  cityId: Float!
 }
 
 input RegisterUserInput {
@@ -190,10 +194,17 @@ input RegisterUserInput {
   date_of_birth: DateTime!
 }
 
+input UpdateUserLocationInput {
+  address: String
+  cityId: Float
+  postal: String
+}
+
 input UpdateUserInput {
   first_name: String!
   last_name: String!
   date_of_birth: DateTime!
+  location: UpdateUserLocationInput
 }
 
 type Query {
@@ -205,11 +216,8 @@ type Query {
 
 type Mutation {
   createListing(input: CreateListingInput!): Listing!
-  editMyListing(
-    # Required input for editing your own listing
-    input: EditMyListingInput!
-  ): Listing!
   deleteMyListing(id: String!): Boolean!
+  editListing(input: EditListingInput!): Listing!
   registerUser(user: RegisterUserInput!): User!
   updateUser(user: UpdateUserInput!): User!
 }

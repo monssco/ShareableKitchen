@@ -8,19 +8,17 @@ import { Availability } from "../../entities/Availability";
 import { City } from "../../entities/Geo/City";
 
 @InputType()
-class LocationInput {
+class CreateListingLocationInput {
 
     @Field()
-    address: string
+    address!: string
 
+    /**
+     * Just from the city id you can figure out the rest.
+     */
     @Field()
-    cityId: number
+    cityId!: number
 
-    @Field()
-    stateId: number
-
-    @Field()
-    countryId: number
 }
 
 @InputType()
@@ -36,19 +34,19 @@ class CreateListingInput implements Partial<Listing> {
     price!: number
 
     @Field(() => Int)
-    sqFtArea: number
+    sqFtArea!: number
 
     @Field(() => [PropertyFeatures])
-    features: PropertyFeatures[]
+    features!: PropertyFeatures[]
 
     @Field(() => PropertyType)
-    propertyType: PropertyType
+    propertyType!: PropertyType
 
-    @Field(() => LocationInput)
-    locationInput: LocationInput
+    @Field(() => CreateListingLocationInput)
+    location!: CreateListingLocationInput
 
     @Field(() => Availability)
-    availability: Availability
+    availability!: Availability
 
 }
 
@@ -60,17 +58,23 @@ export class CreateListingResolver {
         @Ctx() {em, user}: MyContext): Promise<Listing> {
             const dbUser = await em.findOneOrFail(User, {id: user?.sub})
 
-            const city = await em.findOneOrFail(City, {id: input.locationInput.cityId, state: {id: input.locationInput.stateId, country: input.locationInput.countryId}})
-            console.log(city);
+            /**
+             * Find the city first.
+             */
+            const city = await em.findOneOrFail(City, {id: input.location.cityId})
 
-            
-
+            /**
+             * Create the availability schedule.
+             */
             const availability = new Availability(input.availability.startDate, input.availability.endDate)
-            const newListing = new Listing(dbUser, input.title, input.description, availability, input.locationInput.address)
 
-            // newListing.city = city
-            // newListing.city.state = city.state
-            // newListing.city.state.country = city.state.country
+            /**
+             * Create the listing.
+             */
+            const newListing = new Listing(dbUser, input.title, input.description, availability, input.location.address)
+
+            newListing.city = city
+
             newListing.price = input.price
             newListing.sqFtArea = input.sqFtArea
             newListing.features = input.features
@@ -79,8 +83,8 @@ export class CreateListingResolver {
 
             newListing.draft = false
             newListing.active = true
-
+            
             await em.persistAndFlush(newListing);
             return newListing
+        }
     }
-}

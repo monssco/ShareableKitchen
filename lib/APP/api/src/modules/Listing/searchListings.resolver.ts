@@ -18,6 +18,12 @@ class SearchListingsInput {
 
     @Field()
     cityId: number
+
+    @Field({nullable: true})
+    startDate: Date
+
+    @Field({nullable: true})
+    endDate: Date
 }
 
 export class SearchListingsResolver {
@@ -29,23 +35,7 @@ export class SearchListingsResolver {
     ) {
 
         let city = await em.findOneOrFail(City, {id: input.cityId})
-
-        console.log('CITY', city)
-
-        try {
-            const listing = await em.find(Listing, {city}) 
-            return listing
-        } catch (error) {
-            console.log(error)
-            const listing = await em.find(Listing, {city}) 
-            return listing
-        }
-        
-
-        // console.log(listing);
-        
-
-        // // Find all listings in that location that match the more granular filters.
-        // return listing
+        const listing = await em.find(Listing, {city})
+        return listing
     }
 }

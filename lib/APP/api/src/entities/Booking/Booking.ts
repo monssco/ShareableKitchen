@@ -14,9 +14,11 @@ import { User } from "../User/User";
 @Entity()
 export class Booking {
 
+    @Field(()=> Listing)
     @ManyToOne(()=>Listing, {primary: true})
     listing: Listing
 
+    @Field(() => User)
     @ManyToOne(() => User, {primary: true})
     buyer: User
 
@@ -52,4 +54,14 @@ export class Booking {
      */
     @Property()
     paymentId: string
+
+
+    constructor(listing: Listing, buyer: User, start: Date, end: Date, paymentDate: Date, paymentId: string) {
+        this.listing = listing
+        this.buyer = buyer
+        this.startDate = start
+        this.endDate = end
+        this.paymentDate = paymentDate
+        this.paymentId = paymentId
+    }
 }

@@ -32,7 +32,7 @@ export class CreateBookingResolver {
     @Mutation(()=> Booking)
     async createBooking(
         @Arg("input") input: CreateBookingInput,
-        @Ctx() {em, user}: MyContext
+        @Ctx() {em, user, stripe}: MyContext
     ): Promise<Booking> {
         const me = await em.findOneOrFail(User, {id: user?.sub})
         const listing = await em.findOneOrFail(Listing, {id: input.listingId})
@@ -40,6 +40,12 @@ export class CreateBookingResolver {
         // Calculate that there is no overlapping booking
         // Calculate how much it will cost, do the payment? then store it all?
         // 
+
+        stripe.charges.create({
+            customer: me.stripe_customer_id,
+            currency: listing.city.state.country.currency,
+            
+        })
 
         const booking = new Booking(listing, me, input.startDate, input.endDate, new Date(), "test?" )
 

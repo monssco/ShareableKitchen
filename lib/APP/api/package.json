@@ -27,6 +27,7 @@
       "jwt-decode": "^3.1.2",
       "pg": "^8.6.0",
       "reflect-metadata": "^0.1.13",
+      "stripe": "^8.144.0",
       "type-graphql": "^1.1.1",
       "uuid": "^8.3.2"
    },

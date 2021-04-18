@@ -8,6 +8,11 @@ import { MyContext } from "./types";
 
 import jwtDecode, { JwtPayload } from 'jwt-decode';
 
+import Stripe from 'stripe';
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_51IhXgtGZgehPj4cv80xEq7vmSZm6r3fXZs6yxY9Syb22IALSmftnkxFNyRnWkClLgijH1D50hE8QKhSS95hJQaj100AQh0EX6v', {
+    apiVersion: '2020-08-27',
+});
+
 
 /**
  * Header provided by the ALB when its being guarded by cognito.
@@ -80,7 +85,8 @@ const startServer = async () => {
                 exp: decoded.exp,
                 iss: decoded.iss,
                 sub: decoded.sub
-            }
+            },
+            stripe
         }}
     })
 

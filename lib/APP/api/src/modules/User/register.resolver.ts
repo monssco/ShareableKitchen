@@ -26,11 +26,29 @@ export class RegisterResolver {
     @Mutation(()=> User, {nullable: false})
     async registerUser(
         @Arg("user", {nullable: false}) user: RegisterUserInput,
-        @Ctx() {em}: MyContext) {
+        @Ctx() {em, stripe}: MyContext) {
         const newUser = new User(user.id, user.email)
         newUser.first_name = user.first_name
         newUser.last_name = user.last_name
         newUser.date_of_birth = user.date_of_birth
+
+        const customer = await stripe.customers.create({
+            email: user.email,
+            name: user.first_name,
+            
+        })
+
+        const account = await stripe.accounts.create({
+            email: user.email,
+            individual: {
+                email: user.email
+            },
+            type: "express",
+            business_type: "individual"
+        })
+
+        newUser.stripe_customer_id = customer.id
+        newUser.stripe_account_id = account.id
 
         const city = await em.findOneOrFail(City, {id: 16152})
         newUser.city = city

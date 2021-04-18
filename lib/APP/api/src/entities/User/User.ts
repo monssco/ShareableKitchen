@@ -95,18 +95,22 @@ export class User {
     status = true
 
 
+    @Field(() => [Listing], {nullable: true})
     @OneToMany(()=> Listing, listing => listing.author, {nullable: true, cascade: [Cascade.ALL]})
     listings = new Collection<Listing>(this);
 
+    @Field(() => [Booking], {nullable: true})
     @OneToMany(()=> Booking, booking => booking.buyer, {nullable: true, cascade: [Cascade.ALL]})
     bookings = new Collection<Booking>(this);
 
     /**
      * One user is involved in many conversations.
      */
+    @Field(() => [Conversation], {nullable: true})
     @OneToMany(() => Conversation, convo => convo.buyer)
     conversations = new Collection<Conversation>(this);
 
+    @Field(() => [Message], {nullable: true})
     @OneToMany(()=> Message, message => message.author)
     message = new Collection<Message>(this);
 

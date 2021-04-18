@@ -25,6 +25,22 @@ type AvailabilityObject {
 # The javascript `Date` as string. Type represents date and time as the ISO Date string.
 scalar DateTime
 
+type Message {
+  id: String!
+  conversation: Conversation!
+  author: User!
+  content: String!
+  created: DateTime!
+}
+
+type Conversation {
+  buyer: User!
+  seller: User!
+  listing: Listing!
+  id: String!
+  messages: [Message!]!
+}
+
 type CountryType {
   id: ID!
   name: String!
@@ -108,6 +124,46 @@ type User {
   postal: String
   stripe_customer_id: String!
   stripe_account_id: String
+  listings: [Listing!]
+  bookings: [Booking!]
+  conversations: [Conversation!]
+  message: [Message!]
+}
+
+type PublicUserType {
+  id: ID!
+  email: String!
+  profile_image: UserImage
+  first_name: String
+  last_name: String
+  date_of_birth: DateTime
+  address: String
+  city: CityType
+  postal: String
+  stripe_customer_id: String!
+  stripe_account_id: String
+  listings: [Listing!]
+  bookings: [Booking!]
+  conversations: [Conversation!]
+  message: [Message!]
+}
+
+type PublicListing {
+  id: ID!
+  author: PublicUserType!
+  title: String!
+  description: String!
+  availability: AvailabilityObject!
+  photos: [ListingImage!]
+  address: String!
+  city: CityType
+  postal: String
+  price: Int!
+  sqFtArea: Int!
+  features: [PropertyFeatures!]
+  propertyType: PropertyType
+  bookings: [Booking!]
+  draft: Boolean!
 }
 
 interface Image {
@@ -186,6 +242,15 @@ input SearchListingsInput {
   cityId: Float!
 }
 
+input SendMessageInput {
+  content: String!
+  conversationId: String!
+}
+
+input StartConversationInput {
+  listingId: String!
+}
+
 input RegisterUserInput {
   id: ID!
   email: String!
@@ -211,6 +276,7 @@ type Query {
   getCountries: [CountryType!]!
   myListings: [Listing!]!
   searchListings(input: SearchListingsInput!): [Listing!]!
+  getConversations: [Conversation!]!
   me: User
 }
 
@@ -218,6 +284,8 @@ type Mutation {
   createListing(input: CreateListingInput!): Listing!
   deleteMyListing(id: String!): Boolean!
   editListing(input: EditListingInput!): Listing!
+  sendMessage(input: SendMessageInput!): Message!
+  startConversation(input: StartConversationInput!): Conversation!
   registerUser(user: RegisterUserInput!): User!
   updateUser(user: UpdateUserInput!): User!
 }

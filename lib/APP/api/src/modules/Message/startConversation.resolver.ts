@@ -1,0 +1,32 @@
+import { Listing } from "../../entities/Listing/Listing";
+import { Conversation } from "../../entities/Messages/Conversation";
+import { User } from "../../entities/User/User";
+import { MyContext } from "../../types";
+import { Arg, Ctx, Field, InputType, Mutation, Resolver } from "type-graphql";
+
+@InputType()
+class StartConversationInput {
+    
+    @Field()
+    listingId!: string
+}
+
+@Resolver()
+export class StartConversationResolver {
+
+    @Mutation(() => Conversation)
+    async startConversation(
+        @Arg("input", {nullable: false}) input: StartConversationInput,
+        @Ctx() {em, user}: MyContext): Promise<Conversation> {
+
+            let me = await em.findOneOrFail(User, {id: user?.sub})
+
+            let listing = await em.findOneOrFail(Listing, {id: input.listingId})
+
+            let convo = new Conversation(me, listing.author, listing)
+
+            await em.persistAndFlush(convo)
+
+            return convo
+    }
+}

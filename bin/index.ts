@@ -12,7 +12,7 @@ console.log("Node env", process.env.DB_HOST);
 
 /**
  * Dev and Pros have different hosted zones.
- * Might be a good idea to also have different sub domains for prod and dev.
+ * Might be a good idea to also have different sub domains for prod and dev. DONE
  */
 
 const PROD_DOMAIN = 'shareablekitchen.com'
@@ -21,9 +21,9 @@ const DEV_DOMAIN = 'dev.shareablekitchen.com'
 const PROD_HOSTED_ZONE_ID = 'Z05002012DN7N9WCCLM98'
 const DEV_HOSTED_ZONE_ID = 'Z00882051VB7JEP263KOU'
 
-let domain = (process.env.NODE_ENV as string) === 'production' ? PROD_DOMAIN : DEV_DOMAIN
+let domain = process.env.NODE_ENV === 'production' ? PROD_DOMAIN : DEV_DOMAIN
 
-let hostedZoneId= (process.env.NODE_ENV as string) === 'production' ? PROD_HOSTED_ZONE_ID :DEV_HOSTED_ZONE_ID
+let hostedZoneId= process.env.NODE_ENV === 'production' ? PROD_HOSTED_ZONE_ID :DEV_HOSTED_ZONE_ID
 
 let hostedZoneName = domain
 

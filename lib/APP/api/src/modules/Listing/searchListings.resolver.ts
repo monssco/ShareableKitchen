@@ -12,18 +12,21 @@ import { MyContext } from "../../types";
 import { Arg, Ctx, Field, InputType, Query } from "type-graphql";
 import { Listing } from "../../entities/Listing/Listing";
 import { City } from "../../entities/Geo/City";
+import { PaginationInput } from "../Base/pagination.resolver";
+import { FindOptions } from "@mikro-orm/core";
 
 @InputType()
-class SearchListingsInput {
+class SearchListingsInput extends PaginationInput {
 
     @Field()
     cityId: number
 
     @Field({nullable: true})
-    startDate: Date
+    startDate?: Date
 
     @Field({nullable: true})
-    endDate: Date
+    endDate?: Date
+
 }
 
 export class SearchListingsResolver {
@@ -34,8 +37,45 @@ export class SearchListingsResolver {
         @Ctx() {em}: MyContext
     ) {
 
+        var listing: Listing[] = []
+        var options: FindOptions<Listing> = {
+            limit: input.limit,
+            offset: input.offset,
+            orderBy: {
+                published: 'asc'
+            }
+        }
+
+
         let city = await em.findOneOrFail(City, {id: input.cityId})
-        const listing = await em.find(Listing, {city})
+        if (input.startDate && input.endDate) {
+            listing = await em.find(Listing, {city, availability: {
+                startDate: {
+                    $gte: input.startDate
+                },
+                endDate: {
+                    $lte: input.endDate
+                }
+            }}, options)
+        } else if (input.startDate) {
+            listing = await em.find(Listing, {city, availability: {
+                startDate: {
+                    $gte: input.startDate
+                }
+            }}, options)
+        } else if (input.endDate) {
+            listing = await em.find(Listing, {city, availability: {
+                startDate: {
+                    $gte: input.startDate
+                },
+                endDate: {
+                    $lte: input.endDate
+                }
+            }}, options)
+        } else {
+            listing = await em.find(Listing, {city},  options)
+        }
+        
         return listing
     }
 }

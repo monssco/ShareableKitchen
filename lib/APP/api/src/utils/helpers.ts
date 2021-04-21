@@ -6573,6 +6573,9 @@ const STATE_JSON = [
 ]
 
 /**
+ * TODO: Add dummy listings, dummy conversations/messages, bookings etc between different users.
+ */
+/**
  * 
  * Seeds the database with values that are needed for the
  * app to function properly. Things such as dummy users, geo info
@@ -6586,6 +6589,9 @@ export async function seedDatabase(em: EntityManager) {
     "munibrhmn@gmail.com")
     user.first_name = "Munib"
     user.last_name = "Rahman"
+    user.stripe_customer_id = "cus_JKClOkOhSdxGZ1"
+    user.stripe_account_id = "acct_1IhYLr2eWenfZEly"
+    
     
 
     const country = new Country(1, "Canada", "CAD", "$")

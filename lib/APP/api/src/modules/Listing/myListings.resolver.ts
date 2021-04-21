@@ -1,25 +1,34 @@
 import { Listing } from "../../entities/Listing/Listing"
 import { User } from "../../entities/User/User"
 import { MyContext } from "../../types"
-import { Ctx, FieldResolver, Query, Resolver, Root } from "type-graphql"
+import { Arg, Ctx, FieldResolver, Query, Resolver, Root } from "type-graphql"
 import { Availability } from "../../entities/Availability"
+import { PaginationInput } from "../Base/pagination.resolver"
+import { FindOptions } from "@mikro-orm/core"
 
 
 export class MyListingResolver {
 
     @Query(() => [Listing])
     async myListings(
+        @Arg("input") input: PaginationInput,
         @Ctx() {em, user}: MyContext
     ){
         /**
          * First get the user from the database.
          * Then fetch all their listings.
-         * 
-         * TODO: Add arguments for pagination of listings.
          */
         const dbUser = await em.findOneOrFail(User, {id: user?.sub})
-        const listings = await em.find(Listing, {author: dbUser, active: true})
-        return listings
+
+        const options: FindOptions<Listing> = {
+            limit: input.limit,
+            offset: input.offset,
+            orderBy: {
+                created: 'asc'
+            }
+        }
+        
+        return await em.find(Listing, {author: dbUser, active: true}, options)
     }
 }
 

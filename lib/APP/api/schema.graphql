@@ -260,13 +260,23 @@ input UpdateUserInput {
 }
 
 type Query {
-  getBookings(input: GetMessagesInput!): [Message!]!
+  getBookings(input: PaginationInput!): [Booking!]!
   getReservations(input: PaginationInput!): [Booking!]!
   getCountries: [CountryType!]!
   myListings(input: PaginationInput!): [Listing!]!
   searchListings(input: SearchListingsInput!): [Listing!]!
   getConversations(input: PaginationInput!): [Conversation!]!
+  getMessages(input: GetMessagesInput!): [Message!]!
   getStripeAccount: JSON!
+  getExternalAccount(input: String!): JSON!
+  listExternalAccounts: JSON!
+  getStripeAccountBalance: JSON!
+  listPayouts: JSON!
+  getPayout(input: String!): JSON!
+  listBalanceTransactions: JSON!
+  getBalanceTransaction(input: String!): JSON!
+  getStripeCustomer: JSON!
+  getPaymentMethods: JSON!
   me: User
 }
 
@@ -280,6 +290,9 @@ type Mutation {
   editListing(input: EditListingInput!): Listing!
   sendMessage(input: SendMessageInput!): Message!
   startConversation(input: StartConversationInput!): Conversation!
+  updateStripeAccount(input: String!): JSON!
+  createExternalAccount(input: String!): JSON!
+  deleteExternalAccount(input: String!): JSON!
   registerUser(user: RegisterUserInput!): User!
   updateUser(user: UpdateUserInput!): User!
 }

@@ -15,7 +15,7 @@ class GetMessagesInput extends PaginationInput {
 export class GetMessagesResolver {
 
     @Query(() => [Message])
-    async getBookings(
+    async getMessages(
         @Arg("input") input: GetMessagesInput,
         @Ctx() {em}: MyContext
     ): Promise<Message[]> {

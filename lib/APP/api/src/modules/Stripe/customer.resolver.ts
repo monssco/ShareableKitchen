@@ -1,6 +1,6 @@
 
 import { User } from "../../entities/User/User";
-import { Ctx, Query } from "type-graphql";
+import { Arg, Ctx, Mutation, Query } from "type-graphql";
 import { MyContext } from "../../types";
 import { GraphQLJSON } from 'graphql-type-json';
 
@@ -42,5 +42,34 @@ export class CustomerResolver {
             type: "card"
         })
 
+    }
+
+    @Mutation(() => GraphQLJSON)
+    async attachPaymentMethod(
+        @Arg("input") id: string,
+        @Ctx() {em, user, stripe}: MyContext
+    ) {
+        const me = await em.findOneOrFail(User, {id: user?.sub})
+        if (!me.stripe_customer_id) {
+            throw new Error('Stripe account id does not exist.')
+        }
+
+        return await stripe.paymentMethods.attach(id, {
+            customer: me.stripe_customer_id
+        })
+
+    }
+
+    @Mutation(() => GraphQLJSON)
+    async detachPaymentMethod(
+        @Arg("input") id: string,
+        @Ctx() {em, user, stripe}: MyContext
+    ) {
+        const me = await em.findOneOrFail(User, {id: user?.sub})
+        if (!me.stripe_customer_id) {
+            throw new Error('Stripe account id does not exist.')
+        }
+
+        return await stripe.paymentMethods.detach(id)
     }
 }

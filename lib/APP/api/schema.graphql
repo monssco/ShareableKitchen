@@ -291,8 +291,11 @@ type Mutation {
   sendMessage(input: SendMessageInput!): Message!
   startConversation(input: StartConversationInput!): Conversation!
   updateStripeAccount(input: String!): JSON!
+  cancelPayout(input: String!): JSON!
   createExternalAccount(input: String!): JSON!
   deleteExternalAccount(input: String!): JSON!
+  attachPaymentMethod(input: String!): JSON!
+  detachPaymentMethod(input: String!): JSON!
   registerUser(user: RegisterUserInput!): User!
   updateUser(user: UpdateUserInput!): User!
 }

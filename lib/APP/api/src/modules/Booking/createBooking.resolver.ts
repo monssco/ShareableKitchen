@@ -1,12 +1,3 @@
-
-
-/**
- * Going to come back to this.
- * A user can book a listing.
- * When a listing is being booked, it should check to make sure that 
- * conflicting bookings don't exist.
- */
-
 import { Booking } from "../../entities/Booking/Booking";
 import { Arg, Ctx, Field, InputType, Mutation, Resolver } from "type-graphql";
 import { MyContext } from "../../types";

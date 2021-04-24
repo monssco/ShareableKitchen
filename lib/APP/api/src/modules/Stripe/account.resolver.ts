@@ -134,6 +134,21 @@ export class AccountMutationResolvers {
     }
 
     @Mutation(()=> GraphQLJSON)
+    async cancelPayout(
+        @Arg("input") payout_id: string,
+        @Ctx() {em, user, stripe}: MyContext
+    ) {
+        const me = await em.findOneOrFail(User, {id: user?.sub})
+        if (!me.stripe_account_id) {
+            throw new Error('Stripe account id does not exist.')
+        }
+        
+        const account = await stripe.payouts.cancel(payout_id)
+
+        return account
+    }
+
+    @Mutation(()=> GraphQLJSON)
     async createExternalAccount(
         @Arg("input") external_account: string,
         @Ctx() {em, user, stripe}: MyContext

@@ -53,15 +53,17 @@ export class Booking {
      * saved in our db.
      */
     @Property()
-    paymentId: string
+    paymentIntent: string
 
 
-    constructor(listing: Listing, buyer: User, start: Date, end: Date, paymentDate: Date, paymentId: string) {
+
+
+    constructor(listing: Listing, buyer: User, start: Date, end: Date, paymentDate: Date, paymentIntent: string) {
         this.listing = listing
         this.buyer = buyer
         this.startDate = start
         this.endDate = end
         this.paymentDate = paymentDate
-        this.paymentId = paymentId
+        this.paymentIntent = paymentIntent
     }
 }

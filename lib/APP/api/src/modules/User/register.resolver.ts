@@ -40,11 +40,16 @@ export class RegisterResolver {
 
         const account = await stripe.accounts.create({
             email: user.email,
-            individual: {
-                email: user.email
-            },
             type: "express",
-            business_type: "individual"
+            country: "CA",
+            capabilities: {
+                card_payments: {
+                    requested: true
+                },
+                transfers: {
+                    requested: true
+                }
+            }
         })
 
         newUser.stripe_customer_id = customer.id

@@ -110,7 +110,8 @@ type Booking {
   buyer: User!
   startDate: DateTime!
   endDate: DateTime!
-  price: Int!
+  unitPrice: Int!
+  totalAmount: Int!
   applicationFee: Int!
   created: DateTime!
   paymentDate: DateTime

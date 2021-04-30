@@ -39,9 +39,22 @@ export class Booking {
     @Property({columnType: "timestamptz"})
     endDate: Date;
 
+    /**
+     * Price per unit of booking time.
+     * Daily for now
+     * Will be weekly, monthly later on.
+     */
     @Field(() => Int)
     @Property()
-    price: number;
+    unitPrice: number;
+
+    /**
+     * The total cost of renting this place.
+     * Comes out to roughly time booked * unitPrice
+     */
+    @Field(() => Int)
+    @Property()
+    totalAmount: number
 
     @Field(() => Int)
     @Property()
@@ -79,14 +92,15 @@ export class Booking {
 
 
 
-    constructor(listing: Listing, buyer: User, start: Date, end: Date, price: number, applicationFee: number, paymentIntentId: string) {
+    constructor(listing: Listing, buyer: User, start: Date, end: Date, unitPrice: number, totalAmount: number, applicationFee: number, paymentIntentId: string) {
         this.listing = listing
         this.buyer = buyer
         this.startDate = start
         this.endDate = end
-        this.price = price
+        this.unitPrice = unitPrice
         this.paymentIntentId = paymentIntentId
         this.applicationFee = applicationFee
+        this.totalAmount = totalAmount
         this.confirmed = false
     }
 

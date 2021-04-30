@@ -11,7 +11,11 @@ import Stripe from 'stripe';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_51IhXgtGZgehPj4cv80xEq7vmSZm6r3fXZs6yxY9Syb22IALSmftnkxFNyRnWkClLgijH1D50hE8QKhSS95hJQaj100AQh0EX6v', {
     apiVersion: '2020-08-27',
 });
-import router from './webhook/stripe.webhook'
+
+const stripeWebhookEndpoint = process.env.STRIPE_WEBHOOK_SECRET || 'whsec_zIVnFqunSxGySFKehhsSVlrHz8YgiIxk'
+
+import {StripeWebhookManager} from './webhook/StripeWebhookManager'
+import { TransferScheduler } from "./cron/transfer.stripe";
 
 /**
  * Header provided by the ALB when its being guarded by cognito.
@@ -22,6 +26,11 @@ const startServer = async () => {
 
     
     const client = await ormClient();
+
+    /**
+     * Start cron scheduler.
+     */
+    new TransferScheduler(client.em, stripe);
 
 
     /**
@@ -98,7 +107,14 @@ const startServer = async () => {
         res.sendStatus(200)
     })
 
-    app.use('/webhook', router);
+    /**
+     * Instantiate webhook classes.
+     */
+    let stripeWebhook = new StripeWebhookManager(client.em,stripe, stripeWebhookEndpoint)
+    /**
+     * For stripe webhook.
+     */
+    app.use('/webhook', stripeWebhook.getWebHookRouter());
 
     server.applyMiddleware({app, path: '/graphql'})
 

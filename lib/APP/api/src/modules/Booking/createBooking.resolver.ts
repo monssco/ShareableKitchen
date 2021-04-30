@@ -91,7 +91,7 @@ export class CreateBookingResolver {
             statement_descriptor: `Shareable Kitchen`
         })
 
-        const booking = new Booking(listing, me, input.startDate, input.endDate, listing.price, applicationFee, paymentIntent.id)
+        const booking = new Booking(listing, me, input.startDate, input.endDate, listing.price, totalAmount, applicationFee, paymentIntent.id)
 
         if(!paymentIntent.client_secret) {
             throw new Error("Payment intent doesn't have a secret.")

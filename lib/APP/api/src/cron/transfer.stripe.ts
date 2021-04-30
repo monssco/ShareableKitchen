@@ -1,0 +1,76 @@
+import { EntityManager } from "@mikro-orm/core";
+import {CronJob} from 'cron';
+import Stripe from "stripe";
+import { Booking } from "../entities/Booking/Booking";
+
+export class TransferScheduler {
+
+    cronJob: CronJob;
+    em: EntityManager;
+    stripe: Stripe;
+
+    constructor(em: EntityManager, stripe: Stripe) {
+        
+        this.em = em;
+        this.stripe = stripe;
+
+        this.cronJob = new CronJob('1 * * * * *', async () => {
+        try {
+            await this.checkTransfers();
+        } catch (e) {
+            console.error(e);
+        }
+        });
+        
+        // Start job
+        if (!this.cronJob.running) {
+        this.cronJob.start();
+        }
+    }
+
+    /**
+     * TODO: Test this with real data. I think this works but unsure about amounts.
+     */
+    /**
+     * 1. Get bookings that are confirmed and have null transfer ids.
+     * 2. Create transfers using stripe and pay them out?
+     * 3. After successful transfer, update the table with the id of the transfer.
+     */
+    async checkTransfers() {
+        console.log("running transfer check")
+        let bookings = await this.em.find(Booking, {transferId: null, confirmed: true})
+        console.log("found bookings with null id")
+
+        for (const eachBooking of bookings) {
+            console.log(eachBooking)
+            let totalAmount = eachBooking.totalAmount
+
+            /**
+             * For buyers, we take a 3% cut from the total amount.
+             */
+            let applicationFee = Math.abs((3/100) * totalAmount)
+            let amountToBePaid = totalAmount - applicationFee
+
+            // Move this check into the em 
+            if (!eachBooking.paymentIntentId) {
+                console.error("No payment intent exists.")
+                continue;
+            }
+            
+            const paymentIntent = await this.stripe.paymentIntents.retrieve(eachBooking.paymentIntentId)
+
+
+            const transfer = await this.stripe.transfers.create({
+                currency: eachBooking.listing.city.state.country.currency,
+                amount: amountToBePaid,
+                destination: eachBooking.listing.author.stripe_account_id!,
+                source_transaction: paymentIntent.charges.data[0].id
+            })
+
+            eachBooking.transferId = transfer.id
+
+            await this.em.persistAndFlush(eachBooking)
+        }
+
+    }
+}

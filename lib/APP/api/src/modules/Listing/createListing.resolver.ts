@@ -1,7 +1,6 @@
 import { Listing } from "../../entities/Listing/Listing";
 import { MyContext } from "src/types";
 import { Arg, Ctx, Field, InputType, Int, Mutation, Resolver } from "type-graphql";
-import { User } from "../../entities/User/User";
 import { PropertyFeatures } from "../../entities/Enums/PropertyFeatures.enum";
 import { PropertyType } from "../../entities/Enums/PropertyType.enum";
 import { Availability } from "../../entities/Availability";
@@ -58,7 +57,7 @@ export class CreateListingResolver {
         @Arg("input", {nullable: false}) input: CreateListingInput,
         @Ctx() context: MyContext): Promise<Listing> {
             const {em, user} = context
-            const dbUser = await em.findOneOrFail(User, {id: user?.sub})
+            const dbUser = user
 
             /**
              * Without a payout source, you can't create a listing.

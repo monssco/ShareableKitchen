@@ -26,6 +26,6 @@ export class ListReservationsResolver {
             }
         }
 
-        return await em.find(Booking, {listing: {author: {id: user?.sub}}, confirmed: true}, options)
+        return await em.find(Booking, {listing: {author: user}, confirmed: true}, options)
     }
 }

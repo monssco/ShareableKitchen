@@ -3,6 +3,9 @@ import {CronJob} from 'cron';
 import Stripe from "stripe";
 import { Booking } from "../entities/Booking/Booking";
 
+/**
+ * Cron like scheduler that handles stripe transfers.
+ */
 export class TransferScheduler {
 
     cronJob: CronJob;
@@ -14,7 +17,9 @@ export class TransferScheduler {
         this.em = em;
         this.stripe = stripe;
 
-        this.cronJob = new CronJob('1 * * * * *', async () => {
+        let cronGlob = process.env.NODE_ENV === "production" ? "0 * * * *" : "1 * * * * *"
+
+        this.cronJob = new CronJob(cronGlob, async () => {
         try {
             await this.checkTransfers();
         } catch (e) {

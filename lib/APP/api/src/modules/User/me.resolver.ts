@@ -11,9 +11,9 @@ export class MeResolver {
 
     @Query(() => User, {nullable: true})
     async me(
-        @Ctx() {em, user}: MyContext
+        @Ctx() {user}: MyContext
     ) {
-        const me = await em.findOneOrFail(User, {id: user?.sub})
-        return me;
+
+        return user;
     }
 }

@@ -22,7 +22,7 @@ export class GetConversationsResolver {
                 }
             }
 
-            return await em.find(Conversation, {$or: [{buyer: {id: user?.sub}}, {seller: {id: user?.sub}}]}, options)
+            return await em.find(Conversation, {$or: [{buyer: user}, {seller: user}]}, options)
     }
 
     @FieldResolver()

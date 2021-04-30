@@ -1,5 +1,4 @@
 import { Conversation } from "../../entities/Messages/Conversation";
-import { User } from "../../entities/User/User";
 import { MyContext } from "../../types";
 import { Arg, Ctx, Field, InputType, Mutation, Resolver } from "type-graphql";
 import { Message } from "../../entities/Messages/Message";
@@ -21,7 +20,7 @@ export class SendMessageResolver {
         @Arg("input", {nullable: false}) input: SendMessageInput,
         @Ctx() {em, user}: MyContext): Promise<Message> {
 
-            let me = await em.findOneOrFail(User, {id: user?.sub})
+            let me = user
 
             let convo = await em.findOneOrFail(Conversation, {id: input.conversationId})
 

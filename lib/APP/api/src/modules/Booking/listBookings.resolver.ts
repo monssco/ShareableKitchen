@@ -32,7 +32,7 @@ export class ListBookingsResolver {
         /**
          * Only show confirmed bookings.
          */
-        const bookings = await em.find(Booking, {buyer: {id: user?.sub}, confirmed: true})
+        const bookings = await em.find(Booking, {buyer: user, confirmed: true})
 
         return bookings
 

@@ -1,8 +1,7 @@
-
-import { User } from "../../entities/User/User";
 import { Arg, Ctx, Mutation, Query } from "type-graphql";
 import { MyContext } from "../../types";
 import { GraphQLJSON } from 'graphql-type-json';
+import { getStripeCustomerId } from "./helper";
 
 
 
@@ -12,14 +11,10 @@ export class CustomerResolver {
 
     @Query(()=> GraphQLJSON)
     async getStripeCustomer(
-        @Ctx() {em, user, stripe}: MyContext
+        @Ctx() {user, stripe}: MyContext
     ) {
-        const me = await em.findOneOrFail(User, {id: user?.sub})
-        if (!me.stripe_customer_id) {
-            throw new Error('Stripe account id does not exist.')
-        }
-        
-        return await stripe.customers.retrieve(me.stripe_customer_id)
+        const customer_id = await getStripeCustomerId(user);
+        return await stripe.customers.retrieve(customer_id);
     }
 
     /**
@@ -30,15 +25,12 @@ export class CustomerResolver {
      */
     @Query(() => GraphQLJSON)
     async listPaymentMethods(
-        @Ctx() {em, user, stripe}: MyContext
-    ) {
-        const me = await em.findOneOrFail(User, {id: user?.sub})
-        if (!me.stripe_customer_id) {
-            throw new Error('Stripe account id does not exist.')
-        }
+        @Ctx() {user, stripe}: MyContext
+    ) {;
+        const customer_id = await getStripeCustomerId(user);
 
         return await stripe.paymentMethods.list({
-            customer: me.stripe_customer_id,
+            customer: customer_id,
             type: "card"
         })
     }
@@ -46,15 +38,11 @@ export class CustomerResolver {
     @Mutation(() => GraphQLJSON)
     async attachPaymentMethod(
         @Arg("input") id: string,
-        @Ctx() {em, user, stripe}: MyContext
+        @Ctx() {user, stripe}: MyContext
     ) {
-        const me = await em.findOneOrFail(User, {id: user?.sub})
-        if (!me.stripe_customer_id) {
-            throw new Error('Stripe account id does not exist.')
-        }
-
+        const customer_id = await getStripeCustomerId(user);
         return await stripe.paymentMethods.attach(id, {
-            customer: me.stripe_customer_id
+            customer: customer_id
         })
 
     }
@@ -62,13 +50,8 @@ export class CustomerResolver {
     @Mutation(() => GraphQLJSON)
     async detachPaymentMethod(
         @Arg("input") id: string,
-        @Ctx() {em, user, stripe}: MyContext
+        @Ctx() {stripe}: MyContext
     ) {
-        const me = await em.findOneOrFail(User, {id: user?.sub})
-        if (!me.stripe_customer_id) {
-            throw new Error('Stripe account id does not exist.')
-        }
-
         return await stripe.paymentMethods.detach(id)
     }
 }

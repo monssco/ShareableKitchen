@@ -2,7 +2,6 @@ import { Booking } from "../../entities/Booking/Booking";
 import { Arg, Ctx, Field, InputType, Mutation, ObjectType, Resolver } from "type-graphql";
 import { MyContext } from "../../types";
 import { Listing } from "../../entities/Listing/Listing";
-import { User } from "../../entities/User/User";
 import { Availability } from "../../entities/Availability";
 import { differenceInCalendarDays } from 'date-fns'
 
@@ -45,7 +44,7 @@ export class CreateBookingResolver {
         @Arg("input") input: CreateBookingInput,
         @Ctx() {em, user, stripe}: MyContext
     ): Promise<CreateBookingReturn> {
-        const me = await em.findOneOrFail(User, {id: user?.sub})
+        const me = user;
         const listing = await em.findOneOrFail(Listing, {id: input.listingId})
         const availability = await em.findOneOrFail(Availability, {listing})
 

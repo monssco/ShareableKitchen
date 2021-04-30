@@ -1,5 +1,4 @@
 import { Listing } from "../../entities/Listing/Listing"
-import { User } from "../../entities/User/User"
 import { MyContext } from "../../types"
 import { Arg, Ctx, Field, InputType, Int, Mutation, } from "type-graphql"
 import { Availability } from "../../entities/Availability"
@@ -78,8 +77,7 @@ export class EditListingResolver {
         @Arg("input") input: EditListingInput,
         @Ctx() {em, user}: MyContext
     ) {
-        const dbUser = await em.findOneOrFail(User, {id: user?.sub})
-        console.log(dbUser)
+        const dbUser = user
 
         const listing = await em.findOneOrFail(Listing, {id: input.id})
 

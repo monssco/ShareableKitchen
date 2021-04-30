@@ -284,18 +284,16 @@ type Query {
   getConversations(input: PaginationInput!): [Conversation!]!
   getMessages(input: GetMessagesInput!): [Message!]!
   getStripeAccount: JSON!
-  getExternalAccount(input: String!): JSON!
-  listExternalAccounts: JSON!
   getStripeAccountBalance: JSON!
-  listPayouts: JSON!
-  getPayout(input: String!): JSON!
-  listBalanceTransactions: JSON!
-  getBalanceTransaction(input: String!): JSON!
 
   # Account links allow you to onboard a user via stripe. https://stripe.com/docs/api/account_links
   getAccountLink(input: AccountLinkInput!): JSON!
   getStripeCustomer: JSON!
   listPaymentMethods: JSON!
+  getExternalAccount(input: String!): JSON!
+  listExternalAccounts: JSON!
+  getPayout(input: String!): JSON!
+  listPayouts: JSON!
   me: User
 }
 
@@ -312,11 +310,11 @@ type Mutation {
   sendMessage(input: SendMessageInput!): Message!
   startConversation(input: StartConversationInput!): Conversation!
   updateStripeAccount(input: String!): JSON!
-  cancelPayout(input: String!): JSON!
-  createExternalAccount(input: String!): JSON!
-  deleteExternalAccount(input: String!): JSON!
   attachPaymentMethod(input: String!): JSON!
   detachPaymentMethod(input: String!): JSON!
+  createExternalAccount(input: String!): JSON!
+  deleteExternalAccount(input: String!): JSON!
+  cancelPayout(input: String!): JSON!
   registerUser(user: RegisterUserInput!): User!
   updateUser(user: UpdateUserInput!): User!
 }

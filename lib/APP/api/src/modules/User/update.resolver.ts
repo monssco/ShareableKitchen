@@ -39,7 +39,7 @@ export class UpdateResolver {
         @Arg("user", {nullable: false}) {date_of_birth, first_name, last_name, location}: UpdateUserInput,
         @Ctx() {em, user}: MyContext
     ) {
-        const me = await em.findOne(User, {id: user?.sub})
+        const me = user
 
         if (!me) {
             throw Error("User not found")

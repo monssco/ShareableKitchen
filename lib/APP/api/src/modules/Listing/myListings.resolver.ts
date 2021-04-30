@@ -1,5 +1,4 @@
 import { Listing } from "../../entities/Listing/Listing"
-import { User } from "../../entities/User/User"
 import { MyContext } from "../../types"
 import { Arg, Ctx, FieldResolver, Query, Resolver, Root } from "type-graphql"
 import { Availability } from "../../entities/Availability"
@@ -18,7 +17,7 @@ export class MyListingResolver {
          * First get the user from the database.
          * Then fetch all their listings.
          */
-        const dbUser = await em.findOneOrFail(User, {id: user?.sub})
+        const dbUser = user
 
         const options: FindOptions<Listing> = {
             limit: input.limit,

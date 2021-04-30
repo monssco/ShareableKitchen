@@ -1,6 +1,5 @@
 import { Listing } from "../../entities/Listing/Listing";
 import { Conversation } from "../../entities/Messages/Conversation";
-import { User } from "../../entities/User/User";
 import { MyContext } from "../../types";
 import { Arg, Ctx, Field, InputType, Mutation, Resolver } from "type-graphql";
 
@@ -19,7 +18,7 @@ export class StartConversationResolver {
         @Arg("input", {nullable: false}) input: StartConversationInput,
         @Ctx() {em, user}: MyContext): Promise<Conversation> {
 
-            let me = await em.findOneOrFail(User, {id: user?.sub})
+            let me = user
 
             let listing = await em.findOneOrFail(Listing, {id: input.listingId})
 

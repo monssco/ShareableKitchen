@@ -1,5 +1,5 @@
 import { Booking } from "../../entities/Booking/Booking";
-import { Arg, Ctx, Field, InputType, Mutation, Resolver } from "type-graphql";
+import { Arg, Ctx, Field, InputType, Mutation, ObjectType, Resolver } from "type-graphql";
 import { MyContext } from "../../types";
 import { Listing } from "../../entities/Listing/Listing";
 import { User } from "../../entities/User/User";
@@ -18,15 +18,33 @@ class CreateBookingInput {
     endDate!: Date
 }
 
-@Resolver(() => Booking)
+@ObjectType()
+class CreateBookingReturn {
+    @Field()
+    bookingId: string
+
+    @Field()
+    paymentIntentSecret: string
+}
+
+/**
+ * When you create a booking, there are a few things that happen.
+ * 1. We make sure that there are no other overlapping bookings.
+ * 2. We make sure that you can have a payment intent created on your account
+ * 3. We make sure that you can afford to pay for it (otherwise people will just book and then not pay)
+ * 
+ * We return the booking id (which was just created) and and the paymentIntent secret for the payment that must be made for it to be confirmed.
+ * Using that payment intent, we can confirm the booking (via webhook ) once the buyer has paid for it.
+ */
+@Resolver(() => CreateBookingReturn)
 export class CreateBookingResolver {
 
 
-    @Mutation(()=> Booking)
+    @Mutation(()=> CreateBookingReturn)
     async createBooking(
         @Arg("input") input: CreateBookingInput,
         @Ctx() {em, user, stripe}: MyContext
-    ): Promise<Booking> {
+    ): Promise<CreateBookingReturn> {
         const me = await em.findOneOrFail(User, {id: user?.sub})
         const listing = await em.findOneOrFail(Listing, {id: input.listingId})
         const availability = await em.findOneOrFail(Availability, {listing})
@@ -37,7 +55,8 @@ export class CreateBookingResolver {
         }
 
         // Get all the other bookings to ensure there are no overlapping bookings.
-        const bookings = await em.find(Booking, {listing})
+        // Make sure they are indeed confirmed and not just sitting around.
+        const bookings = await em.find(Booking, {listing, confirmed: true})
 
         var overlap = false
         for (const a of bookings) {
@@ -46,37 +65,44 @@ export class CreateBookingResolver {
             overlap = (a.startDate <= input.endDate) && (a.endDate >= input.startDate)
         }
 
-        console.log(overlap)
         if(overlap) {
             throw new Error('New booking date overlaps pre-existing booking.')
         }
 
         // Find the difference in the number of days for $ calculation.
-        const numDays = differenceInCalendarDays(input.startDate, input.endDate)
+        // The days returned need to be incremented by 1.
+        const numDays = Math.abs(differenceInCalendarDays(input.endDate, input.startDate)) + 1
 
         // Amount to charge the buyer. (Person creating this booking)
         const amount = numDays * listing.price
 
-        /**
-         * TODO: calculate application fees here.
-         */
-        const stripeResponse = await stripe.charges.create({
-            customer: me.stripe_customer_id,
-            currency: listing.city.state.country.currency,
-            amount,
-            description: `Booking for ${listing.title}`,
-            destination: {
-                account: listing.author.stripe_account_id!,
-                amount
-            }
-        })
+        // apply the 10% buyer fees. We will absorb the platform fees.
+        var applicationFee = (10 / 100) * amount
         
+        const totalAmount = applicationFee + amount;
 
-        const booking = new Booking(listing, me, input.startDate, input.endDate, new Date(), stripeResponse.id )
+        
+        const paymentIntent = await stripe.paymentIntents.create({
+            payment_method_types: ['card'],
+            amount: totalAmount,
+            currency: 'cad',
+            customer: me.stripe_customer_id,
+            description: `Shareable Kitchen - ${listing.title} - ${listing.id}`,
+            statement_descriptor: `Shareable Kitchen`
+        })
+
+        const booking = new Booking(listing, me, input.startDate, input.endDate, listing.price, applicationFee, paymentIntent.id)
+
+        if(!paymentIntent.client_secret) {
+            throw new Error("Payment intent doesn't have a secret.")
+        }
 
         await em.persistAndFlush(booking)
 
-        return booking
+        return {
+            bookingId: booking.id,
+            paymentIntentSecret: paymentIntent.client_secret
+        }
     }
 
 }

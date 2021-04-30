@@ -38,6 +38,10 @@ export class RegisterResolver {
             
         })
 
+        /**
+         * Create a user with this basic info only.
+         * Later on they will onboard themselves.
+         */
         const account = await stripe.accounts.create({
             email: user.email,
             type: "express",

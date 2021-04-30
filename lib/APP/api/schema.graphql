@@ -110,8 +110,10 @@ type Booking {
   buyer: User!
   startDate: DateTime!
   endDate: DateTime!
+  price: Int!
+  applicationFee: Int!
   created: DateTime!
-  paymentDate: DateTime!
+  paymentDate: DateTime
 }
 
 type User {
@@ -130,6 +132,11 @@ type User {
   bookings: [Booking!]
   conversations: [Conversation!]
   message: [Message!]
+}
+
+type CreateBookingReturn {
+  bookingId: String!
+  paymentIntentSecret: String!
 }
 
 interface Image {
@@ -238,6 +245,11 @@ input StartConversationInput {
   listingId: String!
 }
 
+input AccountLinkInput {
+  refreshUrl: String!
+  returnUrl: String!
+}
+
 input RegisterUserInput {
   id: ID!
   email: String!
@@ -260,9 +272,12 @@ input UpdateUserInput {
 }
 
 type Query {
-  getBookings(input: PaginationInput!): [Booking!]!
-  getReservations(input: PaginationInput!): [Booking!]!
+  listBookings(input: PaginationInput!): [Booking!]!
+  listReservations(input: PaginationInput!): [Booking!]!
   getCountries: [CountryType!]!
+
+  # This endpoint is used to check if an account has payouts enabled. If payouts are not enabled, they must enable them by following the by using the getAccountLink endpoint.
+  arePayoutsEnabled: Boolean!
   myListings(input: PaginationInput!): [Listing!]!
   searchListings(input: SearchListingsInput!): [Listing!]!
   getConversations(input: PaginationInput!): [Conversation!]!
@@ -275,8 +290,11 @@ type Query {
   getPayout(input: String!): JSON!
   listBalanceTransactions: JSON!
   getBalanceTransaction(input: String!): JSON!
+
+  # Account links allow you to onboard a user via stripe. https://stripe.com/docs/api/account_links
+  getAccountLink(input: AccountLinkInput!): JSON!
   getStripeCustomer: JSON!
-  getPaymentMethods: JSON!
+  listPaymentMethods: JSON!
   me: User
 }
 
@@ -284,7 +302,9 @@ type Query {
 scalar JSON @specifiedBy(url: "http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf")
 
 type Mutation {
-  createBooking(input: CreateBookingInput!): Booking!
+  createBooking(input: CreateBookingInput!): CreateBookingReturn!
+
+  # Before creating a listing, check to see if this account has payouts enabled by calling arePayoutsEnabled query.
   createListing(input: CreateListingInput!): Listing!
   deleteMyListing(id: String!): Boolean!
   editListing(input: EditListingInput!): Listing!

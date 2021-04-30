@@ -10,10 +10,10 @@ import { PaginationInput } from "../Base/pagination.resolver";
  * Buyers on the other hand will retrieve Bookings.
  */
 @Resolver()
-export class GetReservationsResolver {
+export class ListReservationsResolver {
 
     @Query(() => [Booking])
-    async getReservations(
+    async listReservations(
         @Arg("input") input: PaginationInput,
         @Ctx() {em, user}: MyContext
     ): Promise<Booking[]> {
@@ -26,6 +26,6 @@ export class GetReservationsResolver {
             }
         }
 
-        return await em.find(Booking, {listing: {author: {id: user?.sub}}}, options)
+        return await em.find(Booking, {listing: {author: {id: user?.sub}}, confirmed: true}, options)
     }
 }

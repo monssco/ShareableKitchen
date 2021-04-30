@@ -1,12 +1,18 @@
 import { MikroORM } from '@mikro-orm/core';
-import microConfig from '../../mikro-orm.config';
 import { seedDatabase } from './helpers';
 
-async function connectToDB() {
+import microConfig from '../../mikro-orm.config';
 
-    /*
-    Initialize orm using the config file.
-    */
+/**
+ * Sets up the ORM connection and performs all necessary migrations.
+ * @returns ORM
+ */
+async function setupDatabaseConnection() {
+
+
+    /**
+     * Initialize orm using the config file.
+     */
     const orm = await MikroORM.init(microConfig);
 
     /**
@@ -26,4 +32,16 @@ async function connectToDB() {
     return orm
 }
 
-export const ormClient = () => connectToDB();
+/**
+ * 
+ * @returns ORM client
+ */
+export const ormClient = () => setupDatabaseConnection();
+
+/**
+ * 
+ * @returns ORM instance.
+ */
+export async function getOrm() {
+    return await MikroORM.init(microConfig);
+}

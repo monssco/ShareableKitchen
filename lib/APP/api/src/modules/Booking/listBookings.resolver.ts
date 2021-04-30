@@ -12,10 +12,10 @@ import { Listing } from "../../entities/Listing/Listing";
  * This is essentially the time that they have decided to book for on a given listing.
  */
 @Resolver()
-export class GetBookingsResolver {
+export class ListBookingsResolver {
 
     @Query(() => [Booking])
-    async getBookings(
+    async listBookings(
         @Arg("input") input: PaginationInput,
         @Ctx() {em, user}: MyContext
     ): Promise<Booking[]> {
@@ -25,10 +25,15 @@ export class GetBookingsResolver {
             offset: input.offset,
             orderBy: {
                 created: 'ASC'
-            }
+            },
         }
         options
-        const bookings = await em.find(Booking, {buyer: {id: user?.sub}})
+        
+        /**
+         * Only show confirmed bookings.
+         */
+        const bookings = await em.find(Booking, {buyer: {id: user?.sub}, confirmed: true})
+
         return bookings
 
     }

@@ -5,14 +5,13 @@ import * as path from 'path';
 import { ormClient } from "./utils/createDatabaseConn";
 import { buildSchema } from "type-graphql";
 import { MyContext } from "./types";
-
 import jwtDecode, { JwtPayload } from 'jwt-decode';
-
 import Stripe from 'stripe';
+
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_51IhXgtGZgehPj4cv80xEq7vmSZm6r3fXZs6yxY9Syb22IALSmftnkxFNyRnWkClLgijH1D50hE8QKhSS95hJQaj100AQh0EX6v', {
     apiVersion: '2020-08-27',
 });
-
+import router from './webhook/stripe.webhook'
 
 /**
  * Header provided by the ALB when its being guarded by cognito.
@@ -21,16 +20,14 @@ const JWT_HEADER_NAME = "x-amzn-oidc-data"
 
 const startServer = async () => {
 
-    // Connect to database using the ORM.
-
     
+    const client = await ormClient();
 
 
     /**
      * Including resolvers using glob patterns.
      * https://typegraphql.com/docs/bootstrap.html#create-typedefs-and-resolvers-map
      */
-    const client = await ormClient();
     const schema = await buildSchema({
                         resolvers: [
                             path.resolve(__dirname, "modules/**/*.resolver.ts")
@@ -77,6 +74,8 @@ const startServer = async () => {
                 throw Error('Unauthorized')
             }
 
+            // TODO: get user from em in here and pass it into the context instead.
+
             return {
             em: client.em,
             req,
@@ -98,6 +97,8 @@ const startServer = async () => {
     app.get('/health-check', (_, res) => {
         res.sendStatus(200)
     })
+
+    app.use('/webhook', router);
 
     server.applyMiddleware({app, path: '/graphql'})
 

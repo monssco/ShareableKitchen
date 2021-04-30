@@ -6,6 +6,7 @@ import { PropertyFeatures } from "../../entities/Enums/PropertyFeatures.enum";
 import { PropertyType } from "../../entities/Enums/PropertyType.enum";
 import { Availability } from "../../entities/Availability";
 import { City } from "../../entities/Geo/City";
+import { CheckPayoutsEnabled } from "./checkPayouts.resolver";
 
 @InputType()
 class CreateListingLocationInput {
@@ -52,11 +53,20 @@ class CreateListingInput implements Partial<Listing> {
 
 @Resolver()
 export class CreateListingResolver {
-    @Mutation(()=> Listing, {nullable: false})
+    @Mutation(()=> Listing, {nullable: false, description:"Before creating a listing, check to see if this account has payouts enabled by calling arePayoutsEnabled query."})
     async createListing(
         @Arg("input", {nullable: false}) input: CreateListingInput,
-        @Ctx() {em, user}: MyContext): Promise<Listing> {
+        @Ctx() context: MyContext): Promise<Listing> {
+            const {em, user} = context
             const dbUser = await em.findOneOrFail(User, {id: user?.sub})
+
+            /**
+             * Without a payout source, you can't create a listing.
+             */
+            let payoutsEnabled = await new CheckPayoutsEnabled().arePayoutsEnabled(context)
+            if (!payoutsEnabled) {
+                throw new Error("Payouts are not enabled, use the onboarding endpoint to add payout method first.")
+            }
 
             /**
              * Find the city first.

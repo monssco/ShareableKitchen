@@ -29,7 +29,7 @@ export class CustomerResolver {
      * and then use those to populate the method.
      */
     @Query(() => GraphQLJSON)
-    async getPaymentMethods(
+    async listPaymentMethods(
         @Ctx() {em, user, stripe}: MyContext
     ) {
         const me = await em.findOneOrFail(User, {id: user?.sub})
@@ -41,7 +41,6 @@ export class CustomerResolver {
             customer: me.stripe_customer_id,
             type: "card"
         })
-
     }
 
     @Mutation(() => GraphQLJSON)

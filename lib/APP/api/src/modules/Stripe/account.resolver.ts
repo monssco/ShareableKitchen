@@ -1,9 +1,17 @@
 
 import { User } from "../../entities/User/User";
-import { Arg, Ctx, Mutation, Query } from "type-graphql";
+import { Arg, Ctx, Field, InputType, Mutation, Query } from "type-graphql";
 import { MyContext } from "../../types";
 import { GraphQLJSON } from 'graphql-type-json';
 
+@InputType()
+class AccountLinkInput {
+    @Field()
+    refreshUrl: string
+
+    @Field()
+    returnUrl: string
+}
 
 
 export class AccountQueryResolvers {
@@ -110,6 +118,22 @@ export class AccountQueryResolvers {
         return await stripe.balanceTransactions.retrieve(id, {
             stripeAccount: me.stripe_account_id
         })
+    }
+
+
+    @Query(() => GraphQLJSON, {description: "Account links allow you to onboard a user via stripe. https://stripe.com/docs/api/account_links"})
+    async getAccountLink(
+        @Arg("input") input: AccountLinkInput,
+        @Ctx() {em, user, stripe}: MyContext
+    ){
+        let me = await em.findOneOrFail(User, {id: user?.sub})
+        let link = await stripe.accountLinks.create({
+            account: me.stripe_account_id!,
+            type: "account_onboarding",
+            refresh_url: input.refreshUrl,
+            return_url: input.returnUrl,
+        })
+        return link
     }
     
 }

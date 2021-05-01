@@ -77,15 +77,12 @@ const startServer = async () => {
 
         const decoded = jwtDecode<JwtPayload>(jwt_header);
 
-        // console.log('DECODED', decoded)
-
         // If these values don't exist, its unauthorized
         if (!decoded.sub || !decoded.exp || !decoded.iss) {
             throw Error('Unauthorized')
         }
 
-        // TODO: get user from em in here and pass it into the context instead.
-
+        // Get user from database.
         const user = await client.em.findOneOrFail(User, {id: decoded.sub})
 
         return {

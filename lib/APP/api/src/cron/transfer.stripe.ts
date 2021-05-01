@@ -35,6 +35,7 @@ export class TransferScheduler {
 
     /**
      * TODO: Test this with real data. I think this works but unsure about amounts.
+     * Also find bookings only that have 24 hours or more elapsed.
      */
     /**
      * 1. Get bookings that are confirmed and have null transfer ids.

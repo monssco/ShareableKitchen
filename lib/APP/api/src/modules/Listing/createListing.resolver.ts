@@ -75,7 +75,7 @@ export class CreateListingResolver {
             /**
              * Create the availability schedule.
              */
-            const availability = new Availability(input.availability.startDate, input.availability.endDate)
+            const availability = new Availability(input.availability.startDate, input.availability.endDate, input.availability.type)
 
             /**
              * Create the listing.

@@ -5,7 +5,8 @@
  */
 
 import { Entity, OneToOne, PrimaryKeyType, Property } from "@mikro-orm/core";
-import { Field, InputType, ObjectType } from "type-graphql";
+import { Field, InputType, ObjectType, registerEnumType } from "type-graphql";
+import { AvailabilityType } from "./Enums/AvailabilityType.enum";
 import { Listing } from "./Listing/Listing";
 
 @InputType("AvailabilityInput")
@@ -26,8 +27,18 @@ export class Availability {
 
     [PrimaryKeyType] : string;
 
-    constructor(startDate: Date, endDate: Date ) {
+    @Field(()=> AvailabilityType)
+    @Property()
+    type: AvailabilityType
+
+    constructor(startDate: Date, endDate: Date, type: AvailabilityType ) {
         this.startDate = startDate
         this.endDate = endDate
+        this.type = type
     }
 }
+
+registerEnumType(AvailabilityType,{
+    name: "AvailabilityType",
+    description: "Types of kitchen availability"
+})

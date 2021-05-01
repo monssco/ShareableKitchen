@@ -20,10 +20,18 @@ type ListingImage implements Image {
 type AvailabilityObject {
   startDate: DateTime!
   endDate: DateTime!
+  type: AvailabilityType!
 }
 
 # The javascript `Date` as string. Type represents date and time as the ISO Date string.
 scalar DateTime
+
+# Types of kitchen availability
+enum AvailabilityType {
+  daily
+  weekly
+  monthly
+}
 
 type Message {
   id: String!
@@ -156,6 +164,7 @@ interface Location {
 input AvailabilityInput {
   startDate: DateTime!
   endDate: DateTime!
+  type: AvailabilityType!
 }
 
 input CountryInput {

@@ -11,6 +11,7 @@ RUN npm install
 # Bundle app source
 COPY . /app
 
-EXPOSE 8000 9000
+# Expose port 3000 for nextjs app
+EXPOSE 3000
 
 CMD npm run develop

@@ -11,8 +11,8 @@ cdk.out
 *.env
 
 # don't apply gitignore on server and app
-!lib/APP/app/*
-!lib/APP/api/*
+!lib/APP/app/**/*
+!lib/APP/api/**/*
 
 # Mac OS
 .DS_Store

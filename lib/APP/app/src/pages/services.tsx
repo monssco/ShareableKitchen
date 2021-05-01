@@ -1,9 +1,7 @@
 import React from 'react'
 import FAQ from '../components/FAQ';
 import SEO from '../components/seo';
-
-import Difference from '../components/Difference';
-import { Link } from 'gatsby';
+import Link from 'next/link';
 
 const ServicesPage = () => {
     return (
@@ -33,7 +31,7 @@ const ServicesPage = () => {
                             <p className="text-lg">
                                 Have a Project for us?
                     </p>
-                        <Link to="/contact">
+                        <Link href="/contact">
                             <p className="py-3 underline font-bold text-lg">Let's chat</p>
                         </Link>
                     </div>
@@ -51,76 +49,16 @@ const ServicesPage = () => {
 export default ServicesPage;
 
 
-import { graphql, useStaticQuery } from 'gatsby';
-import Img from 'gatsby-image';
 import Skills from '../components/Skills';
 
 
 
 const MockUpImage = () => {
 
-    const data = useStaticQuery(graphql`
-        query MockupImageQuery {
-            fileName: file(relativePath: { eq: "mockup.png" }) {
-                childImageSharp {
-                    fluid(maxWidth: 300, maxHeight: 385) {
-                    ...GatsbyImageSharpFluid
-                    ...GatsbyImageSharpFluidLimitPresentationSize
-                    }
-                }
-            }
-            userDesign: file(relativePath: { eq: "user_experience.png" }) {
-                childImageSharp {
-                    fluid(maxWidth: 400, maxHeight: 385) {
-                    ...GatsbyImageSharpFluid
-                    ...GatsbyImageSharpFluidLimitPresentationSize
-                    }
-                }
-            }
-            userMockup: file(relativePath: { eq: "usermockup.png" }) {
-                childImageSharp {
-                    fluid(maxWidth: 300, maxHeight: 385) {
-                    ...GatsbyImageSharpFluid
-                    ...GatsbyImageSharpFluidLimitPresentationSize
-                    }
-                }
-            }
-            designStudio: file(relativePath: { eq: "design_studio.png" }) {
-                childImageSharp {
-                    fluid(maxWidth: 250, maxHeight: 385) {
-                    ...GatsbyImageSharpFluid
-                    ...GatsbyImageSharpFluidLimitPresentationSize
-                    }
-                }
-            }
-        }
-`)
-
-    const imageData = data.fileName.childImageSharp.fluid
 
     return (
         <div className="flex md:flex-row justify-center space-x-4 md:space-x-8 gap-4 md:gap-8 py-10 md:py-20">
-            <Img
-                className="hidden md:block flex-1 flex-shrink-0 object-cover h-96"
-                fluid={imageData}
-                alt="User interface design"
-            >
-            </Img>
-            <Img
-                className="flex-1 object-cover h-96 my-10"
-                fluid={data.userDesign.childImageSharp.fluid}
-                alt="User design">
-            </Img>
-            <Img
-                className=" flex-1 object-cover h-96 -my-5"
-                fluid={data.userMockup.childImageSharp.fluid}
-                alt="monss user testing mockups">
-            </Img>
-            <Img
-                className="hidden md:block flex-1 object-cover h-96 mt-5"
-                fluid={data.designStudio.childImageSharp.fluid}
-                alt="monss user testing mockups">
-            </Img>
+            
         </div>
     )
 

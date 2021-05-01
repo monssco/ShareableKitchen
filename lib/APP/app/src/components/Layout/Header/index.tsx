@@ -1,4 +1,4 @@
-import { Link } from "gatsby"
+import Link from 'next/link'
 import React, {FunctionComponent, useState} from "react"
 
 interface Props {
@@ -36,9 +36,10 @@ const Header: FunctionComponent<Props> = ({ companyName }: Props) => {
             <nav className="relative flex items-center justify-between sm:h-10 lg:justify-between" aria-label="Global">
               <div className="flex items-center flex-grow flex-shrink-0 lg:flex-grow-0">
                 <div className="flex items-center justify-between w-full md:w-auto">
-                  <Link to="/" className="flex title-font font-medium items-center text-gray-900 ">
-
-                    <span className="text-3xl">{companyName}</span>
+                  <Link href="/">
+                    <a className="flex title-font font-medium items-center text-gray-900 ">
+                      <span className="text-3xl">{companyName}</span>
+                    </a>
                   </Link>
                   
                     <div className="-mr-2 flex items-center md:hidden">
@@ -56,13 +57,15 @@ const Header: FunctionComponent<Props> = ({ companyName }: Props) => {
                 <div className="hidden md:block md:ml-10 md:pr-4 md:space-x-8">
                 {routes.map((link) => (
                   <Link
-                    activeClassName="active"
+                    // activeClassName="active"
                     // className="font-medium text-lg text-gray-500 hover:text-gray-900"
                     key={link.title}
-                    to={link.route}
-                    onClick={() => toggleExpansion(false)}
+                    href={link.route}
+                    
                   >
-                    {link.title}
+                    <a onClick={() => toggleExpansion(false)}>
+                      {link.title}
+                    </a>
                   </Link>
                 ))}
                   
@@ -85,9 +88,10 @@ const Header: FunctionComponent<Props> = ({ companyName }: Props) => {
               <div className="rounded-lg shadow-md bg-white ring-1 ring-black ring-opacity-5 overflow-hidden">
                 <div className="px-5 pt-4 flex items-center justify-between">
                   <div>
-                  <Link onClick={() => toggleExpansion(false)} to="/" className="flex title-font font-medium items-center text-gray-900 ">
-
-                    <span className="text-3xl">{companyName}</span>
+                  <Link href="/" >
+                    <a onClick={() => toggleExpansion(false)} className="flex title-font font-medium items-center text-gray-900 " >
+                      <span className="text-3xl">{companyName}</span>
+                    </a>
                   </Link>
             </div>
                     <div className="-mr-2">
@@ -105,14 +109,18 @@ const Header: FunctionComponent<Props> = ({ companyName }: Props) => {
                       
                       {routes.map((link) => (
                         <Link
-                          activeClassName="block px-3 py-2 rounded-md text-base font-medium text-black hover:text-gray-900 hover:bg-gray-50"
-                          className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50" 
-                          role="menuitem"
+                          // activeClassName="block px-3 py-2 rounded-md text-base font-medium text-black hover:text-gray-900 hover:bg-gray-50"
+                          
+                          // role="menuitem"
                           key={link.title}
-                          to={link.route}
-                          onClick={() => toggleExpansion(false)}
+                          href={link.route}
+                          
                         >
-                          {link.title}
+                          <a className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50" 
+                          onClick={() => toggleExpansion(false)}
+                          >
+                            {link.title}
+                          </a>
                         </Link>
                       ))}
                     </div>

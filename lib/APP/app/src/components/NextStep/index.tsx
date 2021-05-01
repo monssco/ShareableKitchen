@@ -1,4 +1,4 @@
-import { Link } from 'gatsby'
+import Link from 'next/link'
 import React from 'react'
 
 interface Props {
@@ -12,7 +12,11 @@ const NextStep = (props: Props) => {
             <div className="m-auto container p-5">
                 <p className="text-white text-sm md:text-base opacity-50">Find out how we can help your business</p>
                 <p className="text-4xl md:text-7xl">Take the next step</p>
-                <Link className="md:text-xl underline" to="/contact/">Let's talk</Link>
+                <Link href="/contact/">
+                    <a className="md:text-xl underline">
+                        Let's talk
+                    </a>
+                </Link>
             </div>
         </section>
     )

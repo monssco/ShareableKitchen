@@ -1,7 +1,6 @@
 import React, { FunctionComponent } from "react"
-import { Link } from 'gatsby';
 import SEO from "../components/seo"
-import { OutboundLink} from 'gatsby-plugin-google-gtag';
+import Link from 'next/link';
 
 const NotFoundPage: FunctionComponent = () => (
   <>
@@ -12,10 +11,14 @@ const NotFoundPage: FunctionComponent = () => (
         
         <p className="text-xl md:text-5xl">Fear not! You can still go to the </p>
         
-         <Link className="text-3xl md:text-8xl underline" to="/">homepage</Link>
+        <Link href="/">
+          <a className="text-3xl md:text-8xl underline">
+            homepage
+            </a>
+        </Link>
 
-        <p className="opacity-80 pt-10">In case you were expecting a page here, please contact <OutboundLink href="mailto:admin@monss.co">admin@monss.co</OutboundLink> for help!
-        </p>
+        {/* <p className="opacity-80 pt-10">In case you were expecting a page here, please contact <OutboundLink href="mailto:admin@monss.co">admin@monss.co</OutboundLink> for help!
+        </p> */}
       </div>
     </section>
   </>

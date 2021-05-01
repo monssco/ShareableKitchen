@@ -11,10 +11,7 @@
 # production
 /build
 
-# output of the gatsby build
-.cache/
-public/
-
+.next
 # misc
 .DS_Store
 .env.local

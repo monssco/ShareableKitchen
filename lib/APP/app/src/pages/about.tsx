@@ -1,9 +1,5 @@
 import React, { FunctionComponent } from 'react'
 import SEO from '../components/seo';
-import { useStaticQuery, graphql } from "gatsby"
-import Img from "gatsby-image"
-
-import Tree from '../images/tree'
 import Difference from '../components/Difference/index';
 
 const AboutPage: FunctionComponent = () => {
@@ -18,7 +14,7 @@ const AboutPage: FunctionComponent = () => {
                         <p className="font-sans font-light text-3xl md:text-6xl max-w-2xl pb-10 leading-tight">
                             Reshaping software development with Simplicity, Transparency and Trust.
                         </p>
-                        <Tree className="h-96"></Tree>
+                        
                     </div>
                     
                     {/* <div className="flex-1 bg-red-100">
@@ -45,34 +41,6 @@ export default AboutPage;
 
 const WhyWeStarted = () => {
 
-    const data = useStaticQuery(graphql`
-        query AboutImageQuery {
-            summerMountain: file(relativePath: { eq: "mountain_summer.png" }) {
-                childImageSharp {
-                    fluid(maxWidth: 200, maxHeight: 385, cropFocus: CENTER) {
-                    ...GatsbyImageSharpFluid
-                    ...GatsbyImageSharpFluidLimitPresentationSize
-                    }
-                }
-            }
-            winterMountain: file(relativePath: { eq: "mountain_winter.png" }) {
-                childImageSharp {
-                    fluid(maxWidth: 250, maxHeight: 385, cropFocus: CENTER) {
-                    ...GatsbyImageSharpFluid
-                    ...GatsbyImageSharpFluidLimitPresentationSize
-                    }
-                }
-            }
-            springMountain: file(relativePath: { eq: "mountain_spring.png" }) {
-                childImageSharp {
-                    fluid(maxWidth: 300, maxHeight: 385, cropFocus: CENTER) {
-                    ...GatsbyImageSharpFluid
-                    ...GatsbyImageSharpFluidLimitPresentationSize
-                    }
-                }
-            }
-        }
-    `)
 
     // if (!data?.placeholderImage?.childImageSharp?.fluid) {
     //     return <div>Picture not found</div>
@@ -97,9 +65,7 @@ const WhyWeStarted = () => {
                 </div>
 
                 <div className="flex-1 flex flex-row gap-8">
-                    <Img fluid={data.summerMountain.childImageSharp.fluid} className="hidden md:block flex-1 flex-shrink-0 object-cover h-96 mb-40 " />
-                    <Img fluid={data.winterMountain.childImageSharp.fluid} className="hidden md:block flex-1 flex-shrink-0 object-cover h-96 -mt-20"/>
-                    <Img fluid={data.springMountain.childImageSharp.fluid} className="hidden md:block flex-1 flex-shrink-0 object-cover h-96 -mb-20" />
+                    
                 </div>
 
 

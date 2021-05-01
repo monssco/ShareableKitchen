@@ -1,7 +1,6 @@
-import { Link } from 'gatsby';
+import Link from 'next/link';
 import React from 'react'
-const Logo = require('./logo.svg') as string;
-import { OutboundLink } from "gatsby-plugin-google-gtag"
+// import { OutboundLink } from "gatsby-plugin-google-gtag"
 
 
 const Footer = () => {
@@ -23,7 +22,7 @@ const Footer = () => {
             </p>
               <div className="">
                 <span className="inline-flex sm:ml-auto sm:mt-0 mt-4 justify-center sm:justify-start">
-                  <OutboundLink href="https://www.facebook.com/monssco-100898055292131" className="hover:text-gray-500">
+                  {/* <OutboundLink href="https://www.facebook.com/monssco-100898055292131" className="hover:text-gray-500">
                   <svg
                     fill="currentColor"
                     strokeLinecap="round"
@@ -34,10 +33,10 @@ const Footer = () => {
                 >
                     <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z" />
                   </svg>
-                </OutboundLink>
+                </OutboundLink> */}
 
                   {/* Twitter */}
-                  <OutboundLink href="https://twitter.com/monssco" className="ml-3 hover:text-gray-500">
+                  {/* <OutboundLink href="https://twitter.com/monssco" className="ml-3 hover:text-gray-500">
                     <svg
                       fill="currentColor"
                       strokeLinecap="round"
@@ -48,8 +47,8 @@ const Footer = () => {
                     >
                       <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z" />
                     </svg>
-                  </OutboundLink>
-                  <OutboundLink href="https://www.instagram.com/monss.co/" className="ml-3 hover:text-gray-500">
+                  </OutboundLink> */}
+                  {/* <OutboundLink href="https://www.instagram.com/monss.co/" className="ml-3 hover:text-gray-500">
                     <svg
                       fill="none"
                       stroke="currentColor"
@@ -62,8 +61,8 @@ const Footer = () => {
                       <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
                       <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37zm1.5-4.87h.01" />
                     </svg>
-                  </OutboundLink>
-                  <OutboundLink href="https://www.linkedin.com/company/monss" className="ml-3 hover:text-gray-500">
+                  </OutboundLink> */}
+                  {/* <OutboundLink href="https://www.linkedin.com/company/monss" className="ml-3 hover:text-gray-500">
                     <svg
                       fill="currentColor"
                       stroke="currentColor"
@@ -79,12 +78,12 @@ const Footer = () => {
                       />
                       <circle cx="4" cy="4" r="2" stroke="none" />
                     </svg>
-                  </OutboundLink>
+                  </OutboundLink> */}
                 </span>
               </div>
 
               <div className="flex flex-col items-end">
-                <Logo />
+                {/* <Logo /> */}
                 <p>Made in Calgary with love.</p>
               </div>
             </div>
@@ -122,12 +121,16 @@ const FooterItemCompany = () => {
         {Links.map(d=> {
           return(
             <li key={d.title}>
-              <Link to={d.link} className="text-lg opacity-80 hover:opacity-100 hover:underline">{d.title}</Link>
+              <Link href={d.link} >
+                <a className="text-lg opacity-80 hover:opacity-100 hover:underline">
+                  {d.title}
+                </a>
+                  </Link>
             </li>
           )
         })}
         <li>
-          <OutboundLink href="https://forms.gle/X9Vuhn2svqNjNjSd7" className="text-lg opacity-80 hover:opacity-100 hover:underline">Careers</OutboundLink>
+          {/* <OutboundLink href="https://forms.gle/X9Vuhn2svqNjNjSd7" className="text-lg opacity-80 hover:opacity-100 hover:underline">Careers</OutboundLink> */}
         </li>
       </ul>
     </div>
@@ -170,7 +173,11 @@ const FooterItemServices = () => {
         {Links.map(d => {
           return (
             <li key={d.title}>
-              <Link to={d.link} className="text-lg opacity-80 hover:opacity-100 hover:underline">{d.title}</Link>
+              <Link href={d.link}>
+                <a className="text-lg opacity-80 hover:opacity-100 hover:underline"> 
+                  {d.title} 
+                </a>
+              </Link>
             </li>
           )
         })}
@@ -186,13 +193,17 @@ const FooterItemNewProjects = () => {
       <p className="opacity-40 text-lg">New Projects</p>
       <ul className="">
         <li>
-          <OutboundLink href="mailto:hello@monss.co?subject=Hello Monss!" className="text-lg opacity-80 hover:opacity-100 underline">hello@monss.co</OutboundLink>
+          {/* <OutboundLink href="mailto:hello@monss.co?subject=Hello Monss!" className="text-lg opacity-80 hover:opacity-100 underline">hello@monss.co</OutboundLink> */}
         </li>
         <li>
-          <OutboundLink href="tel:587-609-7008" className="text-lg opacity-80 hover:opacity-100 underline">587-609-7008</OutboundLink>
+          {/* <OutboundLink href="tel:587-609-7008" className="text-lg opacity-80 hover:opacity-100 underline">587-609-7008</OutboundLink> */}
         </li>
         <li>
-          <Link to="/contact/" className="text-lg opacity-80 hover:opacity-100 underline">Contact</Link>
+          <Link href="/contact/">
+            <a className="text-lg opacity-80 hover:opacity-100 underline">
+              Contact
+            </a>
+          </Link>
         </li>
       </ul>
     </div>
@@ -204,7 +215,7 @@ const FooterItemDirections = () => {
   return (
     <div className="flex-1">
       <p className="opacity-40 text-lg">Directions</p>
-      <OutboundLink className="text-lg opacity-80 hover:opacity-100 hover:underline" href="https://goo.gl/maps/17xdtmrge9bR5eB5A">500 Center Street S <br/> Calgary, Alberta</OutboundLink>
+      {/* <OutboundLink className="text-lg opacity-80 hover:opacity-100 hover:underline" href="https://goo.gl/maps/17xdtmrge9bR5eB5A">500 Center Street S <br/> Calgary, Alberta</OutboundLink> */}
     </div>
   )
 }
@@ -225,7 +236,7 @@ const FooterPrivacy = () => {
         {Links.map(d => {
           return (
             <li key={d.title}>
-              <Link to={d.link} className="text-lg opacity-80 hover:opacity-100 hover:underline">{d.title}</Link>
+              <Link href={d.link} >{d.title}</Link>
             </li>
           )
         })}

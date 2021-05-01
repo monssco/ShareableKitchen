@@ -1,6 +1,4 @@
 import React from 'react'
-import {useStaticQuery, graphql} from 'gatsby';
-import Img from 'gatsby-image';
 import SEO from '../components/seo';
 import Difference from '../components/Difference';
 import Form from '../components/Form/venture';
@@ -10,21 +8,6 @@ interface Props {
 }
 
 const VenturesPage = (props: Props) => {
-
-    
-
-    const data = useStaticQuery(graphql`
-        query VentureImageQuery {
-            mountainsDistance: file(relativePath: { eq: "mountains_distance.png" }) {
-                childImageSharp {
-                    fluid {
-                    ...GatsbyImageSharpFluid
-                    ...GatsbyImageSharpFluidLimitPresentationSize
-                    }
-                }
-            }
-        }
-    `)
 
 
 // TODO: Change all the wording, its copied from funsize
@@ -38,11 +21,6 @@ const VenturesPage = (props: Props) => {
 
                     <div className="flex-1 relative">
 
-                        <Img
-                            className="z-0"
-                            fluid={data.mountainsDistance.childImageSharp.fluid}
-                            alt="User interface design"
-                        />
                         <p className="z-10 p-3 absolute top-0 left-0 bg-black text-white text-2xl font-extrabold tracking-widest">Ventures</p>
 
                         <p className="z-10 p-3 absolute left-0 bottom-0 bg-white text-white text-2xl font-extrabold tracking-widest">Monss</p>

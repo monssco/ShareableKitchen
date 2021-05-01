@@ -1,6 +1,5 @@
 import React from 'react'
 import SEO from '../components/seo'
-import { OutboundLink } from 'gatsby-plugin-google-gtag';
 
 interface Props {
     
@@ -20,7 +19,7 @@ const PrivacyPage = (props: Props) => {
 
                     <br/>
                     <br/>
-                    If you'd like to opt out of Google Analytics, you can use a tracker blocker such as <OutboundLink className="underline text-black" href='https://chrome.google.com/webstore/detail/ublock-origin/cjpalhdlnbpafiamejdnhcphjbkeiagm?hl=en'>uBlock Origin</OutboundLink> for Chrome.
+                    If you'd like to opt out of Google Analytics, you can use a tracker blocker such as for Chrome.
 
                     <br/>
                     <br/>

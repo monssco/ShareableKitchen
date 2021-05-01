@@ -1,7 +1,6 @@
 import React from "react"
 import SEO from "../components/seo"
-import { graphql, Link, useStaticQuery } from "gatsby"
-import Img from 'gatsby-image';
+import Link from 'next/link'
 
 import HireUs from "../components/HireUs/index";
 import Careers from '../components/Careers/index';
@@ -45,20 +44,6 @@ export default IndexPage
 
 const Landing =() => {
 
-  const data = useStaticQuery(graphql`
-        query LandingImageQuery {
-            monssStudio: file(relativePath: { eq: "studio_monss.png" }) {
-                childImageSharp {
-                    fluid(maxWidth: 2000, maxHeight: 1335, cropFocus: CENTER) {
-                    ...GatsbyImageSharpFluid
-                    ...GatsbyImageSharpFluidLimitPresentationSize
-                    }
-                }
-                
-            }
-        }
-    `)
-
   return (
     <div className="container mx-auto md:pt-20 pb-10 lg:py-40 p-5">
       <h1 className="text-4xl md:text-7xl xl:text-9xl font-semibold">digital design +
@@ -67,10 +52,11 @@ const Landing =() => {
       </h1>
       <div className="flex flex-col md:flex-row justify-between pt-5 md:pt-10 lg:pt-20">
         <div className="flex-1" >
-          <Img
+          {/* <Image
           alt="Monss Studio Calgary"
           fadeIn
-          fluid={data.monssStudio.childImageSharp.fluid}/></div>
+          fluid={data.monssStudio.childImageSharp.fluid}/> */}
+          </div>
 
         <div className="w-full md:w-2/5 xl:w-1/3 text-lg lg:text-2xl leading-10 text-black text-opacity-75 mt-5 md:ml-12 md:mt-0">
           <h2 className="text-2xl md:text-4xl mb-10">
@@ -82,7 +68,7 @@ const Landing =() => {
           </h2>
 
         <div className="mt-4 md:mt-10">
-            <Link to="/about/">
+            <Link href="/about">
               <Button text="About us" />
             </Link>
         </div>
@@ -113,3 +99,9 @@ const WhoWeAre = () => {
   )
 }
 
+
+// function HomePage() {
+//   return <div>Welcome to Next.js!</div>
+// }
+
+// export default HomePage

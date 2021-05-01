@@ -1,8 +1,7 @@
 import React from 'react';
 
 import { Callout } from '../HireUs/index';
-
-import {OutboundLink} from 'gatsby-plugin-google-gtag';
+import Link from 'next/link'
 
 // Careers is also here, right now there is no need to seperate it.
 const Careers = () => (
@@ -16,9 +15,11 @@ const Careers = () => (
         </div>
 
         <div className="py-5">
-            <OutboundLink href="https://forms.gle/X9Vuhn2svqNjNjSd7" className="text-2xl py-5 underline hover:text-green-800">
-                Work with us
-            </OutboundLink>
+            <Link href="https://forms.gle/X9Vuhn2svqNjNjSd7" >
+                <a className="text-2xl py-5 underline hover:text-green-800">
+                    Work with us
+                </a>
+            </Link>
         </div>
 
     </div>

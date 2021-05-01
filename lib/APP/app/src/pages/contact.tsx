@@ -1,12 +1,10 @@
-import React, {useState} from 'react'
+import React from 'react'
 import PropTypes from 'prop-types';
 import SEO from '../components/seo';
-import Studio from '../images/studio';
 import Form from '../components/Form';
-import { OutboundLink} from 'gatsby-plugin-google-gtag';
 
 
-const ContactPage = (props) => {
+const ContactPage = () => {
     return (
         <>
             <SEO title="Contact" description="Monss offers design, development, and custom software solutions for your business. Contact us today for a hassle-free consultation."></SEO>
@@ -39,20 +37,19 @@ ContactPage.propTypes = {
 
 const SideBar = () => (
     <div className="w-full py-16 md:pl-20">
-        <Studio className="mt-12"/>
         <div className="py-8">
             <p className="font-sans text-xl">Want to join our team?</p>
-            <OutboundLink href="https://forms.gle/X9Vuhn2svqNjNjSd7" target="blank" rel="noopener noreferrer">
+            {/* <OutboundLink href="https://forms.gle/X9Vuhn2svqNjNjSd7" target="blank" rel="noopener noreferrer">
                 <p className="font-bold text-lg transition duration-300 ease-in-out underline hover:no-underline hover:text-yellow-500">
                     Work at Monss</p>
-            </OutboundLink>
+            </OutboundLink> */}
         </div>
         <div className="">
             <p className="font-sans text-xl">Something else?</p>
-            <OutboundLink href="mailto:hello@monss.co?subject=Hello Monss!" target="blank" rel="noopener noreferrer">
+            {/* <OutboundLink href="mailto:hello@monss.co?subject=Hello Monss!" target="blank" rel="noopener noreferrer">
                 <p className="font-bold text-lg transition duration-300 ease-in-out underline hover:no-underline hover:text-yellow-500">
                     General Inquiries</p>
-            </OutboundLink>
+            </OutboundLink> */}
         </div>
     </div>
 )

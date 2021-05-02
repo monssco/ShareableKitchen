@@ -210,16 +210,6 @@ const FooterItemNewProjects = () => {
   )
 }
 
-const FooterItemDirections = () => {
-
-  return (
-    <div className="flex-1">
-      <p className="opacity-40 text-lg">Directions</p>
-      {/* <OutboundLink className="text-lg opacity-80 hover:opacity-100 hover:underline" href="https://goo.gl/maps/17xdtmrge9bR5eB5A">500 Center Street S <br/> Calgary, Alberta</OutboundLink> */}
-    </div>
-  )
-}
-
 const FooterPrivacy = () => {
 
   const Links = [

@@ -117,8 +117,8 @@ const Form = () => {
                     <Input 
                         name='firstName'
                         htmlFor='grid-first-name'
-                        error={formik.errors.firstName}
-                        touched={formik.touched.firstName}
+                        error={formik.errors.firstName? formik.errors.firstName : ''}
+                        touched={formik.touched.firstName? true : false}
                         label='First Name'
                         placeholder=''
                         type='text'
@@ -131,8 +131,8 @@ const Form = () => {
                     <Input
                         name='lastName'
                         htmlFor='grid-last-name'
-                        error={formik.errors.lastName}
-                        touched={formik.touched.lastName}
+                        error={formik.errors.lastName ? formik.errors.lastName : ''}
+                        touched={formik.touched.lastName? true : false}
                         label='Last Name'
                         placeholder=''
                         type='text'
@@ -146,8 +146,8 @@ const Form = () => {
                     <Input
                         name='email'
                         htmlFor='grid-email'
-                        error={formik.errors.email}
-                        touched={formik.touched.email}
+                        error={formik.errors.email ? formik.errors.email : ''}
+                        touched={formik.touched.email ? true : false}
                         label='Email Address'
                         placeholder=''
                         type='email'
@@ -160,8 +160,8 @@ const Form = () => {
                     <Input
                         name='city'
                         htmlFor='grid-city'
-                        error={formik.errors.city}
-                        touched={formik.touched.city}
+                        error={formik.errors.city? formik.errors.city : ''}
+                        touched={formik.touched.city ? true : false}
                         label='City'
                         placeholder=''
                         type='text'
@@ -176,8 +176,8 @@ const Form = () => {
                     <Input
                         name='companyName'
                         htmlFor='grid-company-name'
-                        error={formik.errors.companyName}
-                        touched={formik.touched.companyName}
+                        error={formik.errors.companyName ? formik.errors.companyName : ''}
+                        touched={formik.touched.companyName ? true : false}
                         label='Company Name'
                         placeholder=''
                         type='text'
@@ -212,8 +212,8 @@ const Form = () => {
                         htmlFor='start'
                         handleChange={formik.handleChange}
                         options={['Select one','ASAP', 'In the next month', 'Within the next 3-6 months', 'Sometimes this year', 'Not sure yet']}
-                        error={formik.errors.startingDate}
-                        touched={formik.touched.startingDate}
+                        error={formik.errors.startingDate ? formik.errors.startingDate : '' }
+                        touched={formik.touched.startingDate ? true : false}
                         onBlur={formik.handleBlur}
                     />
 
@@ -224,8 +224,8 @@ const Form = () => {
                         htmlFor='hear'
                         handleChange={formik.handleChange}
                         options={['Select one', 'A friend referred me', 'I know someone at monss', 'Attended an event', 'Startup Calgary', 'Clutch.co', 'Online', 'Dribble']}
-                        error = {formik.errors.referral}
-                        touched = {formik.touched.referral}
+                        error = {formik.errors.referral ? formik.errors.referral : ''}
+                        touched = {formik.touched.referral ? true :  false}
                         onBlur = {formik.handleBlur}
                     />
                 </div>

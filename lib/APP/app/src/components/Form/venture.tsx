@@ -118,7 +118,7 @@ const Form = () => {
                 <p className=" text-4xl pt-5 pb-3">Apply for Monss Ventures</p>
                 <p className="font-extralight text-2xl pb-10">We'll get back to you as soon as possible.</p>
                 <div className="flex flex-wrap -mx-3 mb-6">
-                    <Input
+                    {/* <Input
                         name='firstName'
                         htmlFor='grid-first-name'
                         error={formik.errors.firstName}
@@ -130,9 +130,9 @@ const Form = () => {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
 
-                    />
+                    /> */}
 
-                    <Input
+                    {/* <Input
                         name='lastName'
                         htmlFor='grid-last-name'
                         error={formik.errors.lastName}
@@ -143,11 +143,11 @@ const Form = () => {
                         className='w-full md:w-1/2 px-3'
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                    />
+                    /> */}
                 </div>
                 <div className="flex flex-wrap -mx-3 mb-6">
 
-                    <Input
+                    {/* <Input
                         name='email'
                         htmlFor='grid-email'
                         error={formik.errors.email}
@@ -159,9 +159,9 @@ const Form = () => {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
 
-                    />
+                    /> */}
 
-                    <Input
+                    {/* <Input
                         name='city'
                         htmlFor='grid-city'
                         error={formik.errors.city}
@@ -172,12 +172,12 @@ const Form = () => {
                         className='w-full md:w-1/2 px-3'
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                    />
+                    /> */}
 
 
                 </div>
                 <div className="flex flex-wrap -mx-3 mb-6">
-                    <Input
+                    {/* <Input
                         name='companyName'
                         htmlFor='grid-company-name'
                         error={formik.errors.companyName}
@@ -189,12 +189,12 @@ const Form = () => {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
 
-                    />
+                    /> */}
 
                     
                 </div>
                 <div className="flex flex-wrap -mx-3 mb-6" >
-                    <Input
+                    {/* <Input
                         name='website'
                         htmlFor='grid-website'
                         error={formik.errors.website}
@@ -206,7 +206,7 @@ const Form = () => {
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
 
-                    />
+                    /> */}
                 </div>
                 <div className="flex flex-wrap -mx-3 mb-6">
                     <div className="w-full px-3">
@@ -227,7 +227,7 @@ const Form = () => {
                     </div>
                 </div>
                 <div className="flex flex-wrap -mx-3 mb-6">
-                    <Select
+                    {/* <Select
                         name='projectStatus'
                         className='w-full md:w-1/2 px-3 mb-6'
                         label='Project Status'
@@ -237,9 +237,9 @@ const Form = () => {
                         error={formik.errors.projectStatus}
                         touched={formik.touched.projectStatus}
                         onBlur={formik.handleBlur}
-                    />
+                    /> */}
 
-                    <Select
+                    {/* <Select
                         name='compensationMethod'
                         className='w-full md:w-1/2 px-3 mb-6'
                         label='Compensation Method'
@@ -249,10 +249,10 @@ const Form = () => {
                         error={formik.errors.compensationMethod}
                         touched={formik.touched.compensationMethod}
                         onBlur={formik.handleBlur}
-                    />
+                    /> */}
                 </div>
                 <div className="flex flex-wrap -mx-3 mb-6">
-                    <Select
+                    {/* <Select
                         name='referral'
                         className='w-full md:w-1/2 px-3 mb-6'
                         label='How did you hear about us? '
@@ -262,7 +262,7 @@ const Form = () => {
                         error={formik.errors.referral}
                         touched={formik.touched.referral}
                         onBlur={formik.handleBlur}
-                    />
+                    /> */}
                 </div>
                 <div className="md:flex md:items-center">
                     <div className="md:w-1/3">
@@ -279,59 +279,59 @@ const Form = () => {
     )
 }
 
-interface InputProps {
-    name: string,
-    htmlFor: string,
-    label: string,
-    placeholder: string,
-    error: string, // for formik
-    touched: boolean, // for formik
-    type: string,
-    className?: string
-    onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
-    onBlur: (e: React.FocusEvent<any>) => void,
-}
+// interface InputProps {
+//     name: string,
+//     htmlFor: string,
+//     label: string,
+//     placeholder: string,
+//     error: string, // for formik
+//     touched: boolean, // for formik
+//     type: string,
+//     className?: string
+//     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
+//     onBlur: (e: React.FocusEvent<any>) => void,
+// }
 
-const Input = (props: InputProps) => (
-    <div className={props.className}>
-        <label className="block tracking-wide text-black text-base" htmlFor={props.htmlFor}>
-            {props.label}
-        </label>
-        <input onBlur={props.onBlur} onChange={props.onChange} name={props.name} className={`appearance-none block w-full text-gray-700 border-b-2 border-gray-700 py-3 mb-3 leading-tight focus:outline-none focus:border-yellow-500 `} id={props.htmlFor} type={props.type} placeholder={props.placeholder} />
-        <p className={`text-red-500 text-xs italic ${props.error && props.touched ? `block` : `hidden`}`}>{props.error}</p>
-    </div>
-)
+// const Input = (props: InputProps) => (
+//     <div className={props.className}>
+//         <label className="block tracking-wide text-black text-base" htmlFor={props.htmlFor}>
+//             {props.label}
+//         </label>
+//         <input onBlur={props.onBlur} onChange={props.onChange} name={props.name} className={`appearance-none block w-full text-gray-700 border-b-2 border-gray-700 py-3 mb-3 leading-tight focus:outline-none focus:border-yellow-500 `} id={props.htmlFor} type={props.type} placeholder={props.placeholder} />
+//         <p className={`text-red-500 text-xs italic ${props.error && props.touched ? `block` : `hidden`}`}>{props.error}</p>
+//     </div>
+// )
 
 
-interface SelectProps {
-    name: string,
-    label: string,
-    htmlFor: string,
-    className: string,
-    options: string[],
-    error: string,
-    touched: boolean,
-    handleChange: (event: React.ChangeEvent<HTMLSelectElement>) => void,
-    onBlur: (e: React.FocusEvent<any>) => void;
-}
+// interface SelectProps {
+//     name: string,
+//     label: string,
+//     htmlFor: string,
+//     className: string,
+//     options: string[],
+//     error: string,
+//     touched: boolean,
+//     handleChange: (event: React.ChangeEvent<HTMLSelectElement>) => void,
+//     onBlur: (e: React.FocusEvent<any>) => void;
+// }
 
-const Select = (props: SelectProps) => (
-    <div className={props.className}>
-        <label className="block tracking-wide text-black text-base" htmlFor={props.htmlFor}>
-            {props.label}
-        </label>
-        <select className="w-full p-2 ring-1 mt-3 ring-black " name={props.name} onChange={props.handleChange} onBlur={props.onBlur}>
-            {props.options.map((value) => {
-                return (
-                    <option key={value} value={value}>
-                        {value}
-                    </option>
-                )
-            })}
-        </select>
-        <p className={`text-red-500 text-xs italic ${props.error && props.touched ? `block` : `hidden`}`}>{props.error}</p>
-    </div>
-)
+// const Select = (props: SelectProps) => (
+//     <div className={props.className}>
+//         <label className="block tracking-wide text-black text-base" htmlFor={props.htmlFor}>
+//             {props.label}
+//         </label>
+//         <select className="w-full p-2 ring-1 mt-3 ring-black " name={props.name} onChange={props.handleChange} onBlur={props.onBlur}>
+//             {props.options.map((value) => {
+//                 return (
+//                     <option key={value} value={value}>
+//                         {value}
+//                     </option>
+//                 )
+//             })}
+//         </select>
+//         <p className={`text-red-500 text-xs italic ${props.error && props.touched ? `block` : `hidden`}`}>{props.error}</p>
+//     </div>
+// )
 
 
 export default Form;

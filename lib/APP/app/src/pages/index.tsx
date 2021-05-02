@@ -12,7 +12,7 @@ import Services from "../components/Services";
 
 const IndexPage = () => (
   <>
-    <SEO title="Monss - Digital Product Design Agency located in Calgary" 
+    <SEO title="Shareable Kitchen - Find a Kitchen to rent today!" 
           lang='en'
     />
     <div className="flex flex-col min-h-full mx-auto">

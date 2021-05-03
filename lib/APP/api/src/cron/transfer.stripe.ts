@@ -1,12 +1,13 @@
 import { EntityManager } from "@mikro-orm/core";
 import {CronJob} from 'cron';
+import { subHours } from "date-fns";
 import Stripe from "stripe";
 import { Booking } from "../entities/Booking/Booking";
 
 /**
  * Cron like scheduler that handles stripe transfers.
  */
-export class TransferScheduler {
+export class StripeTransferScheduler {
 
     cronJob: CronJob;
     em: EntityManager;
@@ -17,6 +18,8 @@ export class TransferScheduler {
         this.em = em;
         this.stripe = stripe;
 
+        // production checks will be after 1 hour.
+        // dev checks are every minute for quick debugging.
         let cronGlob = process.env.NODE_ENV === "production" ? "0 * * * *" : "1 * * * * *"
 
         this.cronJob = new CronJob(cronGlob, async () => {
@@ -35,7 +38,6 @@ export class TransferScheduler {
 
     /**
      * TODO: Test this with real data. I think this works but unsure about amounts.
-     * Also find bookings only that have 24 hours or more elapsed.
      */
     /**
      * 1. Get bookings that are confirmed and have null transfer ids.
@@ -44,7 +46,14 @@ export class TransferScheduler {
      */
     async checkTransfers() {
         console.log("running transfer check")
-        let bookings = await this.em.find(Booking, {transferId: null, confirmed: true})
+        // Get all bookings that hav been paid for by the buyer,
+        // have not been paid out, but are confirmed and
+        // their its been more than 24 hours since their start date.
+        let bookings = await this.em.find(Booking, {transferId: null, paymentIntentId: {
+            $ne: null
+        }, confirmed: true, startDate: {
+            $lte: subHours(new Date(), 24)
+        }})
         console.log("found bookings with null id")
 
         for (const eachBooking of bookings) {
@@ -54,16 +63,11 @@ export class TransferScheduler {
             /**
              * For buyers, we take a 3% cut from the total amount.
              */
-            let applicationFee = Math.abs((3/100) * totalAmount)
+            let percentage = 3
+            let applicationFee = Math.abs((percentage/100) * totalAmount)
             let amountToBePaid = totalAmount - applicationFee
-
-            // Move this check into the em 
-            if (!eachBooking.paymentIntentId) {
-                console.error("No payment intent exists.")
-                continue;
-            }
             
-            const paymentIntent = await this.stripe.paymentIntents.retrieve(eachBooking.paymentIntentId)
+            const paymentIntent = await this.stripe.paymentIntents.retrieve(eachBooking.paymentIntentId!)
 
 
             const transfer = await this.stripe.transfers.create({

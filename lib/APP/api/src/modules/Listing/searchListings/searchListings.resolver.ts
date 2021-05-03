@@ -8,11 +8,11 @@
  * Features (Filtering)
  */
 
-import { MyContext } from "../../types";
+import { MyContext } from "../../../types";
 import { Arg, Ctx, Field, InputType, Query } from "type-graphql";
-import { Listing } from "../../entities/Listing/Listing";
-import { City } from "../../entities/Geo/City";
-import { PaginationInput } from "../Base/pagination.resolver";
+import { Listing } from "../../../entities/Listing/Listing";
+import { City } from "../../../entities/Geo/City";
+import { PaginationInput } from "../../Base/pagination.resolver";
 import { FindOptions } from "@mikro-orm/core";
 
 @InputType()

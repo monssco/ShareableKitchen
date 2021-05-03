@@ -1,10 +1,10 @@
-import { Listing } from "../../entities/Listing/Listing"
-import { MyContext } from "../../types"
+import { Listing } from "../../../entities/Listing/Listing"
+import { MyContext } from "../../../types"
 import { Arg, Ctx, Field, InputType, Int, Mutation, } from "type-graphql"
-import { Availability } from "../../entities/Availability"
-import { PropertyFeatures } from "../../entities/Enums/PropertyFeatures.enum"
-import { PropertyType } from "../../entities/Enums/PropertyType.enum"
-import { City } from "../../entities/Geo/City"
+import { Availability } from "../../../entities/Availability"
+import { PropertyFeatures } from "../../../entities/Enums/PropertyFeatures.enum"
+import { PropertyType } from "../../../entities/Enums/PropertyType.enum"
+import { City } from "../../../entities/Geo/City"
 
 
 @InputType()

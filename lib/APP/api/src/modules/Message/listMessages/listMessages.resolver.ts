@@ -1,12 +1,12 @@
-import { Message } from "../../entities/Messages/Message";
+import { Message } from "../../../entities/Messages/Message";
 import { Arg, Ctx, Field, InputType, Query, Resolver } from "type-graphql";
-import { PaginationInput } from "../Base/pagination.resolver";
+import { PaginationInput } from "../../Base/pagination.resolver";
 import { MyContext } from "src/types";
 import { FindOptions } from "@mikro-orm/core";
 
 
 @InputType()
-class GetMessagesInput extends PaginationInput {
+class ListMessagesInput extends PaginationInput {
     @Field()
     conversationId: string
 }
@@ -15,8 +15,8 @@ class GetMessagesInput extends PaginationInput {
 export class GetMessagesResolver {
 
     @Query(() => [Message])
-    async getMessages(
-        @Arg("input") input: GetMessagesInput,
+    async listMessages(
+        @Arg("input") input: ListMessagesInput,
         @Ctx() {em}: MyContext
     ): Promise<Message[]> {
         const options: FindOptions<Message> = {

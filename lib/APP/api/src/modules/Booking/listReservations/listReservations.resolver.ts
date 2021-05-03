@@ -1,8 +1,8 @@
-import { Booking } from "../../entities/Booking/Booking";
-import { MyContext } from "../../types";
+import { Booking } from "../../../entities/Booking/Booking";
+import { MyContext } from "../../../types";
 import { Arg, Ctx, Query, Resolver } from "type-graphql";
 import { FindOptions } from "@mikro-orm/core";
-import { PaginationInput } from "../Base/pagination.resolver";
+import { PaginationInput } from "../../Base/pagination.resolver";
 
 /**
  * Reservations are retrieved by sellers.

@@ -1,6 +1,6 @@
-import { Listing } from "../../entities/Listing/Listing";
-import { Conversation } from "../../entities/Messages/Conversation";
-import { MyContext } from "../../types";
+import { Listing } from "../../../entities/Listing/Listing";
+import { Conversation } from "../../../entities/Messages/Conversation";
+import { MyContext } from "../../../types";
 import { Arg, Ctx, Field, InputType, Mutation, Resolver } from "type-graphql";
 
 @InputType()

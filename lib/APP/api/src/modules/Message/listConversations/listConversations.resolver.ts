@@ -1,16 +1,16 @@
-import { Conversation } from "../../entities/Messages/Conversation";
-import { MyContext } from "../../types";
+import { Conversation } from "../../../entities/Messages/Conversation";
+import { MyContext } from "../../../types";
 import { Arg, Ctx, FieldResolver, Query, Resolver, Root } from "type-graphql";
-import { Message } from "../../entities/Messages/Message";
-import { PaginationInput } from "../Base/pagination.resolver";
+import { Message } from "../../../entities/Messages/Message";
+import { PaginationInput } from "../../Base/pagination.resolver";
 import { FindOptions } from "@mikro-orm/core";
 
 
 @Resolver(() => Conversation)
-export class GetConversationsResolver {
+export class ListConversationsResolver {
     
     @Query(() => [Conversation])
-    async getConversations(
+    async listConversations(
         @Arg("input") input: PaginationInput,
         @Ctx() {em, user}: MyContext): Promise<Conversation[]> {
 

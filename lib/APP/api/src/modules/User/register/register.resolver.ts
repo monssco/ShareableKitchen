@@ -1,7 +1,7 @@
-import { User } from "../../entities/User/User";
+import { User } from "../../../entities/User/User";
 import { MyContext } from "src/types";
 import { Arg, Ctx, Field, ID, InputType, Mutation, Resolver } from "type-graphql";
-import { City } from "../../entities/Geo/City";
+import { City } from "../../../entities/Geo/City";
 
 @InputType()
 class RegisterUserInput implements Partial<User> {

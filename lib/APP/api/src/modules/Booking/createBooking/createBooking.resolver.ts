@@ -1,8 +1,8 @@
-import { Booking } from "../../entities/Booking/Booking";
+import { Booking } from "../../../entities/Booking/Booking";
 import { Arg, Ctx, Field, InputType, Mutation, ObjectType, Resolver } from "type-graphql";
-import { MyContext } from "../../types";
-import { Listing } from "../../entities/Listing/Listing";
-import { Availability } from "../../entities/Availability";
+import { MyContext } from "../../../types";
+import { Listing } from "../../../entities/Listing/Listing";
+import { Availability } from "../../../entities/Availability";
 import { differenceInCalendarDays } from 'date-fns'
 
 @InputType()
@@ -76,7 +76,8 @@ export class CreateBookingResolver {
         const amount = numDays * listing.price
 
         // apply the 10% buyer fees. We will absorb the platform fees.
-        var applicationFee = (10 / 100) * amount
+        let percentage = 10;
+        var applicationFee = (percentage / 100) * amount
         
         const totalAmount = applicationFee + amount;
 

@@ -16,7 +16,7 @@ import Stripe from 'stripe';
 /**
  * https://stripe.com/docs/api/payment_methods
  */
-export class PayoutMethodsResolver {
+export class PaymentMethodsResolver {
 
     @Mutation(() => GraphQLJSON)
     async attachPaymentMethod(

@@ -119,6 +119,7 @@ type Booking {
   startDate: DateTime!
   endDate: DateTime!
   unitPrice: Int!
+  type: AvailabilityType!
   totalAmount: Int!
   applicationFee: Int!
   created: DateTime!
@@ -240,7 +241,7 @@ input SearchListingsInput {
   endDate: DateTime
 }
 
-input GetMessagesInput {
+input ListMessagesInput {
   limit: Int = 10
   offset: Int = 0
   conversationId: String!
@@ -290,8 +291,8 @@ type Query {
   arePayoutsEnabled: Boolean!
   myListings(input: PaginationInput!): [Listing!]!
   searchListings(input: SearchListingsInput!): [Listing!]!
-  getConversations(input: PaginationInput!): [Conversation!]!
-  getMessages(input: GetMessagesInput!): [Message!]!
+  listConversations(input: PaginationInput!): [Conversation!]!
+  listMessages(input: ListMessagesInput!): [Message!]!
   getStripeAccount: JSON!
   getStripeAccountBalance: JSON!
 

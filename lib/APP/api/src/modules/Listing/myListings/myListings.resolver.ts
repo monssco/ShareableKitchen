@@ -1,8 +1,8 @@
-import { Listing } from "../../entities/Listing/Listing"
-import { MyContext } from "../../types"
+import { Listing } from "../../../entities/Listing/Listing"
+import { MyContext } from "../../../types"
 import { Arg, Ctx, FieldResolver, Query, Resolver, Root } from "type-graphql"
-import { Availability } from "../../entities/Availability"
-import { PaginationInput } from "../Base/pagination.resolver"
+import { Availability } from "../../../entities/Availability"
+import { PaginationInput } from "../../Base/pagination.resolver"
 import { FindOptions } from "@mikro-orm/core"
 
 

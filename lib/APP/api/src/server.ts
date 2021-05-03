@@ -15,7 +15,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_51IhXgtGZgeh
 const stripeWebhookEndpoint = process.env.STRIPE_WEBHOOK_SECRET || 'whsec_zIVnFqunSxGySFKehhsSVlrHz8YgiIxk'
 
 import {StripeWebhookManager} from './webhook/StripeWebhookManager'
-import { TransferScheduler } from "./cron/transfer.stripe";
+import { StripeTransferScheduler } from "./cron/transfer.stripe";
 import { User } from "./entities/User/User";
 
 /**
@@ -31,7 +31,7 @@ const startServer = async () => {
     /**
      * Start cron scheduler.
      */
-    new TransferScheduler(client.em, stripe);
+    new StripeTransferScheduler(client.em, stripe);
 
 
     /**
@@ -63,7 +63,8 @@ const startServer = async () => {
          * This is kind of shitty. So, I just need this as I am building
          * quickly but for a prod env this shouldn't be here.
          * 
-         * I am only interested in the payload. Which looks like this.
+         * I am only interested in the payload for cognito. 
+         * Which looks like this.
          * 
          * {
             "sub": "3f1f8783-8e27-473d-852e-90c94c4f270b",
@@ -97,7 +98,9 @@ const startServer = async () => {
     const app = express();
 
     /**
-     * This health check for target group when uploading to ecs (aws)
+     * This health check for target group when uploading to ecs (aws).
+     * It makes sure that our container hasn't encountered any errors and
+     * hasn't died.
      */
     app.get('/health-check', (_, res) => {
         res.sendStatus(200)

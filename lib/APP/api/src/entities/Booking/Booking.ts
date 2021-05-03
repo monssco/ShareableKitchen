@@ -7,6 +7,7 @@
 import { Entity, ManyToOne, PrimaryKey, PrimaryKeyType, Property } from "@mikro-orm/core";
 import { Field, Int, ObjectType } from "type-graphql";
 import { v4 } from "uuid";
+import { AvailabilityType } from "../Enums/AvailabilityType.enum";
 import { Listing } from "../Listing/Listing";
 import { User } from "../User/User";
 
@@ -47,6 +48,10 @@ export class Booking {
     @Field(() => Int)
     @Property()
     unitPrice: number;
+
+    @Field(()=> AvailabilityType)
+    @Property()
+    type: AvailabilityType
 
     /**
      * The total cost of renting this place.

@@ -1,7 +1,7 @@
-import { Conversation } from "../../entities/Messages/Conversation";
-import { MyContext } from "../../types";
+import { Conversation } from "../../../entities/Messages/Conversation";
+import { MyContext } from "../../../types";
 import { Arg, Ctx, Field, InputType, Mutation, Resolver } from "type-graphql";
-import { Message } from "../../entities/Messages/Message";
+import { Message } from "../../../entities/Messages/Message";
 
 @InputType()
 class SendMessageInput {

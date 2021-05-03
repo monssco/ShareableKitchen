@@ -1,11 +1,11 @@
-import { Listing } from "../../entities/Listing/Listing";
+import { Listing } from "../../../entities/Listing/Listing";
 import { MyContext } from "src/types";
 import { Arg, Ctx, Field, InputType, Int, Mutation, Resolver } from "type-graphql";
-import { PropertyFeatures } from "../../entities/Enums/PropertyFeatures.enum";
-import { PropertyType } from "../../entities/Enums/PropertyType.enum";
-import { Availability } from "../../entities/Availability";
-import { City } from "../../entities/Geo/City";
-import { CheckPayoutsEnabled } from "./checkPayouts.resolver";
+import { PropertyFeatures } from "../../../entities/Enums/PropertyFeatures.enum";
+import { PropertyType } from "../../../entities/Enums/PropertyType.enum";
+import { Availability } from "../../../entities/Availability";
+import { City } from "../../../entities/Geo/City";
+import { CheckPayoutsEnabled } from "../checkPayouts.resolver";
 
 @InputType()
 class CreateListingLocationInput {

@@ -1,9 +1,9 @@
-import { Booking } from "../../entities/Booking/Booking";
-import { MyContext } from "../../types";
+import { Booking } from "../../../entities/Booking/Booking";
+import { MyContext } from "../../../types";
 import { Arg, Ctx, FieldResolver, Query, Resolver, Root } from "type-graphql";
-import { PaginationInput } from "../Base/pagination.resolver";
+import { PaginationInput } from "../../Base/pagination.resolver";
 import { FindOptions } from "@mikro-orm/core";
-import { Listing } from "../../entities/Listing/Listing";
+import { Listing } from "../../../entities/Listing/Listing";
 // import { Listing } from "../../entities/Listing/Listing";
 
 

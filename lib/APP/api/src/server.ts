@@ -1,9 +1,7 @@
 import "reflect-metadata";
 import express from 'express';
 import { ApolloServer } from 'apollo-server-express';
-import * as path from 'path';
 import { ormClient } from "./utils/createDatabaseConn";
-import { buildSchema } from "type-graphql";
 import { MyContext } from "./types";
 import jwtDecode, { JwtPayload } from 'jwt-decode';
 import Stripe from 'stripe';
@@ -17,6 +15,7 @@ const stripeWebhookEndpoint = process.env.STRIPE_WEBHOOK_SECRET || 'whsec_zIVnFq
 import {StripeWebhookManager} from './webhook/StripeWebhookManager'
 import { StripeTransferScheduler } from "./cron/transfer.stripe";
 import { User } from "./entities/User/User";
+import { createSchema } from "./utils/createSchema";
 
 /**
  * Header provided by the ALB when its being guarded by cognito.
@@ -38,17 +37,7 @@ const startServer = async () => {
      * Including resolvers using glob patterns.
      * https://typegraphql.com/docs/bootstrap.html#create-typedefs-and-resolvers-map
      */
-    const schema = await buildSchema({
-                        resolvers: [
-                            path.resolve(__dirname, "modules/**/*.resolver.ts")
-                        ],
-                        emitSchemaFile: {
-                            path: path.resolve(__dirname + '/../schema.graphql'),
-                            commentDescriptions: true,
-                            sortedSchema: false
-                        },
-                        nullableByDefault: false
-                    })
+    const schema = await createSchema();
     /* You can also pass in the redis cache in context here too.
     https://github.com/benawad/lireddit/blob/18_change-password/server/src/index.ts
     */
@@ -111,7 +100,7 @@ const startServer = async () => {
      */
     let stripeWebhook = new StripeWebhookManager(client.em,stripe, stripeWebhookEndpoint)
     /**
-     * For stripe webhook.
+     * Endpoint for stripe webhook.
      */
     app.use('/webhook', stripeWebhook.getWebHookRouter());
 

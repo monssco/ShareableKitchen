@@ -15,7 +15,7 @@ afterAll(async () => {
     await conn.close();
 })
 
-const registerMutation = `
+const updateMutation = `
 mutation updateUser($data: UpdateUserInput!) {
     updateUser(
         user: $data
@@ -31,7 +31,6 @@ mutation updateUser($data: UpdateUserInput!) {
 
 describe("Update User", () => {
     
-
     it.only("update user", async () => {
 
         let user = new User(faker.datatype.uuid(), faker.internet.email())
@@ -48,7 +47,7 @@ describe("Update User", () => {
         };
 
         const response = await graphqlCall({
-            source: registerMutation,
+            source: updateMutation,
             variableValues: {
                 data: userInput
             },
@@ -73,6 +72,8 @@ describe("Update User", () => {
         expect(dbUser).toBeDefined();
         expect(dbUser!.address).toBe(userInput.location?.address);
         expect(dbUser!.first_name).toBe(userInput.first_name);
-        expect(dbUser!.last_name)
+        expect(dbUser!.last_name).toBe(userInput.last_name)
+        expect(dbUser?.city?.id).toBe(userInput.location?.cityId)
+        expect(dbUser?.postal).toBe(userInput.location?.postal)
     });
 });

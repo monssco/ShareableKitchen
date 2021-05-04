@@ -1,9 +1,9 @@
 import { MikroORM, IDatabaseDriver, Connection } from "@mikro-orm/core";
-import { testConn } from "../../../test-utils/testConn"
+import { testConn } from "../../test-utils/testConn"
 import faker from 'faker';
-import { graphqlCall } from "../../../test-utils/graphqlCall";
-import { User } from "../../../entities/User/User";
-import { Listing } from "../../../entities/Listing/Listing";
+import { graphqlCall } from "../../test-utils/graphqlCall";
+import { User } from "../../entities/User/User";
+import { Listing } from "../../entities/Listing/Listing";
 
 
 let conn: MikroORM<IDatabaseDriver<Connection>>;
@@ -16,38 +16,38 @@ afterAll(async () => {
     await conn.close();
 })
 
-const createListingMutation = `
-mutation createListing($data: CreateListingInput!) {
-    createListing(
-        input: $data
-    ) {
-        id
-        city{
-            id
-            name
-        }
-        author  {
-            id
-        }
-        title
-        description
-        availability {
-            startDate
-            endDate
-            type
-        }
-        address
-        price
-        sqFtArea
-        features
-        propertyType
-    }
-}
-`;
+describe("Listing related tests", () => {
 
-describe("Create Listing", () => {
+    const createListingMutation = `
+        mutation createListing($data: CreateListingInput!) {
+            createListing(
+                input: $data
+            ) {
+                id
+                city{
+                    id
+                    name
+                }
+                author  {
+                    id
+                }
+                title
+                description
+                availability {
+                    startDate
+                    endDate
+                    type
+                }
+                address
+                price
+                sqFtArea
+                features
+                propertyType
+            }
+        }
+        `;
     
-    it.only("Create listing", async () => {
+    it("Create listing", async () => {
 
         /**
          * Create user without the graphql api, and persist it to the db.
@@ -110,4 +110,30 @@ describe("Create Listing", () => {
         expect(dbListing?.availability.type).toBe(listingInput.availability.type);
         expect(dbListing?.author.id).toBe(user.id);
     });
+
+    it("Edit Listing", async () => {
+        // Get a listing from the db
+        // edit it
+        // check that its edited
+
+    })
+
+    it("Delete Listing", async () => {
+        // Get a listing from the db
+        // edit it
+        // check that its edited
+        
+    })
+
+    it("Get my listings", async () => {
+        // Make a bunch of listings
+        // Check if they all went through
+    })
+
+    it("Search Listings", async () => {
+        // Make a bunch of listings from one account.
+        // Create another account and search within params
+        // Check to see if the listings show up.
+    })
+
 });

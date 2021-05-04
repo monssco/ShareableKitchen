@@ -6608,10 +6608,7 @@ export async function seedDatabase(em: EntityManager) {
     try {
         await em.findOneOrFail(Country, country);
         await em.findOneOrFail(User, user);
-        console.log("Data already exists in table. Skip.")
     } catch(er) {
-        console.log(er)
-        console.log("Populate tables.")
         await em.persist(country);
         await em.persist(user);
         await em.flush();

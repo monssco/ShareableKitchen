@@ -4,7 +4,7 @@ import { Arg, Ctx, Field, ID, InputType, Mutation, Resolver } from "type-graphql
 import { City } from "../../../entities/Geo/City";
 
 @InputType()
-class RegisterUserInput implements Partial<User> {
+export class RegisterUserInput implements Partial<User> {
     @Field(()=> ID, {nullable: false})
     id: string;
 
@@ -17,8 +17,8 @@ class RegisterUserInput implements Partial<User> {
     @Field()
     last_name: string;
 
-    @Field()
-    date_of_birth: Date;
+    @Field({nullable: true})
+    date_of_birth?: Date;
 }
 
 @Resolver()

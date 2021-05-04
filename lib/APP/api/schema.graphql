@@ -266,7 +266,7 @@ input RegisterUserInput {
   email: String!
   first_name: String!
   last_name: String!
-  date_of_birth: DateTime!
+  date_of_birth: DateTime
 }
 
 input UpdateUserLocationInput {
@@ -276,9 +276,9 @@ input UpdateUserLocationInput {
 }
 
 input UpdateUserInput {
-  first_name: String!
-  last_name: String!
-  date_of_birth: DateTime!
+  first_name: String
+  last_name: String
+  date_of_birth: DateTime
   location: UpdateUserLocationInput
 }
 

@@ -17,15 +17,15 @@ class UpdateUserLocationInput {
 }
 
 @InputType()
-class UpdateUserInput implements Partial<User> {
+export class UpdateUserInput implements Partial<User> {
 
-    @Field()
+    @Field({nullable: true})
     first_name?: string;
 
-    @Field()
+    @Field({nullable: true})
     last_name?: string;
 
-    @Field()
+    @Field({nullable: true})
     date_of_birth?: Date;
 
     @Field({nullable: true})

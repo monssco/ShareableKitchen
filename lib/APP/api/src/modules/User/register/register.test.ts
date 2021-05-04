@@ -34,7 +34,7 @@ mutation registerUser($data: RegisterUserInput!) {
 `;
 
 describe("Register", () => {
-    it.only("create user", async () => {
+    it("create user", async () => {
         const userInput: Partial<RegisterUserInput> = {
             id: faker.datatype.uuid(),
             first_name: faker.name.firstName(),

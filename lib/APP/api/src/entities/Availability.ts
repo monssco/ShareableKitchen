@@ -17,17 +17,17 @@ export class Availability {
     @OneToOne(()=> Listing, listing => listing.availability, {owner: true, orphanRemoval: true, primary: true})
     listing: Listing
 
-    @Field()
+    @Field(()=> Date)
     @Property({columnType: "timestamptz"})
     startDate: Date
 
-    @Field()
+    @Field(()=> Date)
     @Property({columnType: "timestamptz"})
     endDate: Date;
 
     [PrimaryKeyType] : string;
 
-    @Field(()=> AvailabilityType)
+    @Field()
     @Property()
     type: AvailabilityType
 

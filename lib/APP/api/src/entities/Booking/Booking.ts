@@ -113,4 +113,9 @@ export class Booking {
         this.paymentDate = new Date()
         this.confirmed = true
     }
+
+    /**TODO: Maybe move over calculations to here? */
+    // static calculateBooking(){
+
+    // }
 }

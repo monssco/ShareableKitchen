@@ -27,7 +27,7 @@ query meQuery {
 
 describe("Update User", () => {
     
-    it.only("update user", async () => {
+    it("update user", async () => {
 
         let user = new User(faker.datatype.uuid(), faker.internet.email())
         user.first_name = faker.name.firstName()

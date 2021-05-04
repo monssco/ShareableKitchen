@@ -26,11 +26,11 @@ export class Listing {
     author!: User;
 
     @Field()
-    @Property()
+    @Property({length: 100})
     title!: string;
 
     @Field()
-    @Property()
+    @Property({length: 500})
     description!: string;
 
     /**

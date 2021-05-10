@@ -4,6 +4,7 @@ import { MyContext } from "../../../types";
 import { Listing } from "../../../entities/Listing/Listing";
 import { Availability } from "../../../entities/Availability";
 import { differenceInCalendarDays } from 'date-fns'
+import { AvailabilityType } from "../../../entities/Enums/AvailabilityType.enum";
 
 @InputType()
 class CreateBookingInput {
@@ -15,6 +16,9 @@ class CreateBookingInput {
 
     @Field()
     endDate!: Date
+
+    @Field(() => AvailabilityType)
+    type!: AvailabilityType
 }
 
 @ObjectType()
@@ -73,13 +77,16 @@ export class CreateBookingResolver {
         const numDays = Math.abs(differenceInCalendarDays(input.endDate, input.startDate)) + 1
 
         // Amount to charge the buyer. (Person creating this booking)
-        const amount = numDays * listing.price
+        const amount = numDays * listing.unitPrice
 
         // apply the 10% buyer fees. We will absorb the platform fees.
         let percentage = 10;
-        var applicationFee = (percentage / 100) * amount
+        let buyerAppFee = (percentage / 100) * amount
         
-        const totalAmount = applicationFee + amount;
+        const totalAmount = buyerAppFee + amount;
+
+        let sellerPercentage = 3;
+        let sellerAppFee = (sellerPercentage / 100) * amount
 
         
         const paymentIntent = await stripe.paymentIntents.create({
@@ -91,7 +98,9 @@ export class CreateBookingResolver {
             statement_descriptor: `Shareable Kitchen`
         })
 
-        const booking = new Booking(listing, me, input.startDate, input.endDate, listing.price, totalAmount, applicationFee, paymentIntent.id)
+        const booking = new Booking(input.type, listing, me, input.startDate, input.endDate, listing.unitPrice, totalAmount, buyerAppFee, sellerAppFee)
+        
+        booking.paymentIntentId = paymentIntent.id
 
         if(!paymentIntent.client_secret) {
             throw new Error("Payment intent doesn't have a secret.")

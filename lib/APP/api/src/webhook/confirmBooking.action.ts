@@ -1,6 +1,6 @@
 import { EntityManager } from "@mikro-orm/core";
-import { Booking } from "../entities/Booking/Booking";
 import Stripe from "stripe";
+import { Booking } from "../entities/Booking/Booking";
 
 /**
  * Confirms a booking after the payment intent succeeds.

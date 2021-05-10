@@ -71,7 +71,7 @@ type Listing {
   address: String!
   city: CityType
   postal: String
-  price: Int!
+  unitPrice: Int!
   sqFtArea: Int!
   features: [PropertyFeatures!]
   propertyType: PropertyType
@@ -109,12 +109,13 @@ enum PropertyType {
 type Booking {
   listing: Listing!
   buyer: User!
+  type: AvailabilityType!
   startDate: DateTime!
   endDate: DateTime!
   unitPrice: Int!
-  type: AvailabilityType!
-  totalAmount: Int!
-  applicationFee: Int!
+  calculatedAmount: Int!
+  buyerAppFee: Int!
+  sellerAppFee: Int!
   created: DateTime!
   paymentDate: DateTime
 }
@@ -196,6 +197,7 @@ input CreateBookingInput {
   listingId: String!
   startDate: DateTime!
   endDate: DateTime!
+  type: AvailabilityType!
 }
 
 input CreateListingLocationInput {
@@ -206,7 +208,7 @@ input CreateListingLocationInput {
 input CreateListingInput {
   title: String!
   description: String!
-  price: Int!
+  unitPrice: Int!
   sqFtArea: Int!
   features: [PropertyFeatures!]!
   propertyType: PropertyType!
@@ -227,7 +229,7 @@ input EditListingInput {
   address: String
   location: EditListingLocationInput
   postal: String
-  price: Int
+  unitPrice: Int
   sqFtArea: Int
   features: [PropertyFeatures!]
   propertyType: PropertyType

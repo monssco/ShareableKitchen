@@ -39,7 +39,7 @@ describe("Listing related tests", () => {
                     type
                 }
                 address
-                price
+                unitPrice
                 sqFtArea
                 features
                 propertyType
@@ -58,7 +58,7 @@ describe("Listing related tests", () => {
         const listingInput = {
             title: faker.random.word(),
             description: faker.random.words(20),
-            price: faker.datatype.number(),
+            unitPrice: faker.datatype.number(),
             sqFtArea: faker.datatype.number(),
             features: [`deepFryer`],
             propertyType: `church`,
@@ -98,7 +98,7 @@ describe("Listing related tests", () => {
         expect(dbListing).toBeDefined();
         expect(dbListing?.title).toBe(listingInput.title);
         expect(dbListing?.description).toBe(listingInput.description);
-        expect(dbListing?.price).toBe(listingInput.price);
+        expect(dbListing?.unitPrice).toBe(listingInput.unitPrice);
         expect(dbListing?.sqFtArea).toBe(listingInput.sqFtArea);
         //TODO: This is causing issues as its returning a number instead of string to compare it with...
         // expect(dbListing?.features?.toString()).toBe(listingInput.features);

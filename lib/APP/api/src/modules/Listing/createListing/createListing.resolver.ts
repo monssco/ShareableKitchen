@@ -31,7 +31,7 @@ export class CreateListingInput implements Partial<Listing> {
     description!: string
 
     @Field(() => Int)
-    price!: number
+    unitPrice!: number
 
     @Field(() => Int)
     sqFtArea!: number
@@ -88,7 +88,7 @@ export class CreateListingResolver {
 
             newListing.city = city
 
-            newListing.price = input.price
+            newListing.unitPrice = input.unitPrice
             newListing.sqFtArea = input.sqFtArea
             newListing.features = input.features
             newListing.propertyType = input.propertyType

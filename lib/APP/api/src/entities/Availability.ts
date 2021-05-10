@@ -4,7 +4,7 @@
  * Later on we can add more attributes here as our requirements grow.
  */
 
-import { Entity, OneToOne, PrimaryKeyType, Property } from "@mikro-orm/core";
+import { Entity, Enum, OneToOne, PrimaryKeyType, Property } from "@mikro-orm/core";
 import { Field, InputType, ObjectType, registerEnumType } from "type-graphql";
 import { AvailabilityType } from "./Enums/AvailabilityType.enum";
 import { Listing } from "./Listing/Listing";
@@ -28,7 +28,7 @@ export class Availability {
     [PrimaryKeyType] : string;
 
     @Field()
-    @Property()
+    @Enum(()=> AvailabilityType)
     type: AvailabilityType
 
     constructor(startDate: Date, endDate: Date, type: AvailabilityType ) {

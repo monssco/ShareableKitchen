@@ -66,7 +66,7 @@ export class Listing {
 
     @Field(() => Int)
     @Property()
-    price!: number;
+    unitPrice!: number;
 
     @Field(() => Int)
     @Property()

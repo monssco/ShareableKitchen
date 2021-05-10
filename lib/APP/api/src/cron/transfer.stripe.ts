@@ -1,8 +1,8 @@
 import { EntityManager } from "@mikro-orm/core";
 import {CronJob} from 'cron';
 import { subHours } from "date-fns";
-import Stripe from "stripe";
 import { Booking } from "../entities/Booking/Booking";
+import Stripe from "stripe";
 
 /**
  * Cron like scheduler that handles stripe transfers.
@@ -58,14 +58,13 @@ export class StripeTransferScheduler {
 
         for (const eachBooking of bookings) {
             console.log(eachBooking)
-            let totalAmount = eachBooking.totalAmount
+            let totalAmount = eachBooking.calculatedAmount
 
             /**
-             * For buyers, we take a 3% cut from the total amount.
+             * The seller's fees are calculated earlier on.
+             * Just need to subtract them from the total calculated amount.
              */
-            let percentage = 3
-            let applicationFee = Math.abs((percentage/100) * totalAmount)
-            let amountToBePaid = totalAmount - applicationFee
+            let amountToBePaid = totalAmount - eachBooking.sellerAppFee
             
             const paymentIntent = await this.stripe.paymentIntents.retrieve(eachBooking.paymentIntentId!)
 

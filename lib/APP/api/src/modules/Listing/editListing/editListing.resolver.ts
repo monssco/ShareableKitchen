@@ -45,7 +45,7 @@ class EditListingInput implements Partial<Listing> {
     postal?: string
 
     @Field(()=> Int, {nullable: true})
-    price?: number
+    unitPrice?: number
 
     @Field(()=> Int, {nullable: true})
     sqFtArea?: number
@@ -110,8 +110,8 @@ export class EditListingResolver {
             }
         }
 
-        if (input.price) {
-            listing.price = input.price
+        if (input.unitPrice) {
+            listing.unitPrice = input.unitPrice
         }
 
         if (input.sqFtArea) {

@@ -38,7 +38,8 @@ export class StripeWebhookManager {
                 let event = this.stripe.webhooks.constructEvent(request.body, sig, this.webhookEndpointSecret);
                 // Handle the event
                 switch (event.type) {
-                    // When a user has successfully paid for their booking.
+                    // When a user has successfully pays for their booking
+                    // We come in here and confirm it for them.
                     case 'payment_intent.succeeded':
                         const stripeObject: Stripe.PaymentIntent = event.data.object as Stripe.PaymentIntent;
                         console.log(`💰 PaymentIntent status: ${stripeObject.status}`);

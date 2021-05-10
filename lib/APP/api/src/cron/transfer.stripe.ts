@@ -23,11 +23,11 @@ export class StripeTransferScheduler {
         let cronGlob = process.env.NODE_ENV === "production" ? "0 * * * *" : "1 * * * * *"
 
         this.cronJob = new CronJob(cronGlob, async () => {
-        try {
-            await this.checkTransfers();
-        } catch (e) {
-            console.error(e);
-        }
+            try {
+                await this.checkTransfers();
+            } catch (e) {
+                console.error(e);
+            }
         });
         
         // Start job
@@ -40,12 +40,16 @@ export class StripeTransferScheduler {
      * TODO: Test this with real data. I think this works but unsure about amounts.
      */
     /**
-     * 1. Get bookings that are confirmed and have null transfer ids.
-     * 2. Create transfers using stripe and pay them out?
-     * 3. After successful transfer, update the table with the id of the transfer.
+     * Checks to see which bookings need to paid out to the sellers.
      */
     async checkTransfers() {
         console.log("running transfer check")
+        /**
+        * 1. Get bookings that are confirmed and have null transfer ids.
+        * 2. Create transfers using stripe and pay them out?
+        * 3. After successful transfer, update the table with the id of the transfer.
+         */
+        
         // Get all bookings that hav been paid for by the buyer,
         // have not been paid out, but are confirmed and
         // their its been more than 24 hours since their start date.

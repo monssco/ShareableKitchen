@@ -6,7 +6,7 @@ import {v4} from 'uuid';
 import { PropertyFeatures } from '../Enums/PropertyFeatures.enum';
 import { PropertyType } from '../Enums/PropertyType.enum'
 import { Booking } from '../Booking/Booking';
-import { Availability } from '../Availability';
+import { Availability } from '../Availability/Availability';
 import { Conversation } from '../Messages/Conversation';
 import { City } from '../Geo/City';
 /**

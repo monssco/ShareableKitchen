@@ -67,7 +67,7 @@ describe("Listing related tests", () => {
                 cityId: 16151
             },
             availability: {
-                startDate: '01-24-2020',
+                startDate: '01-10-2020',
                 endDate: '01-23-2020',
                 type: 'daily'
             }

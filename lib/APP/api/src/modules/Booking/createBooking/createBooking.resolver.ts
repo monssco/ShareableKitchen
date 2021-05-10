@@ -2,7 +2,7 @@ import { Booking } from "../../../entities/Booking/Booking";
 import { Arg, Ctx, Field, InputType, Mutation, ObjectType, Resolver } from "type-graphql";
 import { MyContext } from "../../../types";
 import { Listing } from "../../../entities/Listing/Listing";
-import { Availability } from "../../../entities/Availability";
+import { Availability } from "../../../entities/Availability/Availability";
 import { differenceInCalendarDays } from 'date-fns'
 import { AvailabilityType } from "../../../entities/Enums/AvailabilityType.enum";
 
@@ -83,7 +83,7 @@ export class CreateBookingResolver {
         let percentage = 10;
         let buyerAppFee = (percentage / 100) * amount
         
-        const totalAmount = buyerAppFee + amount;
+        const calculatedAmount = buyerAppFee + amount;
 
         let sellerPercentage = 3;
         let sellerAppFee = (sellerPercentage / 100) * amount
@@ -91,14 +91,18 @@ export class CreateBookingResolver {
         
         const paymentIntent = await stripe.paymentIntents.create({
             payment_method_types: ['card'],
-            amount: totalAmount,
+            amount: calculatedAmount,
             currency: 'cad',
             customer: me.stripe_customer_id,
             description: `Shareable Kitchen - ${listing.title} - ${listing.id}`,
-            statement_descriptor: `Shareable Kitchen`
+            statement_descriptor: `Shareable Kitchen`,
+            metadata: {
+                booking_type: input.type,
+                listing_id: listing.id
+            }
         })
 
-        const booking = new Booking(input.type, listing, me, input.startDate, input.endDate, listing.unitPrice, totalAmount, buyerAppFee, sellerAppFee)
+        const booking = new Booking(input.type, listing, me, input.startDate, input.endDate, listing.unitPrice, calculatedAmount, buyerAppFee, sellerAppFee)
         
         booking.paymentIntentId = paymentIntent.id
 

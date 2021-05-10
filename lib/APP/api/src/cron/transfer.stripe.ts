@@ -58,13 +58,12 @@ export class StripeTransferScheduler {
 
         for (const eachBooking of bookings) {
             console.log(eachBooking)
-            let totalAmount = eachBooking.calculatedAmount
 
             /**
              * The seller's fees are calculated earlier on.
              * Just need to subtract them from the total calculated amount.
              */
-            let amountToBePaid = totalAmount - eachBooking.sellerAppFee
+            let amountToBePaid = eachBooking.calculatedAmount - eachBooking.sellerAppFee
             
             const paymentIntent = await this.stripe.paymentIntents.retrieve(eachBooking.paymentIntentId!)
 

@@ -3,7 +3,7 @@ import { Arg, Ctx, Field, InputType, Mutation, ObjectType, Resolver } from "type
 import { MyContext } from "../../../types";
 import { Listing } from "../../../entities/Listing/Listing";
 import { Availability } from "../../../entities/Availability/Availability";
-import { differenceInCalendarDays } from 'date-fns'
+import { differenceInCalendarDays, differenceInCalendarWeeks } from 'date-fns'
 import { AvailabilityType } from "../../../entities/Enums/AvailabilityType.enum";
 
 @InputType()
@@ -48,9 +48,9 @@ export class CreateBookingResolver {
         @Arg("input") input: CreateBookingInput,
         @Ctx() {em, user, stripe}: MyContext
     ): Promise<CreateBookingReturn> {
-        const me = user;
-        const listing = await em.findOneOrFail(Listing, {id: input.listingId})
-        const availability = await em.findOneOrFail(Availability, {listing})
+        let buyer = user;
+        let listing = await em.findOneOrFail(Listing, {id: input.listingId})
+        let availability = await em.findOneOrFail(Availability, {listing})
 
         // Make sure that the requested dates are within the available dates.
         if (input.startDate.getTime() < availability.startDate.getTime() || input.endDate.getTime() > availability.endDate.getTime() ) {
@@ -72,16 +72,39 @@ export class CreateBookingResolver {
             throw new Error('New booking date overlaps pre-existing booking.')
         }
 
-        // Find the difference in the number of days for $ calculation.
-        // The days returned need to be incremented by 1.
-        const numDays = Math.abs(differenceInCalendarDays(input.endDate, input.startDate)) + 1
+        var amount = 0;
 
-        // Amount to charge the buyer. (Person creating this booking)
-        const amount = numDays * listing.unitPrice
+        // They will all have to pay right off the bat anyways.
+        // The differences in subscriptions are handled by the webhook and cron job.
+        if (input.type === AvailabilityType.daily){
+            // Find the difference in the number of days for $ calculation.
+            // The days returned need to be incremented by 1. why??
+            const numDays = Math.abs(differenceInCalendarDays(input.endDate, input.startDate))
+
+            // Amount to charge the buyer. (Person creating this booking)
+            amount = numDays * listing.unitPrice
+        } else if (input.type === AvailabilityType.weekly) {
+
+            // Calculate the number of weeks and multiply by unit price.
+            // Ask them to pay upfront.
+            const numWeeks = Math.abs(differenceInCalendarWeeks(input.endDate, input.startDate))
+
+            amount = numWeeks * listing.unitPrice 
+        } else if (input.type === AvailabilityType.monthly) {
+            // In monthly scenario, we do not charge them for all the months at once.
+            // They pay for the first month and the rest of the amount is setup as a subscription model.
+            // const numMonths = Math.abs(differenceInCalendarMonths(input.endDate, input.startDate))
+
+            // Only a single month is asked to be paid.
+            amount = 1 * listing.unitPrice;
+        } else {
+            throw new Error("Availability type must be either daily, weekly or monthly.")
+        }
+
 
         // apply the 10% buyer fees. We will absorb the platform fees.
-        let percentage = 10;
-        let buyerAppFee = (percentage / 100) * amount
+        let buyerPercentage = 10;
+        let buyerAppFee = (buyerPercentage / 100) * amount
         
         const calculatedAmount = buyerAppFee + amount;
 
@@ -93,21 +116,22 @@ export class CreateBookingResolver {
             payment_method_types: ['card'],
             amount: calculatedAmount,
             currency: 'cad',
-            customer: me.stripe_customer_id,
+            customer: buyer.stripe_customer_id,
             description: `Shareable Kitchen - ${listing.title} - ${listing.id}`,
             statement_descriptor: `Shareable Kitchen`,
             metadata: {
                 booking_type: input.type,
-                listing_id: listing.id
+                listing_id: listing.id,
+                buyer_id: buyer.id
             }
         })
 
-        const booking = new Booking(input.type, listing, me, input.startDate, input.endDate, listing.unitPrice, calculatedAmount, buyerAppFee, sellerAppFee)
+        const booking = new Booking(input.type, listing, buyer, input.startDate, input.endDate, listing.unitPrice, calculatedAmount, buyerAppFee, sellerAppFee)
         
         booking.paymentIntentId = paymentIntent.id
 
         if(!paymentIntent.client_secret) {
-            throw new Error("Payment intent doesn't have a secret.")
+            throw new Error("Payment intent doesn't have a secret. Please contact us asap! (587) 609-7008")
         }
 
         await em.persistAndFlush(booking)

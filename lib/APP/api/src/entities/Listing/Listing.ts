@@ -64,6 +64,9 @@ export class Listing {
     @Property({nullable: true})
     postal?: string;
 
+    /**
+     * Price per day, week or month.
+     */
     @Field(() => Int)
     @Property()
     unitPrice!: number;

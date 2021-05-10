@@ -75,7 +75,7 @@ export class Booking {
      * unitPrice * number of weeks
      * 
      * Monthly:
-     * unitPrice * number of months.
+     * unitPrice * 1 month
      */
     @Field(() => Int)
     @Property()

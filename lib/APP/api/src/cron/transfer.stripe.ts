@@ -79,7 +79,7 @@ export class StripeTransferScheduler {
                 source_transaction: paymentIntent.charges.data[0].id
             })
 
-            eachBooking.transferId = transfer.id
+            eachBooking.transferId.push(transfer.id); 
 
             await this.em.persistAndFlush(eachBooking)
         }

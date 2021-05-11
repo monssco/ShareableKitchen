@@ -44,7 +44,7 @@ export class StripeWebhookManager {
                         const stripeObject: Stripe.PaymentIntent = event.data.object as Stripe.PaymentIntent;
                         console.log(`💰 PaymentIntent status: ${stripeObject.status}`);
 
-                        ConfirmBooking(stripeObject, this.em)
+                        ConfirmBooking(stripeObject, this.em, this.stripe)
                         const paymentIntent = event.data.object;
                         console.log(typeof paymentIntent)
                         console.log('PaymentIntent was successful!');

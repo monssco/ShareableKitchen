@@ -3,7 +3,7 @@ import { AvailabilityType } from "../entities/Enums/AvailabilityType.enum";
 import Stripe from "stripe";
 import { Booking } from "../entities/Booking/Booking";
 import { addMonths, getUnixTime, startOfMonth } from "date-fns";
-import { User } from "src/entities/User/User";
+import { User } from "../entities/User/User";
 
 //TODO: Test this class, the code looks good but I have not tested it yet.
 

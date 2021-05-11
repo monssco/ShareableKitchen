@@ -4,7 +4,7 @@
  * User books listing. PK from user and booking as foregin key.
  */
 
-import { Entity, Enum, ManyToOne, PrimaryKey, PrimaryKeyType, Property } from "@mikro-orm/core";
+import { ArrayType, Entity, Enum, ManyToOne, PrimaryKey, PrimaryKeyType, Property } from "@mikro-orm/core";
 import { Field, Int, ObjectType } from "type-graphql";
 import { v4 } from "uuid";
 import { AvailabilityType } from "../Enums/AvailabilityType.enum";
@@ -118,8 +118,8 @@ export class Booking {
     /**
      * Transfer id are created when money goes from our stripe account to a buyers
      */
-    @Property({nullable: true})
-    transferId?: string
+    @Property({nullable: true, type: ArrayType})
+    transferId: string[] = []
 
     constructor(type: AvailabilityType, listing: Listing, buyer: User, start: Date, end: Date, unitPrice: number, calculatedAmount: number, buyerAppFee: number, sellerAppFee: number){
         this.type = type

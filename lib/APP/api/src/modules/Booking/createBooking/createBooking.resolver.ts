@@ -102,14 +102,12 @@ export class CreateBookingResolver {
         }
 
 
-        // apply the 10% buyer fees. We will absorb the platform fees.
-        let buyerPercentage = 10;
-        let buyerAppFee = (buyerPercentage / 100) * amount
+        // apply the buyer fees. We will absorb the platform fees.
+        let buyerAppFee = (Booking.BUYER_PERCENTAGE / 100) * amount
         
         const calculatedAmount = buyerAppFee + amount;
 
-        let sellerPercentage = 3;
-        let sellerAppFee = (sellerPercentage / 100) * amount
+        let sellerAppFee = (Booking.SELLER_PERCENTAGE / 100) * amount
 
         
         const paymentIntent = await stripe.paymentIntents.create({

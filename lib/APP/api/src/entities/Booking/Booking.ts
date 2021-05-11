@@ -15,6 +15,10 @@ import { User } from "../User/User";
 @Entity()
 export class Booking {
 
+    public static readonly BUYER_PERCENTAGE = 3;
+    public static readonly SELLER_PERCENTAGE = 3;
+    
+
     @Field(()=> Listing)
     @ManyToOne(()=>Listing, {primary: true})
     listing: Listing

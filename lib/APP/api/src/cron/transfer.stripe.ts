@@ -27,9 +27,11 @@ export class StripeTransferScheduler {
 
         // production checks will be after 1 hour.
         // dev checks are every minute for quick debugging.
-        let cronGlob = process.env.NODE_ENV === "production" ? "0 * * * *" : "0 * * * *"
+        let cronGlob = process.env.NODE_ENV 
+        === "production" ? "0 * * * *" : "* * * * *"
 
-        let monthlyCronGlob = process.env.NODE_ENV === "production" ? "0 * * * *" : "0 0 5 * *"
+        let monthlyCronGlob = process.env.NODE_ENV 
+        === "production" ? "0 0 5 * *" : "* * * * *"
 
         this.cronJob = new CronJob(cronGlob, async () => {
             try {

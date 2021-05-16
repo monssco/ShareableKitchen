@@ -2,6 +2,7 @@ import { User } from "../../../entities/User/User";
 import { MyContext } from "src/types";
 import { Arg, Ctx, Field, ID, InputType, Mutation, Resolver } from "type-graphql";
 import { City } from "../../../entities/Geo/City";
+import { sendRegistrationEmail } from "../../../utils/Email/sendRegistrationEmail";
 
 @InputType()
 export class RegisterUserInput implements Partial<User> {
@@ -62,6 +63,10 @@ export class RegisterResolver {
         const city = await em.findOneOrFail(City, {id: 16152})
         newUser.city = city
         await em.persistAndFlush(newUser);
+        
+        console.log("SEND EMAIL TO", newUser.email)
+        sendRegistrationEmail(newUser.email)
+        
         return newUser
     }
 }

@@ -1,3 +1,4 @@
+import Mail from 'nodemailer/lib/mailer';
 import {sendEmail} from './sendEmail'
 
 /**
@@ -6,16 +7,16 @@ import {sendEmail} from './sendEmail'
  */
 export const sendRegistrationEmail = async (to: string) => {
 
-    const message = {
+    const message: Mail.Options = {
         from: '"Shareable Kitchen" <no-reply@shareablekitchen.com>',
         to,
         subject: "Welcome to Shareable Kitchen!",
-        text: "Welcome to shareablekitchen.com!",
+        text: "Welcome to Shareable Kitchen!",
         html: `<html>
-            <body>
-            <p>Testing SparkPost - the world's most awesome email service!</p>
-            </body>
-            </html>`
+                    <body>
+                    <p>Welcome to Shareable Kitchen!</p>
+                    </body>
+                </html>`
     };
     await sendEmail(message)
 }

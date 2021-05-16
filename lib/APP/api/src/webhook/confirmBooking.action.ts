@@ -4,6 +4,8 @@ import Stripe from "stripe";
 import { Booking } from "../entities/Booking/Booking";
 import { addMonths, getUnixTime, startOfMonth } from "date-fns";
 import { User } from "../entities/User/User";
+import { sendBookingConfirmationEmail } from "../utils/Email/sendBookingConfirmationEmail";
+import { sendReservationConfirmationEmail } from "../utils/Email/sendReservationConfirmationEmail";
 
 //TODO: Test this class, the code looks good but I have not tested it yet.
 
@@ -28,6 +30,10 @@ export const  ConfirmBooking = async (paymentIntent:Stripe.PaymentIntent, em: En
         // Confirm the booking, they have paid for it already.
         booking.confirmBooking()
         await em.persistAndFlush(booking)
+
+        // Sent async, don't wait on it.
+        sendBookingConfirmationEmail(booking.buyer, booking);
+        sendReservationConfirmationEmail(booking.listing.author, booking);
 
         // If its monthly booking, setup a subscription.
         if (booking.type === AvailabilityType.monthly) {

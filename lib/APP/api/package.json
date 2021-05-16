@@ -26,6 +26,7 @@
     "@mikro-orm/core": "^4.5.4",
     "@mikro-orm/postgresql": "^4.5.4",
     "apollo-server-express": "^2.24.0",
+    "calendar-link": "^2.1.1",
     "class-validator": "^0.13.1",
     "cors": "^2.8.5",
     "cron": "^1.8.2",

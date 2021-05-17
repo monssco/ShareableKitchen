@@ -45,10 +45,8 @@ export default IndexPage
 const Landing =() => {
 
   return (
-    <div className="container mx-auto md:pt-20 pb-10 lg:py-40 p-5">
-      <h1 className="text-4xl md:text-7xl xl:text-9xl font-semibold">digital design +
-        <br/>
-        development
+    <div className="container mx-auto p-10">
+      <h1 className="">Find a kitchen to rent today!
       </h1>
       <div className="flex flex-col md:flex-row justify-between pt-5 md:pt-10 lg:pt-20">
         <div className="flex-1" >

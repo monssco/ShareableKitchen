@@ -1,15 +1,16 @@
 overwrite: true
 watch: true
 schema: http://localhost/graphql
-documents: src/**/*.graphql
+documents: src/graphql/**/*.graphql
 generates:
-  src/generated/graphql.tsx:
+  src/graphql/generated/graphql.ts:
     plugins:
       - typescript
       - typescript-operations
-  src/generated/modules.d.ts:
+      - typescript-graphql-request
+  src/graphql/generated/modules.d.ts:
     plugins:
       - typescript-graphql-files-modules
-  ./graphql.schema.json:
+  src/graphql/graphql.schema.json:
     plugins:
       - introspection

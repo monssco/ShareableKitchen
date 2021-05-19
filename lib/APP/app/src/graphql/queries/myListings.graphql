@@ -1,0 +1,42 @@
+query myListingsQuery {
+  myListings(input: { limit: 10, offset: 0 }) {
+    id
+    title
+    description
+    availability {
+      startDate
+      endDate
+      type
+    }
+    city {
+      id
+      name
+    }
+    photos {
+      original_key
+      resized_medium
+      resized_small
+      resized_large
+    }
+    address
+    postal
+    unitPrice
+    sqFtArea
+    features
+    propertyType
+    bookings {
+      startDate
+      endDate
+      buyer {
+        email
+        id
+        profile_image {
+          original_key
+          resized_medium
+        }
+        first_name
+        last_name
+      }
+    }
+  }
+}

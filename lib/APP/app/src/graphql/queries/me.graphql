@@ -1,0 +1,24 @@
+query MeQuery {
+  me {
+    id
+    email
+    first_name
+    last_name
+    date_of_birth
+    profile_image {
+      original_key
+      resized_medium
+      resized_small
+      resized_large
+      __typename
+    }
+    address
+    city {
+      id
+      name
+    }
+    postal
+    stripe_account_id
+    stripe_customer_id
+  }
+}

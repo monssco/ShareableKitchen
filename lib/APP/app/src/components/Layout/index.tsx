@@ -12,7 +12,7 @@ const Layout: FunctionComponent = ({ children }) => {
     <div className="flex flex-col h-screen justify-between">
       <Header companyName={config.siteMetadata.companyName} />
       <main className="flex-grow">{children}</main>
-      <Footer></Footer>
+      {/* <Footer></Footer> */}
     </div>
   )
 }

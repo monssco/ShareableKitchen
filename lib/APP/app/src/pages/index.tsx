@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 import SEO from "../components/seo"
 import Link from 'next/link'
 
@@ -10,7 +10,13 @@ import Results from "../components/Results";
 import NextStep from "../components/NextStep";
 import Services from "../components/Services";
 
-const IndexPage = () => (
+const IndexPage = () => {
+
+  useEffect(() => {
+    main()
+  }, [])
+return (
+
   <>
     <SEO title="Shareable Kitchen - Find a Kitchen to rent today!" 
           lang='en'
@@ -18,26 +24,37 @@ const IndexPage = () => (
     <div className="flex flex-col min-h-full mx-auto">
       {/* Main home landing container */}
 
-      <Landing></Landing>
-      <WhoWeAre></WhoWeAre>
-      <Services></Services>
+      {/* <Landing></Landing> */}
+      {/* <WhoWeAre></WhoWeAre> */}
+      {/* <Services></Services> */}
 
       {/* Paths we have travelled container */}
       
-      <Carousel></Carousel>
+      {/* <Carousel></Carousel> */}
 
-      <Results></Results>
+      {/* <Results></Results> */}
 
       {/* Hire Us */}
-      <section className="container mx-auto p-5">
+      {/* <section className="container mx-auto p-5">
         <HireUs />
         <Careers />
-      </section>
+      </section> */}
 
-      <NextStep></NextStep>
+      {/* <NextStep></NextStep> */}
     </div>
   </>
-)
+)}
+
+import { GraphQLClient } from 'graphql-request';
+import { getSdk } from '../graphql/generated/graphql'; // THIS FILE IS THE GENERATED FILE
+
+async function main() {
+  const client = new GraphQLClient('http://localhost/graphql');
+  const sdk = getSdk(client);
+  const me = await sdk.MeQuery(); // This is fully typed, based on the query
+
+  console.log(`GraphQL data:`, me);
+}
 
 export default IndexPage
 

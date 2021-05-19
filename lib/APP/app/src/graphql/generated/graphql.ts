@@ -1,3 +1,6 @@
+import { GraphQLClient } from 'graphql-request';
+import * as Dom from 'graphql-request/dist/types.dom';
+import gql from 'graphql-tag';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
@@ -484,9 +487,133 @@ export type MeQueryQuery = (
   & { me?: Maybe<(
     { __typename?: 'User' }
     & Pick<User, 'id' | 'email' | 'first_name' | 'last_name' | 'date_of_birth' | 'address' | 'postal' | 'stripe_account_id' | 'stripe_customer_id'>
-    & { city?: Maybe<(
+    & { profile_image?: Maybe<(
+      { __typename: 'UserImage' }
+      & Pick<UserImage, 'original_key' | 'resized_medium' | 'resized_small' | 'resized_large'>
+    )>, city?: Maybe<(
       { __typename?: 'CityType' }
       & Pick<CityType, 'id' | 'name'>
     )> }
   )> }
 );
+
+export type MyListingsQueryQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MyListingsQueryQuery = (
+  { __typename?: 'Query' }
+  & { myListings: Array<(
+    { __typename?: 'Listing' }
+    & Pick<Listing, 'id' | 'title' | 'description' | 'address' | 'postal' | 'unitPrice' | 'sqFtArea' | 'features' | 'propertyType'>
+    & { availability: (
+      { __typename?: 'AvailabilityObject' }
+      & Pick<AvailabilityObject, 'startDate' | 'endDate' | 'type'>
+    ), city?: Maybe<(
+      { __typename?: 'CityType' }
+      & Pick<CityType, 'id' | 'name'>
+    )>, photos?: Maybe<Array<(
+      { __typename?: 'ListingImage' }
+      & Pick<ListingImage, 'original_key' | 'resized_medium' | 'resized_small' | 'resized_large'>
+    )>>, bookings?: Maybe<Array<(
+      { __typename?: 'Booking' }
+      & Pick<Booking, 'startDate' | 'endDate'>
+      & { buyer: (
+        { __typename?: 'User' }
+        & Pick<User, 'email' | 'id' | 'first_name' | 'last_name'>
+        & { profile_image?: Maybe<(
+          { __typename?: 'UserImage' }
+          & Pick<UserImage, 'original_key' | 'resized_medium'>
+        )> }
+      ) }
+    )>> }
+  )> }
+);
+
+
+export const MeQueryDocument = gql`
+    query MeQuery {
+  me {
+    id
+    email
+    first_name
+    last_name
+    date_of_birth
+    profile_image {
+      original_key
+      resized_medium
+      resized_small
+      resized_large
+      __typename
+    }
+    address
+    city {
+      id
+      name
+    }
+    postal
+    stripe_account_id
+    stripe_customer_id
+  }
+}
+    `;
+export const MyListingsQueryDocument = gql`
+    query myListingsQuery {
+  myListings(input: {limit: 10, offset: 0}) {
+    id
+    title
+    description
+    availability {
+      startDate
+      endDate
+      type
+    }
+    city {
+      id
+      name
+    }
+    photos {
+      original_key
+      resized_medium
+      resized_small
+      resized_large
+    }
+    address
+    postal
+    unitPrice
+    sqFtArea
+    features
+    propertyType
+    bookings {
+      startDate
+      endDate
+      buyer {
+        email
+        id
+        profile_image {
+          original_key
+          resized_medium
+        }
+        first_name
+        last_name
+      }
+    }
+  }
+}
+    `;
+
+export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string) => Promise<T>;
+
+
+const defaultWrapper: SdkFunctionWrapper = (action, _operationName) => action();
+
+export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
+  return {
+    MeQuery(variables?: MeQueryQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<MeQueryQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<MeQueryQuery>(MeQueryDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'MeQuery');
+    },
+    myListingsQuery(variables?: MyListingsQueryQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<MyListingsQueryQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<MyListingsQueryQuery>(MyListingsQueryDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'myListingsQuery');
+    }
+  };
+}
+export type Sdk = ReturnType<typeof getSdk>;

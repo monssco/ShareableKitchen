@@ -13,14 +13,14 @@ const Header: FunctionComponent<Props> = ({ companyName }: Props) => {
       route: `/about/`,
       title: `About`,
     },
-    {
-      route: `/services/`,
-      title: `Services`,
-    },
-    {
-      route: `/ventures/`,
-      title: `Ventures`
-    },
+    // {
+    //   route: `/services/`,
+    //   title: `Services`,
+    // },
+    // {
+    //   route: `/ventures/`,
+    //   title: `Ventures`
+    // },
     {
       route: `/contact/`,
       title: `Contact`,

@@ -1,6 +1,6 @@
 overwrite: true
 watch: true
-schema: http://localhost/graphql
+schema: http://localhost/graphql #Should be changed when going live
 documents: src/graphql/**/*.graphql
 generates:
   src/graphql/generated/graphql.ts:

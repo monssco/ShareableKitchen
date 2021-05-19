@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from "react"
 import PropTypes from "prop-types"
-import Footer from './Footer/index';
+// import Footer from './Footer/index';
 
 import Header from "./Header/index"
 import config from '../../config';

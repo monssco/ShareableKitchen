@@ -8,22 +8,15 @@ interface Props {
 const Header: FunctionComponent<Props> = ({ companyName }: Props) => {
 
   const [isExpanded, toggleExpansion] = useState(false);
+
   const routes = [
     {
-      route: `/about/`,
-      title: `About`,
+      route: `/listings/`,
+      title: `List Kitchen`,
     },
-    // {
-    //   route: `/services/`,
-    //   title: `Services`,
-    // },
-    // {
-    //   route: `/ventures/`,
-    //   title: `Ventures`
-    // },
     {
-      route: `/contact/`,
-      title: `Contact`,
+      route: `/signup_login/`,
+      title: `Login`,
     },
   ]
 

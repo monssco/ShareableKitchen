@@ -21,6 +21,7 @@
     "strictNullChecks": true,
     "esModuleInterop": true,
     "suppressImplicitAnyIndexErrors": true,
+    "noUnusedParameters": true,
     "noUnusedLocals": true,
     "skipLibCheck": true,
     "strict": false,

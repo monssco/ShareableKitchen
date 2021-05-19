@@ -1,20 +1,11 @@
-import React, { useEffect } from "react"
+import React from "react"
 import SEO from "../components/seo"
 import Link from 'next/link'
 
-import HireUs from "../components/HireUs/index";
-import Careers from '../components/Careers/index';
-import Carousel from "../components/Carousel";
 import Button from "../components/Button";
-import Results from "../components/Results";
-import NextStep from "../components/NextStep";
-import Services from "../components/Services";
 
 const IndexPage = () => {
 
-  useEffect(() => {
-    main()
-  }, [])
 return (
 
   <>
@@ -22,6 +13,7 @@ return (
           lang='en'
     />
     <div className="flex flex-col min-h-full mx-auto">
+      
       {/* Main home landing container */}
 
       {/* <Landing></Landing> */}
@@ -44,17 +36,6 @@ return (
     </div>
   </>
 )}
-
-import { GraphQLClient } from 'graphql-request';
-import { getSdk } from '../graphql/generated/graphql'; // THIS FILE IS THE GENERATED FILE
-
-async function main() {
-  const client = new GraphQLClient('http://localhost/graphql');
-  const sdk = getSdk(client);
-  const me = await sdk.MeQuery(); // This is fully typed, based on the query
-
-  console.log(`GraphQL data:`, me);
-}
 
 export default IndexPage
 

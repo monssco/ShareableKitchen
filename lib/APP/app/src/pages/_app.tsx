@@ -1,11 +1,17 @@
 import "../styles/index.css";
 
-// import App from "next/app";
 import type { AppProps /*, AppContext */ } from 'next/app'
 import Layout from "src/components/Layout";
+import { Provider } from 'next-auth/client'
 
 function MyApp({ Component, pageProps }: AppProps) {
-  return <Layout><Component {...pageProps} /></Layout>
+  return (
+    <Provider session={pageProps.session}>
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
+    </Provider>
+  )
 }
 
 // Only uncomment this method if you have blocking data requirements for

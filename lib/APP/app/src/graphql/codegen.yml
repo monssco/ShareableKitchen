@@ -8,6 +8,8 @@ generates:
       - typescript
       - typescript-operations
       - typescript-graphql-request
+    config:
+      enumsAsTypes: true
   src/graphql/generated/modules.d.ts:
     plugins:
       - typescript-graphql-files-modules

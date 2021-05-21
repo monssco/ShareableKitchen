@@ -1,0 +1,20 @@
+query getHomeGalleryListings {
+  homeGalleryListings {
+    id
+    title
+    description
+    photos {
+      resized_medium
+    }
+    city {
+      name
+    }
+    unitPrice
+    availability {
+      type
+    }
+    sqFtArea
+    features
+    propertyType
+  }
+}

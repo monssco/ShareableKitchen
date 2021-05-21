@@ -51,12 +51,14 @@ type CountryType {
 }
 
 type StateType {
+  country: CountryType!
   id: Int!
   name: String!
   cities: [CityType!]
 }
 
 type CityType {
+  state: StateType!
   id: Int!
   name: String!
 }
@@ -178,12 +180,14 @@ input CountryInput {
 }
 
 input StateInput {
+  country: CountryInput!
   id: Int!
   name: String!
   cities: [CityInput!] = []
 }
 
 input CityInput {
+  state: StateInput!
   id: Int!
   name: String!
 }
@@ -238,7 +242,7 @@ input EditListingInput {
 input SearchListingsInput {
   limit: Int = 10
   offset: Int = 0
-  cityId: Float!
+  cityId: Int!
   startDate: DateTime
   endDate: DateTime
 }
@@ -291,6 +295,7 @@ type Query {
 
   # This endpoint is used to check if an account has payouts enabled. If payouts are not enabled, they must enable them by following the by using the getAccountLink endpoint.
   arePayoutsEnabled: Boolean!
+  homeGalleryListings: [Listing!]!
   myListings(input: PaginationInput!): [Listing!]!
   searchListings(input: SearchListingsInput!): [Listing!]!
   listConversations(input: PaginationInput!): [Conversation!]!

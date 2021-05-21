@@ -12,6 +12,7 @@ import { State } from './State';
 @Entity()
 export class City {
 
+    @Field(()=> State)
     @ManyToOne(()=> State, {primary: true})
     state!: State
 

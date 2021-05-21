@@ -1,0 +1,28 @@
+query searchListings($cityId: Int!, $limit: Int!, $offset: Int!) {
+    searchListings(input: { cityId: $cityId, limit: $limit, offset: $offset }) {
+        id
+        title
+        description
+        address
+        postal
+        features
+        sqFtArea
+        availability {
+            startDate
+            endDate
+        }
+        bookings {
+            startDate
+            endDate
+        }
+        author {
+            id
+            first_name
+            last_name
+        }
+        photos {
+            resized_small
+        }
+        propertyType
+    }
+}

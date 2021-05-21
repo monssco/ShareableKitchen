@@ -9,7 +9,7 @@
  */
 
 import { MyContext } from "../../../types";
-import { Arg, Ctx, Field, InputType, Query } from "type-graphql";
+import { Arg, Ctx, Field, InputType, Int, Query } from "type-graphql";
 import { Listing } from "../../../entities/Listing/Listing";
 import { City } from "../../../entities/Geo/City";
 import { PaginationInput } from "../../Base/pagination.resolver";
@@ -18,7 +18,7 @@ import { FindOptions } from "@mikro-orm/core";
 @InputType()
 class SearchListingsInput extends PaginationInput {
 
-    @Field()
+    @Field(() => Int)
     cityId: number
 
     @Field({nullable: true})

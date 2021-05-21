@@ -1,5 +1,5 @@
-query myListingsQuery {
-  myListings(input: { limit: 10, offset: 0 }) {
+query myListingsQuery($offset: Int!, $limit: Int!) {
+  myListings(input: { offset: $offset, limit: $limit, }) {
     id
     title
     description

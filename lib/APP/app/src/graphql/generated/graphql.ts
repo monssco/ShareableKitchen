@@ -37,11 +37,10 @@ export type AvailabilityObject = {
 };
 
 /** Types of kitchen availability */
-export enum AvailabilityType {
-  Daily = 'daily',
-  Weekly = 'weekly',
-  Monthly = 'monthly'
-}
+export type AvailabilityType =
+  | 'daily'
+  | 'weekly'
+  | 'monthly';
 
 export type Booking = {
   __typename?: 'Booking';
@@ -59,12 +58,14 @@ export type Booking = {
 };
 
 export type CityInput = {
+  state: StateInput;
   id: Scalars['Int'];
   name: Scalars['String'];
 };
 
 export type CityType = {
   __typename?: 'CityType';
+  state: StateType;
   id: Scalars['Int'];
   name: Scalars['String'];
 };
@@ -295,31 +296,29 @@ export type PaginationInput = {
 };
 
 /** Features of a given kitchen */
-export enum PropertyFeatures {
-  Microwave = 'microwave',
-  ConveyorOven = 'conveyorOven',
-  TripleSink = 'tripleSink',
-  DoughSheeter = 'doughSheeter',
-  StandUpCooler = 'standUpCooler',
-  WalkInCooler = 'walkInCooler',
-  StonePizzaOven = 'stonePizzaOven',
-  KitchenOven = 'kitchenOven',
-  DoubleSink = 'doubleSink',
-  Freezer = 'freezer',
-  PrepTables = 'prepTables',
-  DeepFryer = 'deepFryer',
-  Other = 'other',
-  DoughMixer = 'doughMixer'
-}
+export type PropertyFeatures =
+  | 'microwave'
+  | 'conveyorOven'
+  | 'tripleSink'
+  | 'doughSheeter'
+  | 'standUpCooler'
+  | 'walkInCooler'
+  | 'stonePizzaOven'
+  | 'kitchenOven'
+  | 'doubleSink'
+  | 'freezer'
+  | 'prepTables'
+  | 'deepFryer'
+  | 'other'
+  | 'doughMixer';
 
 /** Self-explanatory */
-export enum PropertyType {
-  Cafe = 'cafe',
-  Church = 'church',
-  CommercialKitchen = 'commercialKitchen',
-  CommunityCenter = 'communityCenter',
-  Restaurant = 'restaurant'
-}
+export type PropertyType =
+  | 'cafe'
+  | 'church'
+  | 'commercialKitchen'
+  | 'communityCenter'
+  | 'restaurant';
 
 export type Query = {
   __typename?: 'Query';
@@ -328,6 +327,7 @@ export type Query = {
   getCountries: Array<CountryType>;
   /** This endpoint is used to check if an account has payouts enabled. If payouts are not enabled, they must enable them by following the by using the getAccountLink endpoint. */
   arePayoutsEnabled: Scalars['Boolean'];
+  homeGalleryListings: Array<Listing>;
   myListings: Array<Listing>;
   searchListings: Array<Listing>;
   listConversations: Array<Conversation>;
@@ -412,7 +412,7 @@ export type RegisterUserInput = {
 export type SearchListingsInput = {
   limit?: Maybe<Scalars['Int']>;
   offset?: Maybe<Scalars['Int']>;
-  cityId: Scalars['Float'];
+  cityId: Scalars['Int'];
   startDate?: Maybe<Scalars['DateTime']>;
   endDate?: Maybe<Scalars['DateTime']>;
 };
@@ -427,6 +427,7 @@ export type StartConversationInput = {
 };
 
 export type StateInput = {
+  country: CountryInput;
   id: Scalars['Int'];
   name: Scalars['String'];
   cities?: Maybe<Array<CityInput>>;
@@ -434,6 +435,7 @@ export type StateInput = {
 
 export type StateType = {
   __typename?: 'StateType';
+  country: CountryType;
   id: Scalars['Int'];
   name: Scalars['String'];
   cities?: Maybe<Array<CityType>>;
@@ -479,6 +481,60 @@ export type UserImage = Image & {
   resized_large: Scalars['String'];
 };
 
+export type GetHomeGalleryListingsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetHomeGalleryListingsQuery = (
+  { __typename?: 'Query' }
+  & { homeGalleryListings: Array<(
+    { __typename?: 'Listing' }
+    & Pick<Listing, 'id' | 'title' | 'description' | 'unitPrice' | 'sqFtArea' | 'features' | 'propertyType'>
+    & { photos?: Maybe<Array<(
+      { __typename?: 'ListingImage' }
+      & Pick<ListingImage, 'resized_medium'>
+    )>>, city?: Maybe<(
+      { __typename?: 'CityType' }
+      & Pick<CityType, 'name'>
+    )>, availability: (
+      { __typename?: 'AvailabilityObject' }
+      & Pick<AvailabilityObject, 'type'>
+    ) }
+  )> }
+);
+
+export type GetConversationsQueryVariables = Exact<{
+  limit: Scalars['Int'];
+  offset: Scalars['Int'];
+}>;
+
+
+export type GetConversationsQuery = (
+  { __typename?: 'Query' }
+  & { listConversations: Array<(
+    { __typename?: 'Conversation' }
+    & Pick<Conversation, 'id'>
+    & { messages: Array<(
+      { __typename?: 'Message' }
+      & Pick<Message, 'id' | 'content' | 'created'>
+      & { author: (
+        { __typename?: 'User' }
+        & Pick<User, 'id' | 'first_name'>
+        & { profile_image?: Maybe<(
+          { __typename?: 'UserImage' }
+          & Pick<UserImage, 'resized_small'>
+        )> }
+      ) }
+    )>, listing: (
+      { __typename?: 'Listing' }
+      & Pick<Listing, 'id' | 'title'>
+      & { photos?: Maybe<Array<(
+        { __typename?: 'ListingImage' }
+        & Pick<ListingImage, 'resized_small'>
+      )>> }
+    ) }
+  )> }
+);
+
 export type MeQueryQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -497,7 +553,10 @@ export type MeQueryQuery = (
   )> }
 );
 
-export type MyListingsQueryQueryVariables = Exact<{ [key: string]: never; }>;
+export type MyListingsQueryQueryVariables = Exact<{
+  offset: Scalars['Int'];
+  limit: Scalars['Int'];
+}>;
 
 
 export type MyListingsQueryQuery = (
@@ -529,7 +588,83 @@ export type MyListingsQueryQuery = (
   )> }
 );
 
+export type SearchListingsQueryVariables = Exact<{
+  cityId: Scalars['Int'];
+  limit: Scalars['Int'];
+  offset: Scalars['Int'];
+}>;
 
+
+export type SearchListingsQuery = (
+  { __typename?: 'Query' }
+  & { searchListings: Array<(
+    { __typename?: 'Listing' }
+    & Pick<Listing, 'id' | 'title' | 'description' | 'address' | 'postal' | 'features' | 'sqFtArea' | 'propertyType'>
+    & { availability: (
+      { __typename?: 'AvailabilityObject' }
+      & Pick<AvailabilityObject, 'startDate' | 'endDate'>
+    ), bookings?: Maybe<Array<(
+      { __typename?: 'Booking' }
+      & Pick<Booking, 'startDate' | 'endDate'>
+    )>>, author: (
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'first_name' | 'last_name'>
+    ), photos?: Maybe<Array<(
+      { __typename?: 'ListingImage' }
+      & Pick<ListingImage, 'resized_small'>
+    )>> }
+  )> }
+);
+
+
+export const GetHomeGalleryListingsDocument = gql`
+    query getHomeGalleryListings {
+  homeGalleryListings {
+    id
+    title
+    description
+    photos {
+      resized_medium
+    }
+    city {
+      name
+    }
+    unitPrice
+    availability {
+      type
+    }
+    sqFtArea
+    features
+    propertyType
+  }
+}
+    `;
+export const GetConversationsDocument = gql`
+    query getConversations($limit: Int!, $offset: Int!) {
+  listConversations(input: {limit: $limit, offset: $offset}) {
+    id
+    messages {
+      id
+      content
+      created
+      author {
+        id
+        first_name
+        profile_image {
+          resized_small
+        }
+      }
+    }
+    listing {
+      id
+      photos {
+        resized_small
+      }
+      title
+    }
+  }
+}
+    `;
 export const MeQueryDocument = gql`
     query MeQuery {
   me {
@@ -557,8 +692,8 @@ export const MeQueryDocument = gql`
 }
     `;
 export const MyListingsQueryDocument = gql`
-    query myListingsQuery {
-  myListings(input: {limit: 10, offset: 0}) {
+    query myListingsQuery($offset: Int!, $limit: Int!) {
+  myListings(input: {offset: $offset, limit: $limit}) {
     id
     title
     description
@@ -600,6 +735,36 @@ export const MyListingsQueryDocument = gql`
   }
 }
     `;
+export const SearchListingsDocument = gql`
+    query searchListings($cityId: Int!, $limit: Int!, $offset: Int!) {
+  searchListings(input: {cityId: $cityId, limit: $limit, offset: $offset}) {
+    id
+    title
+    description
+    address
+    postal
+    features
+    sqFtArea
+    availability {
+      startDate
+      endDate
+    }
+    bookings {
+      startDate
+      endDate
+    }
+    author {
+      id
+      first_name
+      last_name
+    }
+    photos {
+      resized_small
+    }
+    propertyType
+  }
+}
+    `;
 
 export type SdkFunctionWrapper = <T>(action: (requestHeaders?:Record<string, string>) => Promise<T>, operationName: string) => Promise<T>;
 
@@ -608,11 +773,20 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName) => action();
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
+    getHomeGalleryListings(variables?: GetHomeGalleryListingsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetHomeGalleryListingsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetHomeGalleryListingsQuery>(GetHomeGalleryListingsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getHomeGalleryListings');
+    },
+    getConversations(variables: GetConversationsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetConversationsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetConversationsQuery>(GetConversationsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getConversations');
+    },
     MeQuery(variables?: MeQueryQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<MeQueryQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<MeQueryQuery>(MeQueryDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'MeQuery');
     },
-    myListingsQuery(variables?: MyListingsQueryQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<MyListingsQueryQuery> {
+    myListingsQuery(variables: MyListingsQueryQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<MyListingsQueryQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<MyListingsQueryQuery>(MyListingsQueryDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'myListingsQuery');
+    },
+    searchListings(variables: SearchListingsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<SearchListingsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<SearchListingsQuery>(SearchListingsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'searchListings');
     }
   };
 }

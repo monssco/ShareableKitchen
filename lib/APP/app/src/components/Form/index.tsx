@@ -83,7 +83,7 @@ const Form = () => {
                 url: "https://formspree.io/f/xgepnnql",
                 data: values
             })
-                .then(response => {
+                .then(_ => {
                     setSubmission({
                         ...submission,
                         success: true

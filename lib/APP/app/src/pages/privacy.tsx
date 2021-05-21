@@ -1,11 +1,9 @@
 import React from 'react'
 import SEO from '../components/seo'
 
-interface Props {
-    
-}
 
-const PrivacyPage = (props: Props) => {
+
+const PrivacyPage = () => {
     return (
         <>
             <SEO title='Your Privacy' description='Monss cares about your privacy. Find out how we handle your information.' />

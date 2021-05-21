@@ -8,23 +8,23 @@ import ErrorPage from 'next/error';
 import SmallListing from "src/components/Listing/small";
 import Link from "next/link";
 
-const IndexPage: NextPage<{data: Listing[]}> = (props) => {
-
-  if (!props.data) {
+const IndexPage: NextPage<{listings: Listing[]}> = (props) => {
+  {console.log("PROPS", props.listings)}
+  if (!props.listings) {
     return <ErrorPage statusCode={404} />;
   }
 
   return (
 
     <>
-    {console.log(props.data)}
-    {console.log(typeof props.data)}
+    {console.log(props.listings)}
+    {console.log(typeof props.listings)}
       <SEO title="Shareable Kitchen - Find a Kitchen to rent today!" 
             lang='en'
       />
       <div className="container mx-auto">
         {/* <SearchBar></SearchBar> */}
-        <HomeGallery listings={props.data}></HomeGallery>
+        <HomeGallery listings={props.listings}></HomeGallery>
       </div>
     </>
   )
@@ -61,15 +61,16 @@ const HomeGallery: React.FC<{listings: Listing[]}> = (props) => {
 export const getServerSideProps: GetServerSideProps = async ({
     res
   }) => {
-    // ...
     try {
       let listings =  await graphqlSDK().getHomeGalleryListings()
+      console.log("LISTINGS", listings)
     return {
       props: {
-        data: listings.homeGalleryListings
+        listings: listings.homeGalleryListings
       }
     }
     } catch (error) {
+      console.log("ERROR", error)
       res.statusCode = 404;
       return {
         props: {}

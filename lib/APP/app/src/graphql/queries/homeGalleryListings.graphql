@@ -7,7 +7,7 @@ query getHomeGalleryListings {
       resized_medium
     }
     city {
-      name
+      id
     }
     unitPrice
     availability {

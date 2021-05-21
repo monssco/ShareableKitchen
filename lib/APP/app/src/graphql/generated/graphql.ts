@@ -329,6 +329,7 @@ export type Query = {
   arePayoutsEnabled: Scalars['Boolean'];
   homeGalleryListings: Array<Listing>;
   myListings: Array<Listing>;
+  retrieveListing: Listing;
   searchListings: Array<Listing>;
   listConversations: Array<Conversation>;
   listMessages: Array<Message>;
@@ -359,6 +360,11 @@ export type QueryListReservationsArgs = {
 
 export type QueryMyListingsArgs = {
   input: PaginationInput;
+};
+
+
+export type QueryRetrieveListingArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -494,7 +500,7 @@ export type GetHomeGalleryListingsQuery = (
       & Pick<ListingImage, 'resized_medium'>
     )>>, city?: Maybe<(
       { __typename?: 'CityType' }
-      & Pick<CityType, 'name'>
+      & Pick<CityType, 'id'>
     )>, availability: (
       { __typename?: 'AvailabilityObject' }
       & Pick<AvailabilityObject, 'type'>
@@ -627,7 +633,7 @@ export const GetHomeGalleryListingsDocument = gql`
       resized_medium
     }
     city {
-      name
+      id
     }
     unitPrice
     availability {

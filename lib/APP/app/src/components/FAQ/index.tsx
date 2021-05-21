@@ -1,10 +1,6 @@
 import React, {useState} from 'react'
 
-interface Props {
-    
-}
-
-const FAQ = (props: Props) => {
+const FAQ = () => {
 
 
     const FAQ = [

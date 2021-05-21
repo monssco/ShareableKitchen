@@ -2,15 +2,12 @@ import "../styles/index.css";
 
 import type { AppProps /*, AppContext */ } from 'next/app'
 import Layout from "src/components/Layout";
-import { Provider } from 'next-auth/client'
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <Provider session={pageProps.session}>
       <Layout>
         <Component {...pageProps} />
       </Layout>
-    </Provider>
   )
 }
 

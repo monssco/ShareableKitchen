@@ -1,6 +1,6 @@
-import { GetServerSideProps } from 'next'
+// import { GetServerSideProps } from 'next'
 import {useRouter} from 'next/router'
-import { graphqlSDK } from 'src/graphql/client'
+// import { graphqlSDK } from 'src/graphql/client'
 
 const Listing = () => {
   const router = useRouter()
@@ -21,10 +21,11 @@ export default Listing
 //   }) => {
 //     // ...
 //     try {
-//       let listings =  await graphqlSDK().getHomeGalleryListings()
+//       let id = params?.id as string
+//       let listing =  await graphqlSDK().retrieveListing({id})
 //     return {
 //       props: {
-//         data: listings.homeGalleryListings
+//         data: listing
 //       }
 //     }
 //     } catch (error) {

@@ -35,6 +35,15 @@ declare module '*/myListings.graphql' {
 }
     
 
+declare module '*/retrieveListing.graphql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const retrieveListing: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
 declare module '*/searchListings.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;

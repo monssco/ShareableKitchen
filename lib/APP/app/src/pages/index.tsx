@@ -9,13 +9,12 @@ import SmallListing from "src/components/Listing/small";
 import Link from "next/link";
 
 const IndexPage: NextPage<{listings: Listing[]}> = (props) => {
-  {console.log("PROPS", props.listings)}
+
   if (!props.listings) {
     return <ErrorPage statusCode={404} />;
   }
 
   return (
-
     <>
     {console.log(props.listings)}
     {console.log(typeof props.listings)}
@@ -35,13 +34,13 @@ export default IndexPage
 const HomeGallery: React.FC<{listings: Listing[]}> = (props) => {
 
   return (
-    <div className="bg-green-200">
+    <div className="bg-green-200 p-5">
       <div className="text-2xl">Kitchens near you!</div>
       <div className="flex flex-row">
         {
         props.listings.map(item => {
           return (
-          <div className="p-2">
+          <div key={item.id} className="p-2">
             
               <Link href={`/listings/${encodeURIComponent(item.id)}`}>
                 <a>
@@ -63,7 +62,6 @@ export const getServerSideProps: GetServerSideProps = async ({
   }) => {
     try {
       let listings =  await graphqlSDK().getHomeGalleryListings()
-      console.log("LISTINGS", listings)
     return {
       props: {
         listings: listings.homeGalleryListings

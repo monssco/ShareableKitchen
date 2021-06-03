@@ -83,5 +83,6 @@ export default {
     author: `@monssco`,
     companyName: `Shareable Kitchen`,
     siteUrl: `https://www.shareablekitchen.com`
-  }
+  },
+  gMapsKey: 'AIzaSyCJKbuRIZfvDo_zEZOSXlpgNC2RIJc_U-k'
 }

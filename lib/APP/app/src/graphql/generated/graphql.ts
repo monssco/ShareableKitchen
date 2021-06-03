@@ -122,7 +122,7 @@ export type CreateListingInput = {
 
 export type CreateListingLocationInput = {
   address: Scalars['String'];
-  cityId: Scalars['Float'];
+  cityId: Scalars['Int'];
 };
 
 
@@ -594,6 +594,39 @@ export type MyListingsQueryQuery = (
   )> }
 );
 
+export type RetrieveListingQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type RetrieveListingQuery = (
+  { __typename?: 'Query' }
+  & { retrieveListing: (
+    { __typename?: 'Listing' }
+    & Pick<Listing, 'id' | 'title' | 'description' | 'address' | 'postal' | 'unitPrice' | 'sqFtArea' | 'features' | 'propertyType'>
+    & { author: (
+      { __typename?: 'User' }
+      & Pick<User, 'id' | 'first_name'>
+      & { profile_image?: Maybe<(
+        { __typename?: 'UserImage' }
+        & Pick<UserImage, 'resized_medium'>
+      )> }
+    ), availability: (
+      { __typename?: 'AvailabilityObject' }
+      & Pick<AvailabilityObject, 'startDate' | 'endDate' | 'type'>
+    ), photos?: Maybe<Array<(
+      { __typename?: 'ListingImage' }
+      & Pick<ListingImage, 'resized_medium'>
+    )>>, city?: Maybe<(
+      { __typename?: 'CityType' }
+      & Pick<CityType, 'id'>
+    )>, bookings?: Maybe<Array<(
+      { __typename?: 'Booking' }
+      & Pick<Booking, 'startDate' | 'endDate'>
+    )>> }
+  ) }
+);
+
 export type SearchListingsQueryVariables = Exact<{
   cityId: Scalars['Int'];
   limit: Scalars['Int'];
@@ -741,6 +774,43 @@ export const MyListingsQueryDocument = gql`
   }
 }
     `;
+export const RetrieveListingDocument = gql`
+    query retrieveListing($id: String!) {
+  retrieveListing(id: $id) {
+    id
+    author {
+      id
+      profile_image {
+        resized_medium
+      }
+      first_name
+    }
+    title
+    description
+    availability {
+      startDate
+      endDate
+      type
+    }
+    photos {
+      resized_medium
+    }
+    address
+    city {
+      id
+    }
+    postal
+    unitPrice
+    sqFtArea
+    features
+    propertyType
+    bookings {
+      startDate
+      endDate
+    }
+  }
+}
+    `;
 export const SearchListingsDocument = gql`
     query searchListings($cityId: Int!, $limit: Int!, $offset: Int!) {
   searchListings(input: {cityId: $cityId, limit: $limit, offset: $offset}) {
@@ -790,6 +860,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     myListingsQuery(variables: MyListingsQueryQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<MyListingsQueryQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<MyListingsQueryQuery>(MyListingsQueryDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'myListingsQuery');
+    },
+    retrieveListing(variables: RetrieveListingQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<RetrieveListingQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<RetrieveListingQuery>(RetrieveListingDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'retrieveListing');
     },
     searchListings(variables: SearchListingsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<SearchListingsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<SearchListingsQuery>(SearchListingsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'searchListings');

@@ -1,0 +1,35 @@
+query retrieveListing($id: String!) {
+  retrieveListing(id: $id) {
+    id
+    author {
+      id
+      profile_image {
+        resized_medium
+      }
+      first_name
+    }
+    title
+    description
+    availability {
+      startDate
+      endDate
+      type
+    }
+    photos {
+      resized_medium
+    }
+    address
+    city {
+      id
+    }
+    postal
+    unitPrice
+    sqFtArea
+    features
+    propertyType
+    bookings {
+      startDate
+      endDate
+    }
+  }
+}

@@ -16,7 +16,7 @@ class CreateListingLocationInput {
     /**
      * Just from the city id you can figure out the rest.
      */
-    @Field()
+    @Field(()=> Int)
     cityId!: number
 
 }

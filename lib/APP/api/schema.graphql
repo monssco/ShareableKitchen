@@ -206,7 +206,7 @@ input CreateBookingInput {
 
 input CreateListingLocationInput {
   address: String!
-  cityId: Float!
+  cityId: Int!
 }
 
 input CreateListingInput {
@@ -297,6 +297,7 @@ type Query {
   arePayoutsEnabled: Boolean!
   homeGalleryListings: [Listing!]!
   myListings(input: PaginationInput!): [Listing!]!
+  retrieveListing(id: String!): Listing!
   searchListings(input: SearchListingsInput!): [Listing!]!
   listConversations(input: PaginationInput!): [Conversation!]!
   listMessages(input: ListMessagesInput!): [Message!]!

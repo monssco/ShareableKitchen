@@ -23,7 +23,7 @@ export class GetMessagesResolver {
             limit: input.limit,
             offset: input.offset,
             orderBy: {
-                created: 'asc'
+                created: 'desc'
             }
         }
         

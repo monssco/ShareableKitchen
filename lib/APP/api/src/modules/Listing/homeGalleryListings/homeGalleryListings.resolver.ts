@@ -18,6 +18,8 @@ export class HomeGalleryListingsResolver {
     ) {
 
         // For now, returning all listings for the home gallery.
-        return await em.find(Listing, {})
+        let listings = await em.find(Listing, {})
+        console.log("Homepage", listings)
+        return listings
     }
 }

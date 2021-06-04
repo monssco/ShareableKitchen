@@ -6,12 +6,13 @@ import { Arg, Ctx, Query } from "type-graphql"
 
 export class RetrieveListingResolver {
 
-    @Query(() => [Listing])
-    async myListings(
-        @Arg("input") id: string,
+    @Query(() => Listing)
+    async retrieveListing(
+        @Arg("id") id: string,
         @Ctx() {em}: MyContext
     ){
-        return await em.findOneOrFail(Listing, {id})
+        let listing = await em.findOneOrFail(Listing, {id})
+        return listing
     }
 }
 
@@ -19,12 +20,12 @@ export class RetrieveListingResolver {
 //  * Field resolver for availability attribute on the Listing class.
 //  */
 // @Resolver(() => Listing)
-// export class AvailabilityResolver {
-//     @FieldResolver(()=>Availability)
+// export class CityResolver {
+//     @FieldResolver(()=>City)
 //     async availability(
 //         @Root() listing: Listing,
 //         @Ctx() {em}: MyContext
-//     ): Promise<Availability> {
-//         return await em.findOneOrFail(Availability, {listing})
+//     ): Promise<City> {
+//         return await em.findOneOrFail(City, {id: listing.city.id})
 //     }
 // }

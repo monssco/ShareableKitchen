@@ -7,6 +7,15 @@ import { GetServerSideProps, NextPage } from "next";
 import ErrorPage from 'next/error';
 import SmallListing from "src/components/Listing/small";
 import Link from "next/link";
+import Slider, { Settings } from "react-slick";
+
+const settings: Settings = {
+  dots: true,
+  infinite: true,
+  speed: 500,
+  slidesToShow: 5,
+  slidesToScroll: 3
+};
 
 const IndexPage: NextPage<{listings: Listing[]}> = (props) => {
 
@@ -35,22 +44,22 @@ const HomeGallery: React.FC<{listings: Listing[]}> = (props) => {
 
   return (
     <div className="bg-green-200 p-5">
-      <div className="text-2xl">Kitchens near you!</div>
-      <div className="flex flex-row">
-        {
-        props.listings.map(item => {
-          return (
-          <div key={item.id} className="p-2">
-            
-              <Link href={`/listings/${encodeURIComponent(item.id)}`}>
-                <a>
-                  <SmallListing listing={item}></SmallListing>
-                </a>
-              </Link>
-            
-          </div>)
-        })
-      }
+      <div className="text-3xl">Available kitchens near you</div>
+      <div className=" pt-4">
+        <Slider {...settings}>
+          {
+            props.listings.map(item => {
+              return (
+              <div key={item.id} className="max-w-2xl">
+                  <Link href={`/listings/${encodeURIComponent(item.id)}`}>
+                    <a>
+                      <SmallListing listing={item}></SmallListing>
+                    </a>
+                  </Link>
+              </div>
+              )})
+          }
+        </Slider>
       </div>
 
     </div>

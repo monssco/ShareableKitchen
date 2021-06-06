@@ -9,7 +9,7 @@ generates:
       - typescript-operations
       - typescript-graphql-request
     config:
-      enumsAsTypes: true
+      # enumsAsTypes: true
   src/graphql/generated/modules.d.ts:
     plugins:
       - typescript-graphql-files-modules

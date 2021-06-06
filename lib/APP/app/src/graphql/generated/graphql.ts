@@ -37,10 +37,11 @@ export type AvailabilityObject = {
 };
 
 /** Types of kitchen availability */
-export type AvailabilityType =
-  | 'daily'
-  | 'weekly'
-  | 'monthly';
+export enum AvailabilityType {
+  Daily = 'daily',
+  Weekly = 'weekly',
+  Monthly = 'monthly'
+}
 
 export type Booking = {
   __typename?: 'Booking';
@@ -80,7 +81,7 @@ export type Conversation = {
 };
 
 export type CountryInput = {
-  id: Scalars['ID'];
+  id: Scalars['Int'];
   name: Scalars['String'];
   currency: Scalars['String'];
   currencySymbol: Scalars['String'];
@@ -89,7 +90,7 @@ export type CountryInput = {
 
 export type CountryType = {
   __typename?: 'CountryType';
-  id: Scalars['ID'];
+  id: Scalars['Int'];
   name: Scalars['String'];
   currency: Scalars['String'];
   currencySymbol: Scalars['String'];
@@ -296,29 +297,31 @@ export type PaginationInput = {
 };
 
 /** Features of a given kitchen */
-export type PropertyFeatures =
-  | 'microwave'
-  | 'conveyorOven'
-  | 'tripleSink'
-  | 'doughSheeter'
-  | 'standUpCooler'
-  | 'walkInCooler'
-  | 'stonePizzaOven'
-  | 'kitchenOven'
-  | 'doubleSink'
-  | 'freezer'
-  | 'prepTables'
-  | 'deepFryer'
-  | 'other'
-  | 'doughMixer';
+export enum PropertyFeatures {
+  Microwave = 'microwave',
+  ConveyorOven = 'conveyorOven',
+  TripleSink = 'tripleSink',
+  DoughSheeter = 'doughSheeter',
+  StandUpCooler = 'standUpCooler',
+  WalkInCooler = 'walkInCooler',
+  StonePizzaOven = 'stonePizzaOven',
+  KitchenOven = 'kitchenOven',
+  DoubleSink = 'doubleSink',
+  Freezer = 'freezer',
+  PrepTables = 'prepTables',
+  DeepFryer = 'deepFryer',
+  DoughMixer = 'doughMixer',
+  Other = 'other'
+}
 
 /** Self-explanatory */
-export type PropertyType =
-  | 'cafe'
-  | 'church'
-  | 'commercialKitchen'
-  | 'communityCenter'
-  | 'restaurant';
+export enum PropertyType {
+  Cafe = 'cafe',
+  Church = 'church',
+  CommercialKitchen = 'commercialKitchen',
+  CommunityCenter = 'communityCenter',
+  Restaurant = 'restaurant'
+}
 
 export type Query = {
   __typename?: 'Query';

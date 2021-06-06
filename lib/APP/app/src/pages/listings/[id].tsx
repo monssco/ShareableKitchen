@@ -7,7 +7,11 @@ import Image from 'next/image'
 import Calendar from 'src/components/Calendar';
 import Map from 'src/components/Map';
 
-
+/**
+ * Shows the detailed listing.
+ * @param param0 A listing
+ * @returns 
+ */
 const ListingPage: NextPage<{listing: Listing}> = ({listing}) => {
 
   if (!listing) {
@@ -32,13 +36,17 @@ const ListingPage: NextPage<{listing: Listing}> = ({listing}) => {
   };
 
   return (
-    <div className="container mx-auto p-10">
+    <div className="max-w-6xl mx-auto p-5">
+
+      <div>
+        <Calendar {...listing}/>
+      </div>
       
       {/* Title */}
       <p className="text-3xl py-2">{listing.title}</p>
 
       {/* Images */}
-      <div className="bg-red-300">
+      {/* TODO: move into seperate component later on. */}
         <Slider {...settings} >
         <div className="h-screen/3 w-96 relative">
           <Image 
@@ -49,31 +57,41 @@ const ListingPage: NextPage<{listing: Listing}> = ({listing}) => {
             className="" // just an example
           />
         </div>
+        <div className="h-screen/3 w-96 relative">
+          <Image 
+            src="https://shareablekitchen.com/wp-content/uploads/2021/02/tempImaget43UeU-scaled.jpg"
+            alt="Picture of the author"
+            layout="fill" // required
+            objectFit="cover" // change to suit your needs
+            className="" // just an example
+          />
+        </div>
       </Slider>
-      </div>
 
-      <div className="py-2">
+      <div className="pt-5">
         <p className="text-2xl">Description</p>
         <p>{listing.description}</p>
       </div>
       
-      <div className="py-2">
+      <div className="py-3">
         <p className="text-2xl">Price</p>
         <p className="text">$ {listing.unitPrice} {listing.availability.type}</p>
         <p></p>
       </div>
 
-      <div>
+      <div className="py-3">
         <p className="text-2xl">Area</p>
-        <p className="py-2 text">{listing.sqFtArea} sqFt</p>
+        <p className="text">{listing.sqFtArea} sqFt</p>
       </div>
 
       <p className="pt-3 text-2xl">Amenities</p>
       <div>{listing.features?.map(item => 
-        <li>{item}</li>
+        <li key={item}>{item.valueOf()}</li>
       )}</div>
-      <div>
-        <Calendar {...listing}/>
+
+      <div className="py-3">
+        <p className="text-2xl">Hosted by</p>
+        <p>{listing.author.first_name}</p>
       </div>
 
       <div>

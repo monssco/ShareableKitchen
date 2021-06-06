@@ -12,9 +12,11 @@ interface MapProps {
 
 const Map: React.FC<MapProps> = ({center, zoom}: MapProps) => {
     return (
-        <div>
-            <p className="text-2xl">Location</p>
-            <p className="py-4">Calgary, Alberta, Canada</p>
+        <div className="py-3">
+            <div className="py-4">
+                <p className="text-2xl">Location</p>
+                <p>Calgary, Alberta, Canada</p>
+            </div>
             <div style={{ height: '30vh', width: '100%' }}>
                 <GoogleMapReact
                 bootstrapURLKeys={{ key: config.gMapsKey }}

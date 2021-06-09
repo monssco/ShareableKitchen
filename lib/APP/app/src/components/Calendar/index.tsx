@@ -1,8 +1,9 @@
 import DatePicker from 'react-datepicker';
 import { useEffect, useState } from 'react';
-import { parseISO, eachDayOfInterval } from 'date-fns';
+import { parseISO, eachDayOfInterval, format, differenceInCalendarDays } from 'date-fns';
 import React from 'react';
 import { Listing } from 'src/graphql/generated/graphql';
+import { graphqlSDK } from 'src/graphql/client';
 
 // API and examples
 // https://reactdatepicker.com/
@@ -14,30 +15,60 @@ import { Listing } from 'src/graphql/generated/graphql';
  */
 const Calendar: React.FC<Listing> = (listing: Listing) => {
 
+    const reserveListing = () => {
+        console.log("reserve that shit")
+        graphqlSDK()
+    }
 
-    const [startDate, setStartDate] = useState(new Date());
-    const [endDate, setEndDate] = useState(new Date());
-
-    const onChange = (dates:[Date, Date]) => {
-        const [start, end] = dates;
-        setStartDate(start);
-        setEndDate(end);
-    };
-
-    // const [allowedDays, setAllowedDays] = useState<Date[]>([]);
+    const PriceSummary = () => {
+        return (
+            <div>
+                <p className="py-2">Reservation: ${price?.reservation}</p>
+                <p>Service Fee ${price?.fees}</p>
+                <p className="py-2 font-medium">Total ${price?.total}</p>
+                <button className="rounded-lg w-full bg-pink-600 p-4 text-xl text-white" onClick={reserveListing}>Reserve</button>
+            </div>
+        )
+    }
 
     const [excludedDays, setExcludedDays] = useState<Date[]>([]);
 
+    const [startDate, setStartDate] = useState<Date | null>(null);
+    const [endDate, setEndDate] = useState<Date | null>(null);
+    const [price, setPrice] = useState<{
+        reservation: number,
+        fees: number,
+        total: number
+    } | null>(null)
+
+    const onChange = (dates:[Date, Date]) => {
+        setPrice(null)
+        console.log(dates)
+        const [start, end] = dates;
+        setStartDate(start);
+        setEndDate(end);
+
+        if (end) {
+            setIsCalOpen(false)
+        }
+
+        if (start && end) {
+            console.log("BOTH selected")
+            let numDays = differenceInCalendarDays(end, start) + 1
+            console.log(numDays)
+            let price = numDays * listing.unitPrice
+            let buyerFees = price * 0.03
+            setPrice({
+                reservation: price,
+                fees: buyerFees,
+                total: price + buyerFees
+            })
+            console.log(price)
+        }
+    };
+
     useEffect(()=> {
         console.log('LISTING', listing)
-        // if (listing.availability) {
-        //     setAllowedDays(
-        //         eachDayOfInterval({
-        //         start: parseISO(listing.availability.startDate),
-        //         end: parseISO(listing.availability.endDate)
-        //     })
-        //     )
-        // }
 
         if (listing.bookings) {
             let excludedInterval:Date[] = []
@@ -69,26 +100,30 @@ const Calendar: React.FC<Listing> = (listing: Listing) => {
                 <div className="border border-gray-400 rounded-l-md p-3 w-40 cursor-pointer select-none" onClick={showCalendar}>
                     <p className="uppercase text-xs">Check-in</p>
                     {}
-                    <p className="text-gray-500">Add Date</p>
+                    <p className={`${startDate ? 'text-black' : 'text-gray-500'}`}>{startDate ? format(startDate, 'MM-dd-yyyy') : 'Add Date'}</p>
                 </div>
 
                 <div className="border border-gray-400 rounded-r-md p-3 w-40 cursor-pointer select-none" onClick={showCalendar}>
                     <p className="uppercase text-xs">Check-out</p>
-                    <p className="text-gray-500">Add Date</p>
+                    <p className={`${endDate ? 'text-black' : 'text-gray-500'}`}>{endDate ? format(endDate, 'MM-dd-yyyy') : 'Add Date'}</p>
                 </div>
             </div>
 
             <div className={`${isCalOpen ? 'block':'hidden'}`}>
                 <DatePicker
-                    className="w-full"
                     onChange={onChange}
                     startDate={startDate}
                     endDate={endDate}
                     selectsRange
                     minDate={new Date()}
-                    // excludeDates={excludedDays}
+                    maxDate={parseISO(listing.availability.endDate)}
+                    excludeDates={excludedDays}
                     inline
                 />
+            </div>
+
+            <div className={`${price ? 'block' : 'hidden' }`}>
+                <PriceSummary/>
             </div>
         </div>
     )

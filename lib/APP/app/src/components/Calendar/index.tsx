@@ -1,10 +1,12 @@
 import DatePicker from 'react-datepicker';
 import { useEffect, useState } from 'react';
-import { parseISO, eachDayOfInterval, format, differenceInCalendarDays, isMonday, isSunday, isFirstDayOfMonth, isLastDayOfMonth } from 'date-fns';
+import { parseISO, eachDayOfInterval, format, differenceInCalendarDays, isMonday, isSunday, isFirstDayOfMonth, isLastDayOfMonth, compareAsc, addDays } from 'date-fns';
 import React from 'react';
 import { AvailabilityType, Listing } from 'src/graphql/generated/graphql';
 
 import {useRouter} from 'next/router'
+import { graphqlSDK } from 'src/graphql/client';
+import { availabilityStringToType, fromBackendMoney } from 'src/utils/helpers';
 
 // API and examples
 // https://reactdatepicker.com/
@@ -32,15 +34,15 @@ const Calendar: React.FC<Listing> = (listing: Listing) => {
             <div>
                 <div className="flex flex-row py-2 justify-between">
                     <p>Reservation </p>
-                    <p>${price?.reservation}</p>
+                    <p>${fromBackendMoney(price?.amount!)}</p>
                 </div>
                 <div className="flex flex-row py-2 justify-between">
                     <p>Service Fee</p>
-                    <p>${price?.fees}</p>
+                    <p>${fromBackendMoney(price?.fees!)}</p>
                 </div>
                 <div className="flex flex-row py-2 justify-between font-medium">
                     <p>Total</p>
-                    <p>${price?.total}</p>
+                    <p>${fromBackendMoney(price?.total!)}</p>
                 </div>
                 
                 <button className="rounded-lg w-full bg-pink-600 p-4 text-xl text-white" onClick={reserveListing}>Reserve</button>
@@ -49,12 +51,15 @@ const Calendar: React.FC<Listing> = (listing: Listing) => {
     }
 
     const [excludedDays, setExcludedDays] = useState<Date[]>([]);
+    const [minDate, setMinDate] = useState(new Date());
     const [startDate, setStartDate] = useState<Date | null>(null);
     const [endDate, setEndDate] = useState<Date | null>(null);
     const [price, setPrice] = useState<{
-        reservation: number,
+        amount: number,
         fees: number,
-        total: number
+        total: number,
+        unitPrice: number,
+        unitQuantity: number
     } | null>(null);
 
     const [isCalOpen, setIsCalOpen ] = useState(false);
@@ -63,7 +68,7 @@ const Calendar: React.FC<Listing> = (listing: Listing) => {
      * Triggered when ever there is a change in the dates.
      * @param dates new dates
      */
-    const onChange = (dates:[Date, Date]) => {
+    const onChange = async (dates:[Date, Date]) => {
         setPrice(null)
         console.log(dates)
         const [start, end] = dates;
@@ -75,23 +80,25 @@ const Calendar: React.FC<Listing> = (listing: Listing) => {
             setIsCalOpen(false)
         }
 
-        // Dates exist on the start and end date
-        if (startDate && endDate) {
-            
-        }
-
         if (start && end) {
+
             console.log("BOTH selected")
-            let numDays = differenceInCalendarDays(end, start) + 1
-            console.log(numDays)
-            let price = numDays * listing.unitPrice
-            let buyerFees = price * 0.03
+            // Make a quick backend call to see how much it will cost.
+            let quote = (await graphqlSDK().getBookingQuote({
+                listingId: listing.id,
+                startDate: format(start, 'MM-dd-yyyy'),
+                endDate: format(end, 'MM-dd-yyyy'),
+                type: availabilityStringToType(listing.availability.type)
+            })).getBookingQuote
+
+            console.log(quote)
             setPrice({
-                reservation: price,
-                fees: buyerFees,
-                total: price + buyerFees
+                amount: quote.calculatedAmount,
+                fees: quote.buyerAppFee,
+                total: quote.calculatedAmount + quote.buyerAppFee,
+                unitPrice: quote.unitPrice,
+                unitQuantity: quote.unitQuantity
             })
-            console.log(price)
         }
 
         
@@ -157,6 +164,13 @@ const Calendar: React.FC<Listing> = (listing: Listing) => {
 
             setExcludedDays(excludedInterval)
         }
+
+        // Set up the minimum date they can book.
+        // Compare to the time right now.
+        let now = new Date()
+
+        let minDate = compareAsc(now, parseISO(listing.availability.startDate))  === -1 ? parseISO(listing.availability.startDate) : now
+        setMinDate(minDate)
         }, [])
 
     return (
@@ -184,7 +198,7 @@ const Calendar: React.FC<Listing> = (listing: Listing) => {
                     startDate={startDate}
                     endDate={endDate}
                     selectsRange
-                    minDate={new Date()}
+                    minDate={minDate}
                     maxDate={parseISO(listing.availability.endDate)}
                     excludeDates={excludedDays}
                     inline

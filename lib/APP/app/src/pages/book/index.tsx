@@ -4,21 +4,40 @@ import { GetServerSideProps, NextPage } from "next";
 import { graphqlSDK } from '../../graphql/client';
 import { AvailabilityType, CreateBookingReturn } from 'src/graphql/generated/graphql';
 import ErrorPage from 'next/error';
+import Image from 'next/image'
+import { availabilityTypeToString, fromBackendMoney } from 'src/utils/helpers';
 
-const Book: NextPage<{booking: CreateBookingReturn}> = ({booking}) => {
+const Book: NextPage<{booking: CreateBookingReturn}> = (props) => {
     const router = useRouter()
 
-    if (!booking) {
+    if (!props.booking) {
         return <ErrorPage statusCode={404} title={"We can't process your request, please try again"}/>;
     }
 
+    let listing = props.booking.booking.listing
+    let booking = props.booking.booking
+    let piSecret = props.booking.paymentIntentSecret
+
     console.log("Router query", router.query)
-    console.log("Payment intent secret", booking.paymentIntentSecret)
+    console.log("Payment intent secret", piSecret)
     console.log(booking)
     return (
-        <div>
-            Hello, this is the booking page tagalog
-            {JSON.stringify(router.query)}
+        <div className="container mx-auto">
+            <p>Request to book</p>
+            <div>
+                <Image
+                    alt="Kitchen"
+                    src="/kitchen.jpeg"
+                    width={150}
+                    height={150}
+                />
+                <p>{listing.title}</p>
+                <div>{listing.features?.map(i => <p key={i}>{i}</p>)}</div>
+            </div>
+            <div>
+                <p className="text-3xl">Price Details</p>
+                <p>${fromBackendMoney(listing.unitPrice)} x {booking.unitQuantity} {availabilityTypeToString(booking.type)}</p>
+            </div>
         </div>
     )
 }

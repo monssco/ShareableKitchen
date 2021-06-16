@@ -57,8 +57,8 @@ export class Listing {
     //  * Track this issue on github:
     //  * https://github.com/mikro-orm/mikro-orm/issues/1687
     //  */
-    // @Property({name: 'city_id', nullable: true})
-    // protected city_id: number
+    @Property({name: 'city_id', nullable: true})
+    city_id: number
 
     @Field({nullable: true})
     @Property({nullable: true})

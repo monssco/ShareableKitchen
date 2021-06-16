@@ -21,7 +21,7 @@ export class State {
     id!: number;
 
     @Field()
-    @Property({nullable: false})
+    @Property()
     name!: string;
 
     @Field(() => [City], {nullable: true})
@@ -31,8 +31,9 @@ export class State {
     [PrimaryKeyType]: [number, number];
 
     constructor(id: number, name: string, country:Country) {
+        console.log("Creating state", name)
         this.id = id
-        this.country = country
         this.name = name
+        this.country = country
     }
 }

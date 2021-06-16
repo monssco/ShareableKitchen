@@ -13,30 +13,35 @@ mutation createBooking(
         }
     ) {
         booking {
-        listing {
-            id
-            author {
-            id
-            profile_image {
-                resized_medium
-            }
-            first_name
-            }
-            title
-            description
-            photos {
-            resized_medium
-            }
-            address
-            city {
-            id
-            }
-            postal
+            created
+            calculatedAmount
+            buyerAppFee
             unitPrice
-            sqFtArea
-            features
-            propertyType
-        }
+            unitQuantity
+            listing {
+                id
+                author {
+                id
+                profile_image {
+                    resized_medium
+                }
+                first_name
+                }
+                title
+                description
+                photos {
+                resized_medium
+                }
+                address
+                city {
+                id
+                }
+                postal
+                unitPrice
+                sqFtArea
+                features
+                propertyType
+            }
         }
         paymentIntentSecret
     }

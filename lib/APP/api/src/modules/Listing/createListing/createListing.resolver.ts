@@ -50,7 +50,7 @@ export class CreateListingInput implements Partial<Listing> {
 
 }
 
-@Resolver()
+@Resolver(()=> Listing)
 export class CreateListingResolver {
     @Mutation(()=> Listing, {nullable: false, description:"Before creating a listing, check to see if this account has payouts enabled by calling arePayoutsEnabled query."})
     async createListing(

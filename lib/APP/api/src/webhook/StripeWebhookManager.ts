@@ -8,6 +8,7 @@ const router = express.Router();
 // This is required since the signature is treated as a buffer
 // by stripe's sdk.
 // https://github.com/stripe/stripe-node/issues/341
+//@ts-ignore
 router.use(express.raw({type: "*/*"}));
 
 import {ConfirmBooking} from './confirmBooking.action';

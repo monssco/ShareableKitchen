@@ -71,6 +71,20 @@ export class Booking {
     @Property()
     unitPrice: number;
 
+
+    /**
+     * Number of units.
+     * 
+     * For days it will be number of days.
+     * 
+     * For weeks its number of weeks.
+     * 
+     * For months its number of months
+     */
+    @Field(() => Int)
+    @Property()
+    unitQuantity: number;
+
     /**
      * Daily:
      * unitPrice * number of days
@@ -125,13 +139,14 @@ export class Booking {
     @Property({nullable: true, type: ArrayType})
     transferId: string[] = []
 
-    constructor(type: AvailabilityType, listing: Listing, buyer: User, start: Date, end: Date, unitPrice: number, calculatedAmount: number, buyerAppFee: number, sellerAppFee: number){
+    constructor(type: AvailabilityType, listing: Listing, buyer: User, start: Date, end: Date, unitPrice: number, unitQuantity: number, calculatedAmount: number, buyerAppFee: number, sellerAppFee: number){
         this.type = type
         this.listing = listing
         this.buyer = buyer
         this.startDate = start
         this.endDate = end
         this.unitPrice = unitPrice
+        this.unitQuantity = unitQuantity
         this.calculatedAmount = calculatedAmount
         this.buyerAppFee = buyerAppFee
         this.sellerAppFee = sellerAppFee

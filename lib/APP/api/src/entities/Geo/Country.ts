@@ -1,4 +1,4 @@
-import {Field, ID, InputType, ObjectType} from 'type-graphql';
+import {Field, InputType, Int, ObjectType} from 'type-graphql';
 import {Cascade, Collection, Entity, OneToMany, PrimaryKey, Property} from '@mikro-orm/core';
 import { State } from './State';
 
@@ -12,7 +12,7 @@ import { State } from './State';
 @ObjectType("CountryType")
 @Entity()
 export class Country {
-    @Field(() => ID)
+    @Field(() => Int)
     @PrimaryKey({nullable: false})
     id!: number;
 

@@ -3,8 +3,8 @@ import { Arg, Ctx, Field, InputType, Mutation, ObjectType, Resolver } from "type
 import { MyContext } from "../../../types";
 import { Listing } from "../../../entities/Listing/Listing";
 import { Availability } from "../../../entities/Availability/Availability";
-import { differenceInCalendarDays, differenceInCalendarWeeks } from 'date-fns'
 import { AvailabilityType } from "../../../entities/Enums/AvailabilityType.enum";
+import { calculateAmount } from "./calculateAmount";
 
 @InputType()
 class CreateBookingInput {
@@ -24,7 +24,7 @@ class CreateBookingInput {
 @ObjectType()
 class CreateBookingReturn {
     @Field()
-    bookingId: string
+    booking: Booking
 
     @Field()
     paymentIntentSecret: string
@@ -48,6 +48,7 @@ export class CreateBookingResolver {
         @Arg("input") input: CreateBookingInput,
         @Ctx() {em, user, stripe}: MyContext
     ): Promise<CreateBookingReturn> {
+        console.log("HERE")
         let buyer = user;
         let listing = await em.findOneOrFail(Listing, {id: input.listingId})
         let availability = await em.findOneOrFail(Availability, {listing})
@@ -72,47 +73,16 @@ export class CreateBookingResolver {
             throw new Error('New booking date overlaps pre-existing booking.')
         }
 
-        var amount = 0;
+        const {amount, buyerAppFee, sellerAppFee, unitQuantity} = calculateAmount({
+            type: input.type,
+            startDate: input.startDate,
+            endDate: input.endDate,
+            unitPrice: listing.unitPrice
+        })
 
-        // They will all have to pay right off the bat anyways.
-        // The differences in subscriptions are handled by the webhook and cron job.
-        if (input.type === AvailabilityType.daily){
-            // Find the difference in the number of days for $ calculation.
-            // The days returned need to be incremented by 1. why??
-            const numDays = Math.abs(differenceInCalendarDays(input.endDate, input.startDate))
-
-            // Amount to charge the buyer. (Person creating this booking)
-            amount = numDays * listing.unitPrice
-        } else if (input.type === AvailabilityType.weekly) {
-
-            // Calculate the number of weeks and multiply by unit price.
-            // Ask them to pay upfront.
-            const numWeeks = Math.abs(differenceInCalendarWeeks(input.endDate, input.startDate))
-
-            amount = numWeeks * listing.unitPrice 
-        } else if (input.type === AvailabilityType.monthly) {
-            // In monthly scenario, we do not charge them for all the months at once.
-            // They pay for the first month and the rest of the amount is setup as a subscription model.
-            // const numMonths = Math.abs(differenceInCalendarMonths(input.endDate, input.startDate))
-
-            // Only a single month is asked to be paid.
-            amount = 1 * listing.unitPrice;
-        } else {
-            throw new Error("Availability type must be either daily, weekly or monthly.")
-        }
-
-
-        // apply the buyer fees. We will absorb the platform fees.
-        let buyerAppFee = (Booking.BUYER_PERCENTAGE / 100) * amount
-        
-        const calculatedAmount = buyerAppFee + amount;
-
-        let sellerAppFee = (Booking.SELLER_PERCENTAGE / 100) * amount
-
-        
         const paymentIntent = await stripe.paymentIntents.create({
             payment_method_types: ['card'],
-            amount: calculatedAmount,
+            amount: (amount + buyerAppFee),
             currency: 'cad',
             customer: buyer.stripe_customer_id,
             description: `Shareable Kitchen - ${listing.title} - ${listing.id}`,
@@ -124,7 +94,7 @@ export class CreateBookingResolver {
             }
         })
 
-        const booking = new Booking(input.type, listing, buyer, input.startDate, input.endDate, listing.unitPrice, calculatedAmount, buyerAppFee, sellerAppFee)
+        const booking = new Booking(input.type, listing, buyer, input.startDate, input.endDate, listing.unitPrice, unitQuantity, amount, buyerAppFee, sellerAppFee)
         
         booking.paymentIntentId = paymentIntent.id
 
@@ -135,7 +105,7 @@ export class CreateBookingResolver {
         await em.persistAndFlush(booking)
 
         return {
-            bookingId: booking.id,
+            booking,
             paymentIntentSecret: paymentIntent.client_secret
         }
     }

@@ -1,0 +1,21 @@
+query getBookingQuote(
+  $listingId: String!
+  $startDate: DateTime!
+  $endDate: DateTime!
+  $type: AvailabilityType!
+) {
+  getBookingQuote(
+    input: {
+      listingId: $listingId
+      startDate: $startDate
+      endDate: $endDate
+      type: $type
+    }
+  ) {
+    unitPrice
+    unitQuantity
+    calculatedAmount
+    buyerAppFee
+    created
+  }
+}

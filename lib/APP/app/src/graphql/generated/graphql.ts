@@ -51,6 +51,7 @@ export type Booking = {
   startDate: Scalars['DateTime'];
   endDate: Scalars['DateTime'];
   unitPrice: Scalars['Int'];
+  unitQuantity: Scalars['Int'];
   calculatedAmount: Scalars['Int'];
   buyerAppFee: Scalars['Int'];
   sellerAppFee: Scalars['Int'];
@@ -325,6 +326,7 @@ export enum PropertyType {
 
 export type Query = {
   __typename?: 'Query';
+  getBookingQuote: Booking;
   listBookings: Array<Booking>;
   listReservations: Array<Booking>;
   getCountries: Array<CountryType>;
@@ -348,6 +350,11 @@ export type Query = {
   getPayout: Scalars['JSON'];
   listPayouts: Scalars['JSON'];
   me?: Maybe<User>;
+};
+
+
+export type QueryGetBookingQuoteArgs = {
+  input: GetBookingQuoteInput;
 };
 
 
@@ -490,6 +497,13 @@ export type UserImage = Image & {
   resized_large: Scalars['String'];
 };
 
+export type GetBookingQuoteInput = {
+  listingId: Scalars['String'];
+  startDate: Scalars['DateTime'];
+  endDate: Scalars['DateTime'];
+  type: AvailabilityType;
+};
+
 export type CreateBookingMutationVariables = Exact<{
   listingId: Scalars['String'];
   startDate: Scalars['DateTime'];
@@ -505,6 +519,7 @@ export type CreateBookingMutation = (
     & Pick<CreateBookingReturn, 'paymentIntentSecret'>
     & { booking: (
       { __typename?: 'Booking' }
+      & Pick<Booking, 'created' | 'calculatedAmount' | 'buyerAppFee' | 'unitPrice' | 'unitQuantity'>
       & { listing: (
         { __typename?: 'Listing' }
         & Pick<Listing, 'id' | 'title' | 'description' | 'address' | 'postal' | 'unitPrice' | 'sqFtArea' | 'features' | 'propertyType'>
@@ -524,6 +539,22 @@ export type CreateBookingMutation = (
         )> }
       ) }
     ) }
+  ) }
+);
+
+export type GetBookingQuoteQueryVariables = Exact<{
+  listingId: Scalars['String'];
+  startDate: Scalars['DateTime'];
+  endDate: Scalars['DateTime'];
+  type: AvailabilityType;
+}>;
+
+
+export type GetBookingQuoteQuery = (
+  { __typename?: 'Query' }
+  & { getBookingQuote: (
+    { __typename?: 'Booking' }
+    & Pick<Booking, 'unitPrice' | 'unitQuantity' | 'calculatedAmount' | 'buyerAppFee' | 'created'>
   ) }
 );
 
@@ -702,6 +733,11 @@ export const CreateBookingDocument = gql`
     input: {listingId: $listingId, startDate: $startDate, endDate: $endDate, type: $type}
   ) {
     booking {
+      created
+      calculatedAmount
+      buyerAppFee
+      unitPrice
+      unitQuantity
       listing {
         id
         author {
@@ -728,6 +764,19 @@ export const CreateBookingDocument = gql`
       }
     }
     paymentIntentSecret
+  }
+}
+    `;
+export const GetBookingQuoteDocument = gql`
+    query getBookingQuote($listingId: String!, $startDate: DateTime!, $endDate: DateTime!, $type: AvailabilityType!) {
+  getBookingQuote(
+    input: {listingId: $listingId, startDate: $startDate, endDate: $endDate, type: $type}
+  ) {
+    unitPrice
+    unitQuantity
+    calculatedAmount
+    buyerAppFee
+    created
   }
 }
     `;
@@ -926,6 +975,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
   return {
     createBooking(variables: CreateBookingMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CreateBookingMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<CreateBookingMutation>(CreateBookingDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createBooking');
+    },
+    getBookingQuote(variables: GetBookingQuoteQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetBookingQuoteQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetBookingQuoteQuery>(GetBookingQuoteDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getBookingQuote');
     },
     getHomeGalleryListings(variables?: GetHomeGalleryListingsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetHomeGalleryListingsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetHomeGalleryListingsQuery>(GetHomeGalleryListingsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getHomeGalleryListings');

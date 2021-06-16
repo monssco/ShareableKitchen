@@ -43,7 +43,7 @@ type Conversation {
 }
 
 type CountryType {
-  id: ID!
+  id: Int!
   name: String!
   currency: String!
   currencySymbol: String!
@@ -95,8 +95,8 @@ enum PropertyFeatures {
   freezer
   prepTables
   deepFryer
-  other
   doughMixer
+  other
 }
 
 # Self-explanatory
@@ -115,6 +115,7 @@ type Booking {
   startDate: DateTime!
   endDate: DateTime!
   unitPrice: Int!
+  unitQuantity: Int!
   calculatedAmount: Int!
   buyerAppFee: Int!
   sellerAppFee: Int!
@@ -148,7 +149,7 @@ type User {
 }
 
 type CreateBookingReturn {
-  bookingId: String!
+  booking: Booking!
   paymentIntentSecret: String!
 }
 
@@ -172,7 +173,7 @@ input AvailabilityInput {
 }
 
 input CountryInput {
-  id: ID!
+  id: Int!
   name: String!
   currency: String!
   currencySymbol: String!
@@ -198,6 +199,13 @@ input PaginationInput {
 }
 
 input CreateBookingInput {
+  listingId: String!
+  startDate: DateTime!
+  endDate: DateTime!
+  type: AvailabilityType!
+}
+
+input getBookingQuoteInput {
   listingId: String!
   startDate: DateTime!
   endDate: DateTime!
@@ -289,6 +297,7 @@ input UpdateUserInput {
 }
 
 type Query {
+  getBookingQuote(input: getBookingQuoteInput!): Booking!
   listBookings(input: PaginationInput!): [Booking!]!
   listReservations(input: PaginationInput!): [Booking!]!
   getCountries: [CountryType!]!

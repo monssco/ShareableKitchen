@@ -106,7 +106,7 @@ export type CreateBookingInput = {
 
 export type CreateBookingReturn = {
   __typename?: 'CreateBookingReturn';
-  bookingId: Scalars['String'];
+  booking: Booking;
   paymentIntentSecret: Scalars['String'];
 };
 
@@ -490,6 +490,43 @@ export type UserImage = Image & {
   resized_large: Scalars['String'];
 };
 
+export type CreateBookingMutationVariables = Exact<{
+  listingId: Scalars['String'];
+  startDate: Scalars['DateTime'];
+  endDate: Scalars['DateTime'];
+  type: AvailabilityType;
+}>;
+
+
+export type CreateBookingMutation = (
+  { __typename?: 'Mutation' }
+  & { createBooking: (
+    { __typename?: 'CreateBookingReturn' }
+    & Pick<CreateBookingReturn, 'paymentIntentSecret'>
+    & { booking: (
+      { __typename?: 'Booking' }
+      & { listing: (
+        { __typename?: 'Listing' }
+        & Pick<Listing, 'id' | 'title' | 'description' | 'address' | 'postal' | 'unitPrice' | 'sqFtArea' | 'features' | 'propertyType'>
+        & { author: (
+          { __typename?: 'User' }
+          & Pick<User, 'id' | 'first_name'>
+          & { profile_image?: Maybe<(
+            { __typename?: 'UserImage' }
+            & Pick<UserImage, 'resized_medium'>
+          )> }
+        ), photos?: Maybe<Array<(
+          { __typename?: 'ListingImage' }
+          & Pick<ListingImage, 'resized_medium'>
+        )>>, city?: Maybe<(
+          { __typename?: 'CityType' }
+          & Pick<CityType, 'id'>
+        )> }
+      ) }
+    ) }
+  ) }
+);
+
 export type GetHomeGalleryListingsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -659,6 +696,41 @@ export type SearchListingsQuery = (
 );
 
 
+export const CreateBookingDocument = gql`
+    mutation createBooking($listingId: String!, $startDate: DateTime!, $endDate: DateTime!, $type: AvailabilityType!) {
+  createBooking(
+    input: {listingId: $listingId, startDate: $startDate, endDate: $endDate, type: $type}
+  ) {
+    booking {
+      listing {
+        id
+        author {
+          id
+          profile_image {
+            resized_medium
+          }
+          first_name
+        }
+        title
+        description
+        photos {
+          resized_medium
+        }
+        address
+        city {
+          id
+        }
+        postal
+        unitPrice
+        sqFtArea
+        features
+        propertyType
+      }
+    }
+    paymentIntentSecret
+  }
+}
+    `;
 export const GetHomeGalleryListingsDocument = gql`
     query getHomeGalleryListings {
   homeGalleryListings {
@@ -852,6 +924,9 @@ const defaultWrapper: SdkFunctionWrapper = (action, _operationName) => action();
 
 export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = defaultWrapper) {
   return {
+    createBooking(variables: CreateBookingMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CreateBookingMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<CreateBookingMutation>(CreateBookingDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createBooking');
+    },
     getHomeGalleryListings(variables?: GetHomeGalleryListingsQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetHomeGalleryListingsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetHomeGalleryListingsQuery>(GetHomeGalleryListingsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getHomeGalleryListings');
     },

@@ -1,4 +1,13 @@
 
+declare module '*/createBooking.graphql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const createBooking: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
 declare module '*/homeGalleryListings.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;

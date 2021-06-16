@@ -5,6 +5,8 @@
   "version": "0.1.0",
   "author": "Munib Sonny Rahman",
   "dependencies": {
+    "@stripe/react-stripe-js": "^1.4.1",
+    "@stripe/stripe-js": "^1.15.0",
     "@types/react-helmet": "^6.1.1",
     "@types/swiper": "^5.4.2",
     "axios": "^0.21.1",

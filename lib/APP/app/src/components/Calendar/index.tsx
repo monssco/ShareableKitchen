@@ -1,9 +1,10 @@
 import DatePicker from 'react-datepicker';
 import { useEffect, useState } from 'react';
-import { parseISO, eachDayOfInterval, format, differenceInCalendarDays, getDay, isMonday, isFriday, isSunday, isFirstDayOfMonth, isLastDayOfMonth } from 'date-fns';
+import { parseISO, eachDayOfInterval, format, differenceInCalendarDays, isMonday, isSunday, isFirstDayOfMonth, isLastDayOfMonth } from 'date-fns';
 import React from 'react';
 import { AvailabilityType, Listing } from 'src/graphql/generated/graphql';
-import { graphqlSDK } from 'src/graphql/client';
+
+import {useRouter} from 'next/router'
 
 // API and examples
 // https://reactdatepicker.com/
@@ -15,9 +16,15 @@ import { graphqlSDK } from 'src/graphql/client';
  */
 const Calendar: React.FC<Listing> = (listing: Listing) => {
 
+    const router = useRouter();
+
     const reserveListing = () => {
-        console.log("reserve that shit")
         // Should take you to booking page with this info.
+        if(startDate && endDate) {
+            router.push(`/book?listingId=${listing.id}&startDate=${format(startDate, 'MM-dd-yyyy')}&endDate=${format(endDate, 'MM-dd-yyyy')}&type=${listing.availability.type}`)
+        } else {
+            //TODO: Show error
+        }
     }
 
         const PriceSummary = () => {
@@ -96,16 +103,25 @@ const Calendar: React.FC<Listing> = (listing: Listing) => {
      */
     const filterDays = (date: Date) => {
 
+        // Daily availability all days are open
         if (listing.availability.type === AvailabilityType.Daily) {
             return true
-        } else if (listing.availability.type === AvailabilityType.Weekly) {
+        } 
+        // Weekly, we let them select the monday and then they can select the sunday after.
+        else if (listing.availability.type === AvailabilityType.Weekly) {
             if (startDate && endDate) {
                 return isMonday(date)
             }
             
             if (startDate) {
+                // Don't allow them to choose previous the sundays before this chosen monday
+                if (date < startDate) {
+                    return false
+                }
                 return isSunday(date)
             }
+
+            return isMonday(date)
 
         } else if (listing.availability.type === AvailabilityType.Monthly) {
             // return month days
@@ -129,18 +145,18 @@ const Calendar: React.FC<Listing> = (listing: Listing) => {
         console.log('LISTING', listing)
 
         // Setup excluded days.
-        // if (listing.bookings) {
-        //     let excludedInterval:Date[] = []
-        //     listing.bookings.forEach(booking => {
-        //         let interval = eachDayOfInterval({
-        //         start: parseISO(booking.startDate),
-        //         end: parseISO(booking.endDate)
-        //         })
-        //         excludedInterval.concat(interval)
-        //     })
+        if (listing.bookings) {
+            let excludedInterval:Date[] = []
+            listing.bookings.forEach(booking => {
+                let interval = eachDayOfInterval({
+                start: parseISO(booking.startDate),
+                end: parseISO(booking.endDate)
+                })
+                excludedInterval.concat(interval)
+            })
 
-        //     setExcludedDays(excludedInterval)
-        // }
+            setExcludedDays(excludedInterval)
+        }
         }, [])
 
     return (
@@ -176,6 +192,7 @@ const Calendar: React.FC<Listing> = (listing: Listing) => {
                     monthsShown={2}
                     // @ts-ignore when new version for type checks is released fix this.
                     calendarStartDay={1}
+                    disabledKeyboardNavigation={true}
                 />
             </div>
 

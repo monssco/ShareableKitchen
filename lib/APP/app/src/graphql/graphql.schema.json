@@ -889,15 +889,15 @@
         "description": null,
         "fields": [
           {
-            "name": "bookingId",
+            "name": "booking",
             "description": null,
             "args": [],
             "type": {
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
+                "kind": "OBJECT",
+                "name": "Booking",
                 "ofType": null
               }
             },

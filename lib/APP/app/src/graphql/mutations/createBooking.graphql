@@ -1,0 +1,43 @@
+mutation createBooking(
+    $listingId: String!,
+    $startDate: DateTime!,
+    $endDate: DateTime!,
+    $type: AvailabilityType!
+    ) {
+    createBooking(
+        input: {
+            listingId: $listingId,
+            startDate: $startDate,
+            endDate: $endDate,
+            type: $type,
+        }
+    ) {
+        booking {
+        listing {
+            id
+            author {
+            id
+            profile_image {
+                resized_medium
+            }
+            first_name
+            }
+            title
+            description
+            photos {
+            resized_medium
+            }
+            address
+            city {
+            id
+            }
+            postal
+            unitPrice
+            sqFtArea
+            features
+            propertyType
+        }
+        }
+        paymentIntentSecret
+    }
+}

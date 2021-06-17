@@ -1,12 +1,12 @@
 import DatePicker from 'react-datepicker';
 import { useEffect, useState } from 'react';
-import { parseISO, eachDayOfInterval, format, differenceInCalendarDays, isMonday, isSunday, isFirstDayOfMonth, isLastDayOfMonth, compareAsc, addDays } from 'date-fns';
+import { parseISO, eachDayOfInterval, format, isMonday, isSunday, isFirstDayOfMonth, isLastDayOfMonth, compareAsc } from 'date-fns';
 import React from 'react';
 import { AvailabilityType, Listing } from 'src/graphql/generated/graphql';
 
 import {useRouter} from 'next/router'
 import { graphqlSDK } from 'src/graphql/client';
-import { availabilityStringToType, fromBackendMoney } from 'src/utils/helpers';
+import { availabilityStringToType, toDecimalCurrency } from 'src/utils/helpers';
 
 // API and examples
 // https://reactdatepicker.com/
@@ -34,15 +34,15 @@ const Calendar: React.FC<Listing> = (listing: Listing) => {
             <div>
                 <div className="flex flex-row py-2 justify-between">
                     <p>Reservation </p>
-                    <p>${fromBackendMoney(price?.amount!)}</p>
+                    <p>${toDecimalCurrency(price?.amount!)}</p>
                 </div>
                 <div className="flex flex-row py-2 justify-between">
                     <p>Service Fee</p>
-                    <p>${fromBackendMoney(price?.fees!)}</p>
+                    <p>${toDecimalCurrency(price?.fees!)}</p>
                 </div>
                 <div className="flex flex-row py-2 justify-between font-medium">
                     <p>Total</p>
-                    <p>${fromBackendMoney(price?.total!)}</p>
+                    <p>${toDecimalCurrency(price?.total!)}</p>
                 </div>
                 
                 <button className="rounded-lg w-full bg-pink-600 p-4 text-xl text-white" onClick={reserveListing}>Reserve</button>

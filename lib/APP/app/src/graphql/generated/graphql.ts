@@ -26,14 +26,14 @@ export type AccountLinkInput = {
 export type AvailabilityInput = {
   startDate: Scalars['DateTime'];
   endDate: Scalars['DateTime'];
-  type: Scalars['String'];
+  type: AvailabilityType;
 };
 
 export type AvailabilityObject = {
   __typename?: 'AvailabilityObject';
   startDate: Scalars['DateTime'];
   endDate: Scalars['DateTime'];
-  type: Scalars['String'];
+  type: AvailabilityType;
 };
 
 /** Types of kitchen availability */
@@ -519,7 +519,7 @@ export type CreateBookingMutation = (
     & Pick<CreateBookingReturn, 'paymentIntentSecret'>
     & { booking: (
       { __typename?: 'Booking' }
-      & Pick<Booking, 'created' | 'calculatedAmount' | 'buyerAppFee' | 'unitPrice' | 'unitQuantity'>
+      & Pick<Booking, 'type' | 'created' | 'calculatedAmount' | 'buyerAppFee' | 'unitPrice' | 'unitQuantity'>
       & { listing: (
         { __typename?: 'Listing' }
         & Pick<Listing, 'id' | 'title' | 'description' | 'address' | 'postal' | 'unitPrice' | 'sqFtArea' | 'features' | 'propertyType'>
@@ -554,7 +554,7 @@ export type GetBookingQuoteQuery = (
   { __typename?: 'Query' }
   & { getBookingQuote: (
     { __typename?: 'Booking' }
-    & Pick<Booking, 'unitPrice' | 'unitQuantity' | 'calculatedAmount' | 'buyerAppFee' | 'created'>
+    & Pick<Booking, 'unitPrice' | 'unitQuantity' | 'calculatedAmount' | 'buyerAppFee' | 'created' | 'type'>
   ) }
 );
 
@@ -733,6 +733,7 @@ export const CreateBookingDocument = gql`
     input: {listingId: $listingId, startDate: $startDate, endDate: $endDate, type: $type}
   ) {
     booking {
+      type
       created
       calculatedAmount
       buyerAppFee
@@ -777,6 +778,7 @@ export const GetBookingQuoteDocument = gql`
     calculatedAmount
     buyerAppFee
     created
+    type
   }
 }
     `;

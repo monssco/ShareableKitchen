@@ -13,6 +13,7 @@ mutation createBooking(
         }
     ) {
         booking {
+            type
             created
             calculatedAmount
             buyerAppFee
@@ -21,16 +22,16 @@ mutation createBooking(
             listing {
                 id
                 author {
-                id
-                profile_image {
-                    resized_medium
+                    id
+                    profile_image {
+                        resized_medium
+                    }
+                    first_name
                 }
-                first_name
-                }
-                title
-                description
+                    title
+                    description
                 photos {
-                resized_medium
+                    resized_medium
                 }
                 address
                 city {

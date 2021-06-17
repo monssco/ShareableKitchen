@@ -5,9 +5,11 @@ export const availabilityTypeToString = (type: AvailabilityType) => {
         return "day"
     } else if (type === AvailabilityType.Weekly) {
         return "week"
-    } else {
+    } else if (type === AvailabilityType.Monthly) {
         return "month"
     }
+    
+    return "NaN"
 }
 
 export const availabilityStringToType = (type: string) => {
@@ -20,10 +22,20 @@ export const availabilityStringToType = (type: string) => {
     }
 }
 
-export const fromBackendMoney = (amount: number) => {
+/**
+ * Converts whole amount to decimal points
+ * @param amount in whole number eg 1000
+ * @returns 10.00
+ */
+export const toDecimalCurrency = (amount: number) => {
     return (Math.round(amount * 100) / 10000).toFixed(2)
 }
 
-export const toBackendMoney = (amount: number) => {
-    Math.round(amount * 100)
+/**
+ * Converts decimal amount to whole amount for the backend.
+ * @param amount decimal amount eg 10.00
+ * @returns 1000
+ */
+export const toWholeCurrency = (amount: number) => {
+    return Math.round(amount * 100)
 }

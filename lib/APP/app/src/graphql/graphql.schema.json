@@ -106,8 +106,8 @@
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
+                "kind": "ENUM",
+                "name": "AvailabilityType",
                 "ofType": null
               }
             },
@@ -165,8 +165,8 @@
               "kind": "NON_NULL",
               "name": null,
               "ofType": {
-                "kind": "SCALAR",
-                "name": "String",
+                "kind": "ENUM",
+                "name": "AvailabilityType",
                 "ofType": null
               }
             },

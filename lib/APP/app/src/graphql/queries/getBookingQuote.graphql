@@ -17,5 +17,6 @@ query getBookingQuote(
     calculatedAmount
     buyerAppFee
     created
+    type
   }
 }

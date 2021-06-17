@@ -6,6 +6,7 @@ import Slider, {Settings} from 'react-slick';
 import Image from 'next/image'
 import Calendar from 'src/components/Calendar';
 import Map from 'src/components/Map';
+import { availabilityTypeToString, toDecimalCurrency } from 'src/utils/helpers';
 
 /**
  * Shows the detailed listing.
@@ -75,7 +76,7 @@ const ListingPage: NextPage<{listing: Listing}> = ({listing}) => {
       
       <div className="py-3">
         <p className="text-2xl">Price</p>
-        <p className="text">$ {listing.unitPrice} {listing.availability.type}</p>
+        <p className="text">$ {toDecimalCurrency(listing.unitPrice)} / {availabilityTypeToString(listing.availability.type)}</p>
         <p></p>
       </div>
 

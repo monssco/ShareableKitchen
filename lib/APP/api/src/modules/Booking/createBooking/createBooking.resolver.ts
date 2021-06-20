@@ -19,15 +19,24 @@ class CreateBookingInput {
 
     @Field(() => AvailabilityType)
     type!: AvailabilityType
+
+    @Field()
+    cancelUrl!: string
+
+    @Field()
+    successUrl!: string
 }
 
 @ObjectType()
 class CreateBookingReturn {
     @Field()
-    booking: Booking
+    booking!: Booking
 
+    /**
+     * Used by stripejs in the frontend.
+     */
     @Field()
-    paymentIntentSecret: string
+    sessionId!: string
 }
 
 /**
@@ -80,33 +89,53 @@ export class CreateBookingResolver {
             unitPrice: listing.unitPrice
         })
 
-        const paymentIntent = await stripe.paymentIntents.create({
+        const booking = new Booking(input.type, listing, buyer, input.startDate, input.endDate, listing.unitPrice, unitQuantity, amount, buyerAppFee, sellerAppFee)
+
+        //TODO: You can also use checkout to make subscriptions,
+        // check to see if subscriptions can be made for monthly
+        // bookings here or not. If this is possible, you can get rid
+        // of the logic in the backend.
+
+        const session = await stripe.checkout.sessions.create({
+            customer:buyer.stripe_customer_id,
+            cancel_url: input.cancelUrl,
+            success_url: input.successUrl,
             payment_method_types: ['card'],
-            amount: (amount + buyerAppFee),
-            currency: 'cad',
-            customer: buyer.stripe_customer_id,
-            description: `Shareable Kitchen - ${listing.title} - ${listing.id}`,
-            statement_descriptor: `Shareable Kitchen`,
-            metadata: {
-                booking_type: input.type,
-                listing_id: listing.id,
-                buyer_id: buyer.id
-            }
+            mode: 'payment',
+            line_items: [
+                {
+                    currency: 'cad',
+                    amount: (amount + buyerAppFee),
+                    name: listing.title,
+                    description: listing.description,
+                    images: ['www.google.ca'],
+                    quantity: 1
+                }
+            ],
+            payment_intent_data: {
+                metadata: {
+                    booking_type: input.type,
+                    listing_id: listing.id,
+                    buyer_id: buyer.id
+                }
+            },
+            client_reference_id: booking.id,
+            
         })
 
-        const booking = new Booking(input.type, listing, buyer, input.startDate, input.endDate, listing.unitPrice, unitQuantity, amount, buyerAppFee, sellerAppFee)
-        
-        booking.paymentIntentId = paymentIntent.id
+        console.log(session)
 
-        if(!paymentIntent.client_secret) {
-            throw new Error("Payment intent doesn't have a secret. Please contact us asap! (587) 609-7008")
-        }
+        booking.paymentIntentId = session.payment_intent?.toString()
+
+        // if(!paymentIntent.client_secret) {
+        //     throw new Error("Payment intent doesn't have a secret. Please contact us asap! (587) 609-7008")
+        // }
 
         await em.persistAndFlush(booking)
 
         return {
             booking,
-            paymentIntentSecret: paymentIntent.client_secret
+            sessionId: session.id
         }
     }
 

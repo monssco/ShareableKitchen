@@ -46,13 +46,12 @@ export class StripeWebhookManager {
                         console.log(`💰 PaymentIntent status: ${stripeObject.status}`);
 
                         ConfirmBooking(stripeObject, this.em, this.stripe)
-                        const paymentIntent = event.data.object;
-                        console.log(typeof paymentIntent)
                         console.log('PaymentIntent was successful!');
                     break;
                     // ... handle other event types
                     default:
-                    console.log(`Unhandled event type ${event.type}`);
+                    console.log(`Unhandled event type ${event.type}`)
+                    // console.log(event.data)
                 }
 
                 response.json({received: true})

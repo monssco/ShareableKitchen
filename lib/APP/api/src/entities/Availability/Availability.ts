@@ -28,7 +28,7 @@ export class Availability {
 
     [PrimaryKeyType] : string;
 
-    @Field()
+    @Field(()=> AvailabilityType)
     @Enum(()=> AvailabilityType)
     type: AvailabilityType
 

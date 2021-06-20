@@ -54,4 +54,19 @@ export class CustomerResolver {
     ) {
         return await stripe.paymentMethods.detach(id)
     }
+
+    // These methods above are too mundane and will need too much
+    // work, so for now you can use stripe checkout to add payment methods.
+    //TODO: Attaching new payment methods should be done via stripe checkout.
+    // https://stripe.com/docs/payments/checkout
+    // const sd = await stripe.checkout.sessions.create({
+    //         customer:buyer.stripe_customer_id,
+    //         cancel_url: input.cancelUrl,
+    //         success_url: input.successUrl,
+    //         payment_method_types: ['card'],
+    //         mode: 'setup'
+            
+    //     })
+
+    //     console.log("SD", sd)
 }

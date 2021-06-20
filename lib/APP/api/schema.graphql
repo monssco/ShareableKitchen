@@ -20,11 +20,18 @@ type ListingImage implements Image {
 type AvailabilityObject {
   startDate: DateTime!
   endDate: DateTime!
-  type: String!
+  type: AvailabilityType!
 }
 
 # The javascript `Date` as string. Type represents date and time as the ISO Date string.
 scalar DateTime
+
+# Types of kitchen availability
+enum AvailabilityType {
+  daily
+  weekly
+  monthly
+}
 
 type Message {
   id: String!
@@ -123,13 +130,6 @@ type Booking {
   paymentDate: DateTime
 }
 
-# Types of kitchen availability
-enum AvailabilityType {
-  daily
-  weekly
-  monthly
-}
-
 type User {
   id: ID!
   email: String!
@@ -150,7 +150,7 @@ type User {
 
 type CreateBookingReturn {
   booking: Booking!
-  paymentIntentSecret: String!
+  sessionId: String!
 }
 
 interface Image {
@@ -169,7 +169,7 @@ interface Location {
 input AvailabilityInput {
   startDate: DateTime!
   endDate: DateTime!
-  type: String!
+  type: AvailabilityType!
 }
 
 input CountryInput {
@@ -203,6 +203,8 @@ input CreateBookingInput {
   startDate: DateTime!
   endDate: DateTime!
   type: AvailabilityType!
+  cancelUrl: String!
+  successUrl: String!
 }
 
 input getBookingQuoteInput {

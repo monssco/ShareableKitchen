@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import {useRouter} from 'next/router';
 import { GetServerSideProps, NextPage } from "next";
 import { graphqlSDK } from '../../graphql/client';
 import { AvailabilityType, CreateBookingReturn } from 'src/graphql/generated/graphql';
@@ -22,7 +21,6 @@ import {loadStripe} from '@stripe/stripe-js'
  */
 
 const Book: NextPage<{booking: CreateBookingReturn}> = (props) => {
-    const router = useRouter()
 
     if (!props.booking) {
         return <ErrorPage statusCode={404} title={"We can't process your request, please try again"}/>;

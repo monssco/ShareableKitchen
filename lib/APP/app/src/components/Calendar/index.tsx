@@ -6,7 +6,7 @@ import { AvailabilityType, Listing } from 'src/graphql/generated/graphql';
 
 import {useRouter} from 'next/router'
 import { graphqlSDK } from 'src/graphql/client';
-import { availabilityStringToType, toDecimalCurrency } from 'src/utils/helpers';
+import { availabilityStringToType, availabilityTypeToString, toDecimalCurrency } from 'src/utils/helpers';
 
 // API and examples
 // https://reactdatepicker.com/
@@ -32,8 +32,9 @@ const Calendar: React.FC<Listing> = (listing: Listing) => {
         const PriceSummary = () => {
         return (
             <div>
+                {/* 11.23 x 3 days for example */}
                 <div className="flex flex-row py-2 justify-between">
-                    <p>Reservation </p>
+                    <p>${toDecimalCurrency(listing.unitPrice)} x {price?.unitQuantity} {availabilityTypeToString(listing.availability.type)}{price?.unitQuantity! > 1 ? 's': ''}</p>
                     <p>${toDecimalCurrency(price?.amount!)}</p>
                 </div>
                 <div className="flex flex-row py-2 justify-between">

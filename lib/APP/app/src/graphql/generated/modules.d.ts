@@ -53,6 +53,15 @@ declare module '*/myListings.graphql' {
 }
     
 
+declare module '*/retrieveBooking.graphql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const retrieveBooking: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
 declare module '*/retrieveListing.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;

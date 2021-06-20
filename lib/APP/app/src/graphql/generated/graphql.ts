@@ -331,6 +331,7 @@ export type Query = {
   getBookingQuote: Booking;
   listBookings: Array<Booking>;
   listReservations: Array<Booking>;
+  retrieveBooking: Booking;
   getCountries: Array<CountryType>;
   /** This endpoint is used to check if an account has payouts enabled. If payouts are not enabled, they must enable them by following the by using the getAccountLink endpoint. */
   arePayoutsEnabled: Scalars['Boolean'];
@@ -367,6 +368,11 @@ export type QueryListBookingsArgs = {
 
 export type QueryListReservationsArgs = {
   input: PaginationInput;
+};
+
+
+export type QueryRetrieveBookingArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -669,6 +675,27 @@ export type MyListingsQueryQuery = (
   )> }
 );
 
+export type RetrieveBookingQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type RetrieveBookingQuery = (
+  { __typename?: 'Query' }
+  & { retrieveBooking: (
+    { __typename?: 'Booking' }
+    & Pick<Booking, 'startDate' | 'endDate' | 'type' | 'unitPrice' | 'unitQuantity' | 'calculatedAmount' | 'buyerAppFee' | 'sellerAppFee'>
+    & { listing: (
+      { __typename?: 'Listing' }
+      & Pick<Listing, 'title' | 'description'>
+      & { photos?: Maybe<Array<(
+        { __typename?: 'ListingImage' }
+        & Pick<ListingImage, 'resized_medium'>
+      )>> }
+    ) }
+  ) }
+);
+
 export type RetrieveListingQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
@@ -904,6 +931,27 @@ export const MyListingsQueryDocument = gql`
   }
 }
     `;
+export const RetrieveBookingDocument = gql`
+    query retrieveBooking($id: String!) {
+  retrieveBooking(id: $id) {
+    listing {
+      title
+      description
+      photos {
+        resized_medium
+      }
+    }
+    startDate
+    endDate
+    type
+    unitPrice
+    unitQuantity
+    calculatedAmount
+    buyerAppFee
+    sellerAppFee
+  }
+}
+    `;
 export const RetrieveListingDocument = gql`
     query retrieveListing($id: String!) {
   retrieveListing(id: $id) {
@@ -996,6 +1044,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     myListingsQuery(variables: MyListingsQueryQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<MyListingsQueryQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<MyListingsQueryQuery>(MyListingsQueryDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'myListingsQuery');
+    },
+    retrieveBooking(variables: RetrieveBookingQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<RetrieveBookingQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<RetrieveBookingQuery>(RetrieveBookingDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'retrieveBooking');
     },
     retrieveListing(variables: RetrieveListingQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<RetrieveListingQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<RetrieveListingQuery>(RetrieveListingDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'retrieveListing');

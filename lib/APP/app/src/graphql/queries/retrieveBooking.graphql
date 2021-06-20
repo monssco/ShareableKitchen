@@ -1,0 +1,24 @@
+query retrieveBooking(
+    $id: String!
+    ) {
+    retrieveBooking(
+        id: $id
+    ) {
+        listing{
+        title
+        description
+        photos{
+            resized_medium
+        }
+        }
+        startDate
+        endDate
+        type
+        unitPrice
+        unitQuantity
+        calculatedAmount
+        buyerAppFee
+        sellerAppFee
+    }
+    }
+

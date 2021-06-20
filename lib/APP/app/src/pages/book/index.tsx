@@ -9,7 +9,7 @@ import config from '../../config'
 import {loadStripe} from '@stripe/stripe-js'
 
 
-
+// TODO: auth-wall this.
 
 /**
  * This page is responsible for requesting a booking from the backend
@@ -28,10 +28,8 @@ const Book: NextPage<{booking: CreateBookingReturn}> = (props) => {
 
     useEffect(() => {
         const stripeRedirect = async ()=> {
-            const stripePromise = await loadStripe(config.stripePublishableKey,
-                {
-                    stripeAccount: ''
-                })
+            // TODO: Send stripe account info here.
+            const stripePromise = await loadStripe(config.stripePublishableKey)
             stripePromise?.redirectToCheckout({sessionId:  props.booking.sessionId})
         } 
         stripeRedirect();
@@ -39,7 +37,7 @@ const Book: NextPage<{booking: CreateBookingReturn}> = (props) => {
 
     return (
         <div className="container mx-auto">
-            <p className="text-4xl font-semibold py-6">Request to book</p>
+            <p className="text-4xl font-semibold py-6">Redirecting you to payments!</p>
             {/* <ListingBox {...booking} /> */}
             <div className="max-w-sm">
             </div>
@@ -57,6 +55,14 @@ export const getServerSideProps: GetServerSideProps = async ({req, res, query}) 
     let end = endDate  as string
     let _type = type as AvailabilityType
     try {
+
+        // This is a bit of a hack, since there is no protocol
+        // we get it from the referer url
+        let protocol = req.headers.referer?.split('://')[0]
+
+        if (!protocol){
+            protocol = 'http'
+        }
         
         let booking =  await graphqlSDK().createBooking({
             listingId: id,
@@ -64,7 +70,7 @@ export const getServerSideProps: GetServerSideProps = async ({req, res, query}) 
             endDate: end,
             type: _type,
             cancelUrl: `${req.headers.referer}`,
-            successUrl: `${req.headers.referer}/success`
+            successUrl: `${protocol}://${req.headers.host}/book/success`
         })
 
         console.log(booking)

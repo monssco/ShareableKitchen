@@ -2,7 +2,9 @@ mutation createBooking(
     $listingId: String!,
     $startDate: DateTime!,
     $endDate: DateTime!,
-    $type: AvailabilityType!
+    $type: AvailabilityType!,
+    $cancelUrl: String!,
+    $successUrl: String!
     ) {
     createBooking(
         input: {
@@ -10,6 +12,8 @@ mutation createBooking(
             startDate: $startDate,
             endDate: $endDate,
             type: $type,
+            cancelUrl: $cancelUrl,
+            successUrl: $successUrl
         }
     ) {
         booking {
@@ -44,6 +48,6 @@ mutation createBooking(
                 propertyType
             }
         }
-        paymentIntentSecret
+        sessionId
     }
 }

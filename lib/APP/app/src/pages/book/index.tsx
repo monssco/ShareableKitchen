@@ -1,50 +1,25 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {useRouter} from 'next/router';
 import { GetServerSideProps, NextPage } from "next";
 import { graphqlSDK } from '../../graphql/client';
-import { AvailabilityType, Booking, CreateBookingReturn } from 'src/graphql/generated/graphql';
+import { AvailabilityType, CreateBookingReturn } from 'src/graphql/generated/graphql';
 import ErrorPage from 'next/error';
-import Image from 'next/image'
-import { availabilityTypeToString, toDecimalCurrency } from 'src/utils/helpers';
 
-const ListingBox = (booking: Booking) => {
-    let listing = booking.listing
-    return(
-        <div className="max-w-sm border-gray-300 border p-5 rounded-xl">
-                <div>
-                    <Image
-                        alt="Kitchen"
-                        src="/kitchen.jpeg"
-                        width={150}
-                        height={150}
-                    />
-                    <p className="text-2xl">{listing.title}</p>
-                    <div>{listing.features?.map(i => <p key={i}>{i}</p>)}</div>
-                </div>
-                <div className="py-2">
-                    <p className="text-3xl">Price Details</p>
-                </div>
-                <div className="py-2">
-                    <div className="flex justify-between">
-                        <p>${toDecimalCurrency(listing.unitPrice)} x {booking.unitQuantity} {availabilityTypeToString(booking.type)}{booking.unitQuantity > 1 ? 's': ''}</p>
-                        <p>${toDecimalCurrency(booking.calculatedAmount)}</p>
-                    </div>
-                </div>
-                <div className="py-2">
-                    <div className="flex justify-between">
-                        <p>Service Fees</p>
-                        <p>${toDecimalCurrency(booking.buyerAppFee)}</p>
-                    </div>
-                </div>
-                <div className="font-semibold py-2">
-                    <div className="flex justify-between">
-                        <p>Total</p>
-                        <p>${toDecimalCurrency(booking.calculatedAmount + booking.buyerAppFee)}</p>
-                    </div>
-                </div>
-            </div>
-    )
-}
+
+import config from '../../config'
+import {loadStripe} from '@stripe/stripe-js'
+
+
+
+
+/**
+ * This page is responsible for requesting a booking from the backend
+ * and then referring you to stripe's page.
+ * It is also responsible for making sure that the user is logged in,
+ * otherwise it will redirect the user to the login page.
+ * @param props booking that will be send back from the backend
+ * @returns refers you to stripe's booking page
+ */
 
 const Book: NextPage<{booking: CreateBookingReturn}> = (props) => {
     const router = useRouter()
@@ -53,24 +28,30 @@ const Book: NextPage<{booking: CreateBookingReturn}> = (props) => {
         return <ErrorPage statusCode={404} title={"We can't process your request, please try again"}/>;
     }
 
-    let listing = props.booking.booking.listing
-    let booking = props.booking.booking
-    let piSecret = props.booking.paymentIntentSecret
+    useEffect(() => {
+        const stripeRedirect = async ()=> {
+            const stripePromise = await loadStripe(config.stripePublishableKey,
+                {
+                    stripeAccount: ''
+                })
+            stripePromise?.redirectToCheckout({sessionId:  props.booking.sessionId})
+        } 
+        stripeRedirect();
+    }, [])
 
-    console.log("Router query", router.query)
-    console.log("Payment intent secret", piSecret)
-    console.log(booking)
     return (
         <div className="container mx-auto">
             <p className="text-4xl font-semibold py-6">Request to book</p>
-            <ListingBox {...booking} />
+            {/* <ListingBox {...booking} /> */}
+            <div className="max-w-sm">
+            </div>
         </div>
     )
 }
 
 export default Book
 
-export const getServerSideProps: GetServerSideProps = async ({res, query}) =>
+export const getServerSideProps: GetServerSideProps = async ({req, res, query}) =>
 {
     const {listingId, startDate, endDate, type} = query
     let id = listingId as string
@@ -83,8 +64,12 @@ export const getServerSideProps: GetServerSideProps = async ({res, query}) =>
             listingId: id,
             startDate: start,
             endDate: end,
-            type: _type
+            type: _type,
+            cancelUrl: `${req.headers.referer}`,
+            successUrl: `${req.headers.referer}/success`
         })
+
+        console.log(booking)
         return {
             props: 
                 {

@@ -103,12 +103,14 @@ export type CreateBookingInput = {
   startDate: Scalars['DateTime'];
   endDate: Scalars['DateTime'];
   type: AvailabilityType;
+  cancelUrl: Scalars['String'];
+  successUrl: Scalars['String'];
 };
 
 export type CreateBookingReturn = {
   __typename?: 'CreateBookingReturn';
   booking: Booking;
-  paymentIntentSecret: Scalars['String'];
+  sessionId: Scalars['String'];
 };
 
 export type CreateListingInput = {
@@ -509,6 +511,8 @@ export type CreateBookingMutationVariables = Exact<{
   startDate: Scalars['DateTime'];
   endDate: Scalars['DateTime'];
   type: AvailabilityType;
+  cancelUrl: Scalars['String'];
+  successUrl: Scalars['String'];
 }>;
 
 
@@ -516,7 +520,7 @@ export type CreateBookingMutation = (
   { __typename?: 'Mutation' }
   & { createBooking: (
     { __typename?: 'CreateBookingReturn' }
-    & Pick<CreateBookingReturn, 'paymentIntentSecret'>
+    & Pick<CreateBookingReturn, 'sessionId'>
     & { booking: (
       { __typename?: 'Booking' }
       & Pick<Booking, 'type' | 'created' | 'calculatedAmount' | 'buyerAppFee' | 'unitPrice' | 'unitQuantity'>
@@ -728,9 +732,9 @@ export type SearchListingsQuery = (
 
 
 export const CreateBookingDocument = gql`
-    mutation createBooking($listingId: String!, $startDate: DateTime!, $endDate: DateTime!, $type: AvailabilityType!) {
+    mutation createBooking($listingId: String!, $startDate: DateTime!, $endDate: DateTime!, $type: AvailabilityType!, $cancelUrl: String!, $successUrl: String!) {
   createBooking(
-    input: {listingId: $listingId, startDate: $startDate, endDate: $endDate, type: $type}
+    input: {listingId: $listingId, startDate: $startDate, endDate: $endDate, type: $type, cancelUrl: $cancelUrl, successUrl: $successUrl}
   ) {
     booking {
       type
@@ -764,7 +768,7 @@ export const CreateBookingDocument = gql`
         propertyType
       }
     }
-    paymentIntentSecret
+    sessionId
   }
 }
     `;

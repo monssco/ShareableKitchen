@@ -153,13 +153,18 @@ const Calendar: React.FC<Listing> = (listing: Listing) => {
 
         // Setup excluded days.
         if (listing.bookings) {
+
             let excludedInterval:Date[] = []
             listing.bookings.forEach(booking => {
+                // Grab each interval and find days between them
                 let interval = eachDayOfInterval({
-                start: parseISO(booking.startDate),
-                end: parseISO(booking.endDate)
+                    start: parseISO(booking.startDate),
+                    end: parseISO(booking.endDate)
                 })
-                excludedInterval.concat(interval)
+                
+                // Add them to the excluded array.
+                excludedInterval = excludedInterval.concat(interval)
+
             })
 
             setExcludedDays(excludedInterval)

@@ -84,5 +84,6 @@ export default {
     companyName: `Shareable Kitchen`,
     siteUrl: `https://www.shareablekitchen.com`
   },
-  gMapsKey: 'AIzaSyCJKbuRIZfvDo_zEZOSXlpgNC2RIJc_U-k'
+  gMapsKey: 'AIzaSyCJKbuRIZfvDo_zEZOSXlpgNC2RIJc_U-k',
+  stripePublishableKey: 'pk_test_51IhXgtGZgehPj4cvlPqWq4N0aClIlfHXiiMlZR6IigjjF5tFprmqC4wYySA3IPsGydLlTmF0OvU0cm3Xhu8XT1rv00mhz3WQ3h'
 }

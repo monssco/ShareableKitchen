@@ -73,8 +73,6 @@ export class CreateBookingResolver {
 
         var overlap = false
         for (const a of bookings) {
-            console.log("Check")
-            console.log(a)
             overlap = (a.startDate <= input.endDate) && (a.endDate >= input.startDate)
         }
 
@@ -113,23 +111,22 @@ export class CreateBookingResolver {
                 }
             ],
             payment_intent_data: {
+                // This data is required by the webhook.
                 metadata: {
                     booking_type: input.type,
                     listing_id: listing.id,
                     buyer_id: buyer.id
-                }
+                },
+                // For monthly payments, we can charge their card later on.
+                // So it uses 'off_session'
+                setup_future_usage: booking.type === AvailabilityType.monthly ? 'off_session' : 'on_session'
             },
-            client_reference_id: booking.id,
-            
+            client_reference_id: booking.id
         })
 
         console.log(session)
 
         booking.paymentIntentId = session.payment_intent?.toString()
-
-        // if(!paymentIntent.client_secret) {
-        //     throw new Error("Payment intent doesn't have a secret. Please contact us asap! (587) 609-7008")
-        // }
 
         await em.persistAndFlush(booking)
 

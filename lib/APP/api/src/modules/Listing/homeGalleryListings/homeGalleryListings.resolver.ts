@@ -8,6 +8,7 @@
 import { MyContext } from "../../../types";
 import { Ctx, Query } from "type-graphql";
 import { Listing } from "../../../entities/Listing/Listing";
+// import { Booking } from "../../../entities/Booking/Booking";
 
 
 export class HomeGalleryListingsResolver {
@@ -18,8 +19,20 @@ export class HomeGalleryListingsResolver {
     ) {
 
         // For now, returning all listings for the home gallery.
-        let listings = await em.find(Listing, {})
-        console.log("Homepage", listings)
-        return listings
+        // Bug that caused issues with loading bookings, had to 
+        // initialize it (https://mikro-orm.io/docs/collections/)
+        // let listings = await em.find(Listing, {}, ['bookings', 'photos'])
+
+        let ls = await em.find(Listing, {})
+        
+        for (const l of ls){
+            l.bookings.init({where: {confirmed: true}})
+        }
+
+        // let bookings = await em.find(Booking, {confirmed: true})
+
+        // console.log("Bookings", bookings)
+        
+        return ls
     }
 }

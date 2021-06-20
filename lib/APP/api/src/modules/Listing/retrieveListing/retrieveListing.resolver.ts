@@ -12,6 +12,7 @@ export class RetrieveListingResolver {
         @Ctx() {em}: MyContext
     ){
         let listing = await em.findOneOrFail(Listing, {id})
+        await listing.bookings.init({where: {confirmed: true}})
         return listing
     }
 }

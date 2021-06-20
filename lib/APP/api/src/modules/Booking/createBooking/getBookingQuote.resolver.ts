@@ -46,6 +46,9 @@ export class GetBookingQuoteResolver {
 
         const booking = new Booking(input.type, listing, buyer, input.startDate, input.endDate, listing.unitPrice, unitQuantity, amount, buyerAppFee, sellerAppFee)
 
+        // If you don't clear it, it can then be saved to the db in the next persist/flush cycle by the orm.
+        em.clear()
+
         return booking
     }
 

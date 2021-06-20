@@ -94,6 +94,7 @@ export class CreateBookingResolver {
         // bookings here or not. If this is possible, you can get rid
         // of the logic in the backend.
 
+        //TODO: Add images from s3 in here.
         const session = await stripe.checkout.sessions.create({
             customer:buyer.stripe_customer_id,
             cancel_url: input.cancelUrl,
@@ -102,20 +103,19 @@ export class CreateBookingResolver {
             mode: 'payment',
             line_items: [
                 {
+                    //TODO: change currency based on the buyer's location?
                     currency: 'cad',
                     amount: (amount + buyerAppFee),
                     name: listing.title,
                     description: listing.description,
-                    images: ['www.google.ca'],
-                    quantity: 1
+                    images: ['https://images.unsplash.com/photo-1556911220-bff31c812dba?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8a2l0Y2hlbnxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80'],
+                    quantity: 1 // TODO: do something with quantity, if it can be moved then do so, I don't know how this works with connect but having a quantity on a time period seems off.
                 }
             ],
             payment_intent_data: {
                 // This data is required by the webhook.
                 metadata: {
-                    booking_type: input.type,
-                    listing_id: listing.id,
-                    buyer_id: buyer.id
+                    booking_id: booking.id
                 },
                 // For monthly payments, we can charge their card later on.
                 // So it uses 'off_session'

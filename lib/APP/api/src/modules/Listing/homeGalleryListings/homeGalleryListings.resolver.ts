@@ -21,11 +21,9 @@ export class HomeGalleryListingsResolver {
         // For now, returning all listings for the home gallery.
         // Bug that caused issues with loading bookings, had to 
         // initialize it (https://mikro-orm.io/docs/collections/)
-        // let listings = await em.find(Listing, {}, ['bookings', 'photos'])
-
-        let ls = await em.find(Listing, {})
-        
-        for (const l of ls){
+        let listings = await em.find(Listing, {})
+        // This filter makes sure we only return confirmed bookings.
+        for (const l of listings){
             l.bookings.init({where: {confirmed: true}})
         }
 
@@ -33,6 +31,6 @@ export class HomeGalleryListingsResolver {
 
         // console.log("Bookings", bookings)
         
-        return ls
+        return listings
     }
 }

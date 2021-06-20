@@ -19,13 +19,11 @@ import { sendReservationConfirmationEmail } from "../utils/Email/sendReservation
 export const  ConfirmBooking = async (paymentIntent:Stripe.PaymentIntent, em: EntityManager, stripe: Stripe) => {
 
     // This metadata has been added when the booking was created.
-    let booking_type = paymentIntent.metadata['booking_type']
-    let listing_id = paymentIntent.metadata['listing_id']
-    let buyer_id = paymentIntent.metadata['buyer_id']
+    let booking_id = paymentIntent.metadata['booking_id']
 
     try {
-        // Find the booking.
-        let booking = await em.findOneOrFail(Booking, {listing: {id: listing_id},type: booking_type, buyer: {id: buyer_id}})
+        // Find the booking, get listing and buyer too.
+        let booking = await em.findOneOrFail(Booking, {id: booking_id}, ['buyer', 'listing.author'])
 
         // Confirm the booking, they have paid for it already.
         booking.confirmBooking()
@@ -37,9 +35,11 @@ export const  ConfirmBooking = async (paymentIntent:Stripe.PaymentIntent, em: En
 
         // If its monthly booking, setup a subscription.
         if (booking.type === AvailabilityType.monthly) {
-            let buyer = await em.findOneOrFail(User, {id: buyer_id})
+            let buyer = await em.findOneOrFail(User, {id: booking.buyer.id})
             await createMonthlySubscription(stripe, booking, buyer, paymentIntent.id, em )
         }
+
+        console.log("Successfully confirmed booking!")
 
     } catch (error) {
         console.error("ERROR", error)

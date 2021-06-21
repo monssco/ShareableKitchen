@@ -94,11 +94,19 @@ export class CreateBookingResolver {
         // bookings here or not. If this is possible, you can get rid
         // of the logic in the backend.
 
+        /**
+         * Appends the booking id on the success url,
+         * so that the frontend can then retrieve it later on and
+         * show the details after successfully paying for it.
+         */
+        let successUrl = new URL(input.successUrl)
+        successUrl.searchParams.append('bookingId', booking.id)
+
         //TODO: Add images from s3 in here.
         const session = await stripe.checkout.sessions.create({
             customer:buyer.stripe_customer_id,
             cancel_url: input.cancelUrl,
-            success_url: input.successUrl,
+            success_url: successUrl.href,
             payment_method_types: ['card'],
             mode: 'payment',
             line_items: [

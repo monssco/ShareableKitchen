@@ -302,6 +302,7 @@ type Query {
   getBookingQuote(input: getBookingQuoteInput!): Booking!
   listBookings(input: PaginationInput!): [Booking!]!
   listReservations(input: PaginationInput!): [Booking!]!
+  retrieveBooking(id: String!): Booking!
   getCountries: [CountryType!]!
 
   # This endpoint is used to check if an account has payouts enabled. If payouts are not enabled, they must enable them by following the by using the getAccountLink endpoint.

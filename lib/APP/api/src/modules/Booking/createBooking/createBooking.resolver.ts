@@ -80,7 +80,7 @@ export class CreateBookingResolver {
             throw new Error('New booking date overlaps pre-existing booking.')
         }
 
-        const {amount, buyerAppFee, sellerAppFee, unitQuantity} = calculateAmount({
+        let {amount, buyerAppFee, sellerAppFee, unitQuantity} = calculateAmount({
             type: input.type,
             startDate: input.startDate,
             endDate: input.endDate,
@@ -88,6 +88,18 @@ export class CreateBookingResolver {
         })
 
         const booking = new Booking(input.type, listing, buyer, input.startDate, input.endDate, listing.unitPrice, unitQuantity, amount, buyerAppFee, sellerAppFee)
+
+        if (input.type === AvailabilityType.monthly) {
+            // if the type is monthly, we only charge for 1 month!
+            // rest of the months are setup as subscriptions.
+            if (booking.unitQuantity > 1) {
+                // This subscription is greater than a month, only as them to pay for a single month.
+
+                // We charge the first month and the buyer fees for ALL the months together at once. The subscription later on charges them the advertised monthly fee only.
+                amount = listing.unitPrice *  1
+
+            }
+        }
 
         //TODO: You can also use checkout to make subscriptions,
         // check to see if subscriptions can be made for monthly

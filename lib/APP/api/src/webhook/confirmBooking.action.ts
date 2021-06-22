@@ -22,6 +22,7 @@ export const  ConfirmBooking = async (paymentIntent:Stripe.PaymentIntent, em: En
     let booking_id = paymentIntent.metadata['booking_id']
 
     try {
+        em.clear()
         // Find the booking, get listing and buyer too.
         let booking = await em.findOneOrFail(Booking, {id: booking_id}, ['buyer', 'listing.author'])
 
@@ -33,9 +34,11 @@ export const  ConfirmBooking = async (paymentIntent:Stripe.PaymentIntent, em: En
         sendBookingConfirmationEmail(booking.buyer, booking);
         sendReservationConfirmationEmail(booking.listing.author, booking);
 
-        // If its monthly booking, setup a subscription.
-        if (booking.type === AvailabilityType.monthly) {
+        // If its monthly booking that spans more than 2 months, setup a subscription.
+        // If it is for a single month, ignore it
+        if (booking.type === AvailabilityType.monthly && booking.unitQuantity > 1) {
             let buyer = await em.findOneOrFail(User, {id: booking.buyer.id})
+            // Create monthly subscription.
             await createMonthlySubscription(stripe, booking, buyer, paymentIntent.id, em )
         }
 
@@ -58,6 +61,8 @@ export const  ConfirmBooking = async (paymentIntent:Stripe.PaymentIntent, em: En
 const createMonthlySubscription =
     async (stripe: Stripe, booking: Booking, buyer: User, paymentIntentId: string, em: EntityManager ) => {
 
+        console.log("Setup monthly subscription")
+
         // We attach the payment method of the payment intent (that the 
         // buyer has already paid with and has succeeded) to charge for 
         // the recurring subscriptions.
@@ -67,11 +72,19 @@ const createMonthlySubscription =
             expand: ["payment_method"]
         })
 
+        // Only ask them to pay the monthly amount only,
+        // dont attach any fees.
+        let monthlyAmount = booking.unitPrice
+
         // We make a price for this listing and just for this booking.
         let price = await stripe.prices.create({
-            unit_amount: booking.calculatedAmount,
-            currency: booking.listing.city.state.country.currencySymbol,
-            recurring: {interval: 'month'},
+            unit_amount: monthlyAmount,
+            // currency: expandedBooking.listing.city.state.country.currencySymbol, TODO: Fix this once you upgrade to mikroorm v5.
+            currency: 'cad',
+            recurring: {
+                interval: 'month', 
+                interval_count: 1
+            },
             product_data: {
                 name: `Shareable Kitchen - ${booking.listing.title} - ${booking.listing.id}`,
                 statement_descriptor: `Shareable Kitchen`,
@@ -88,30 +101,53 @@ const createMonthlySubscription =
         // Since they have already paid for the first month, we will skip
         // this month.
         let nextMonth = addMonths(booking.startDate, 1)
-
         // Get the first day of that next month.
         let firstOfNextMonth = startOfMonth(nextMonth)
 
+        // let thisMonth = addMonths(expandedBooking.startDate, 0)
+        // let firstOfThisMonth = startOfMonth(thisMonth)
+
         // The last day of the subscription.
-        let lastDay = booking.endDate
+        // let lastDay = booking.endDate
 
         let payment_method = paymentIntent.payment_method as Stripe.PaymentMethod
 
-        let subscription = await stripe.subscriptions.create({
+        // TODO: Subscriptions are not quite right. 
+        // Maybe use subscription scheduleuer?
+        // https://github.com/stripe/stripe-java/issues/454
+        // 
+
+        let subscription = await stripe.subscriptionSchedules.create({
             customer: buyer.stripe_customer_id!,
-            application_fee_percent: 10,
-            off_session: true,
-            items: [
+            start_date: getUnixTime(firstOfNextMonth),
+            phases: [
                 {
-                    price: price.id
+                    items: [
+                        {
+                            price: price.id,
+                            quantity: 1,
+                            
+                        }
+                    ],
+                    default_payment_method: payment_method.id,
+                    iterations: booking.unitQuantity - 1 // 1 month is already paid for
                 }
-            ],
-            // We want it to cycle on the first of each month.
-            billing_cycle_anchor: getUnixTime(firstOfNextMonth),
-            cancel_at: getUnixTime(lastDay),
-            // Use the payment method from the paid out payment intent that was just processed.
-            default_payment_method: payment_method.id
+            ]
         })
+        // let subscription = await stripe.subscriptions.create({
+        //     customer: buyer.stripe_customer_id!,
+        //     off_session: true,
+        //     items: [
+        //         {
+        //             price: price.id
+        //         }
+        //     ],
+        //     // We want it to cycle on the first of each month.
+        //     billing_cycle_anchor: getUnixTime(firstOfNextMonth),
+        //     cancel_at: getUnixTime(lastDay),
+        //     // Use the payment method from the paid out payment intent that was just processed.
+        //     default_payment_method: payment_method.id
+        // })
 
         booking.subscriptionId = subscription.id
         await em.persistAndFlush(booking)

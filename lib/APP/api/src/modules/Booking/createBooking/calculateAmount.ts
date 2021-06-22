@@ -1,6 +1,6 @@
 // This is the heart of the entire calculation limbo.
 
-import { differenceInCalendarDays, differenceInCalendarWeeks } from "date-fns";
+import { differenceInCalendarDays, differenceInCalendarWeeks, differenceInCalendarMonths } from "date-fns";
 import { Booking } from "../../../entities/Booking/Booking";
 import { AvailabilityType } from "../../../entities/Enums/AvailabilityType.enum";
 
@@ -45,12 +45,18 @@ export const calculateAmount = ({
         } else if (type === AvailabilityType.monthly) {
             // In monthly scenario, we do not charge them for all the months at once.
             // They pay for the first month and the rest of the amount is setup as a subscription model.
-            // const numMonths = Math.abs(differenceInCalendarMonths(input.endDate, input.startDate))
 
-            // Only a single month is asked to be paid.
-            amount = 1 * unitPrice;
+            // Since this amount is being displayed to them on the frontend, 
+            // we must calculate and return back the WHOLE amount.
+            const numMonths = Math.abs(differenceInCalendarMonths(endDate, startDate)) + 1
 
-            unitQuantity = 1
+            // Only a single month is asked to be paid. (that logic is in createBooking resolver)
+            // For the quote we return all the months.
+            amount = numMonths * unitPrice;
+
+            unitQuantity = numMonths
+
+            // They only pay for the first month, and the rest is a subscription model... We should give them the whole amount when about to reserve, but when it comes to actually confirming it, charge them for the first month only.
         } else {
             throw new Error("Availability type must be either daily, weekly or monthly.")
         }

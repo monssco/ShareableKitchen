@@ -684,7 +684,7 @@ export type RetrieveBookingQuery = (
   { __typename?: 'Query' }
   & { retrieveBooking: (
     { __typename?: 'Booking' }
-    & Pick<Booking, 'startDate' | 'endDate' | 'type' | 'unitPrice' | 'unitQuantity' | 'calculatedAmount' | 'buyerAppFee' | 'sellerAppFee'>
+    & Pick<Booking, 'startDate' | 'endDate' | 'type' | 'unitPrice' | 'unitQuantity' | 'calculatedAmount' | 'buyerAppFee' | 'sellerAppFee' | 'created'>
     & { listing: (
       { __typename?: 'Listing' }
       & Pick<Listing, 'title' | 'description'>
@@ -949,6 +949,7 @@ export const RetrieveBookingDocument = gql`
     calculatedAmount
     buyerAppFee
     sellerAppFee
+    created
   }
 }
     `;

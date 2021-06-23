@@ -38,10 +38,6 @@ const ListingPage: NextPage<{listing: Listing}> = ({listing}) => {
 
   return (
     <div className="max-w-6xl mx-auto p-5">
-
-      <div>
-        <Calendar {...listing}/>
-      </div>
       
       {/* Title */}
       <p className="text-3xl py-2">{listing.title}</p>
@@ -69,30 +65,38 @@ const ListingPage: NextPage<{listing: Listing}> = ({listing}) => {
         </div>
       </Slider>
 
-      <div className="pt-5">
-        <p className="text-2xl">Description</p>
-        <p>{listing.description}</p>
-      </div>
-      
-      <div className="py-3">
-        <p className="text-2xl">Price</p>
-        <p className="text">$ {toDecimalCurrency(listing.unitPrice)} / {availabilityTypeToString(listing.availability.type)}</p>
-        <p></p>
-      </div>
+      <div className="flex flex-col-reverse md:flex-row py-10">
+        <div className="info-container flex-auto">
+          <div className="pt-5">
+            <p className="text-2xl">Description</p>
+            <p>{listing.description}</p>
+          </div>
+          
+          <div className="py-3">
+            <p className="text-2xl">Price</p>
+            <p className="text">$ {toDecimalCurrency(listing.unitPrice)} / {availabilityTypeToString(listing.availability.type)}</p>
+            <p></p>
+          </div>
 
-      <div className="py-3">
-        <p className="text-2xl">Area</p>
-        <p className="text">{listing.sqFtArea} sqFt</p>
-      </div>
+          <div className="py-3">
+            <p className="text-2xl">Area</p>
+            <p className="text">{listing.sqFtArea} sqFt</p>
+          </div>
 
-      <p className="pt-3 text-2xl">Amenities</p>
-      <div>{listing.features?.map(item => 
-        <li key={item}>{item.valueOf()}</li>
-      )}</div>
+          <p className="pt-3 text-2xl">Amenities</p>
+          <div>{listing.features?.map(item => 
+            <li key={item}>{item.valueOf()}</li>
+          )}</div>
 
-      <div className="py-3">
-        <p className="text-2xl">Hosted by</p>
-        <p>{listing.author.first_name}</p>
+          <div className="py-3">
+            <p className="text-2xl">Hosted by</p>
+            <p>{listing.author.first_name}</p>
+          </div>
+        </div>
+
+        <div className="calendar-container flex-1">
+          <Calendar {...listing}/>
+        </div>
       </div>
 
       <div>

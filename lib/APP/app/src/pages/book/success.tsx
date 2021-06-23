@@ -17,7 +17,7 @@ export const getServerSideProps = async ({res, query}: GetServerSidePropsContext
 
         return {
             props: {
-                booking
+                booking: booking.retrieveBooking
             }
         }
         } catch (error) {
@@ -38,13 +38,12 @@ const Success = ({booking}: InferGetServerSidePropsType<typeof getServerSideProp
 
     console.log("Booking", booking)
     return (
-        <div>
+        <div className="container mx-auto p-10">
             <div>
                 Congratulations! Your booking is now confirmed.
                 You should receive an email shortly with the exact times and further instructions along with the location.
 
-                If you have any questions please contact us via support@shareablekitchen.com
-
+                If you have any questions please contact us via support@shareablekitchen.com.
 
                 Happy Cooking!
             </div>

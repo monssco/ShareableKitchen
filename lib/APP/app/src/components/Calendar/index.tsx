@@ -1,12 +1,14 @@
 import DatePicker from 'react-datepicker';
 import { useEffect, useState } from 'react';
-import { parseISO, eachDayOfInterval, format, isMonday, isSunday, isFirstDayOfMonth, isLastDayOfMonth, compareAsc } from 'date-fns';
+import { parseISO, eachDayOfInterval, format, isMonday, isSunday, isFirstDayOfMonth, isLastDayOfMonth, compareAsc, addMonths } from 'date-fns';
 import React from 'react';
 import { AvailabilityType, Listing } from 'src/graphql/generated/graphql';
 
 import {useRouter} from 'next/router'
 import { graphqlSDK } from 'src/graphql/client';
 import { availabilityStringToType, availabilityTypeToString, toDecimalCurrency } from 'src/utils/helpers';
+import Warning from '../Alert/warning';
+import Info from '../Alert/info';
 
 // API and examples
 // https://reactdatepicker.com/
@@ -44,6 +46,10 @@ const Calendar: React.FC<Listing> = (listing: Listing) => {
                 <div className="flex flex-row py-2 justify-between font-medium">
                     <p>Total</p>
                     <p>${toDecimalCurrency(price?.total!)}</p>
+                </div>
+
+                <div className={`${(price?.unitQuantity! > 1 && listing.availability.type === AvailabilityType.Monthly) ? 'block' : 'hidden'}`}>
+                    <Info text={"You will only be charged for the first month. The remaining balance will be deduced on 1st of each subsequent month."}/>
                 </div>
                 
                 <button className="rounded-lg w-full bg-pink-600 p-4 text-xl text-white" onClick={reserveListing}>Reserve</button>
@@ -205,7 +211,7 @@ const Calendar: React.FC<Listing> = (listing: Listing) => {
                     endDate={endDate}
                     selectsRange
                     minDate={minDate}
-                    maxDate={parseISO(listing.availability.endDate)}
+                    maxDate={addMonths(parseISO(listing.availability.endDate), 1)}
                     excludeDates={excludedDays}
                     inline
                     filterDate={filterDays}
@@ -218,6 +224,7 @@ const Calendar: React.FC<Listing> = (listing: Listing) => {
 
             <div className={`${price ? 'block' : 'hidden' } max-w-full md:max-w-xs`}>
                 <PriceSummary/>
+                <Warning text={"Please make sure you book early enough so that Alberta Health can easily inspect the kitchen and issue you the required permits. For more info, please check out our help section."} ></Warning>
             </div>
         </div>
     )

@@ -12,7 +12,7 @@ interface MapProps {
 
 const Map: React.FC<MapProps> = ({center, zoom}: MapProps) => {
     return (
-        <div className="py-3">
+        <div>
             <div className="py-4">
                 <p className="text-2xl">Location</p>
                 <p>Calgary, Alberta, Canada</p>

@@ -57,7 +57,7 @@ export class CreateBookingResolver {
         @Arg("input") input: CreateBookingInput,
         @Ctx() {em, user, stripe}: MyContext
     ): Promise<CreateBookingReturn> {
-        console.log("HERE")
+        
         let buyer = user;
         let listing = await em.findOneOrFail(Listing, {id: input.listingId})
         let availability = await em.findOneOrFail(Availability, {listing})
@@ -126,7 +126,7 @@ export class CreateBookingResolver {
                     //TODO: change currency based on the buyer's location?
                     currency: 'cad',
                     amount: (amount + buyerAppFee),
-                    name: listing.title,
+                    name: `${listing.title} - Shareable Kitchen`,
                     description: listing.description,
                     images: ['https://images.unsplash.com/photo-1556911220-bff31c812dba?ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8a2l0Y2hlbnxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80'],
                     quantity: 1 // TODO: do something with quantity, if it can be moved then do so, I don't know how this works with connect but having a quantity on a time period seems off.

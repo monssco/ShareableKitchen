@@ -61,8 +61,6 @@ export const  ConfirmBooking = async (paymentIntent:Stripe.PaymentIntent, em: En
 const createMonthlySubscription =
     async (stripe: Stripe, booking: Booking, buyer: User, paymentIntentId: string, em: EntityManager ) => {
 
-        console.log("Setup monthly subscription")
-
         // We attach the payment method of the payment intent (that the 
         // buyer has already paid with and has succeeded) to charge for 
         // the recurring subscriptions.
@@ -86,7 +84,7 @@ const createMonthlySubscription =
                 interval_count: 1
             },
             product_data: {
-                name: `Shareable Kitchen - ${booking.listing.title} - ${booking.listing.id}`,
+                name: `${booking.listing.title} - Shareable Kitchen`,
                 statement_descriptor: `Shareable Kitchen`,
                 metadata: {
                     listing_id: booking.listing.id,

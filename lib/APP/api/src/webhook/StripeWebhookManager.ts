@@ -22,11 +22,29 @@ export class StripeWebhookManager {
     private stripe: Stripe;
     private webhookEndpointSecret: string;
 
+    //TODO: Register webhook in here.
     constructor(em: EntityManager, stripe: Stripe, webhookEndpointSecret: string) {
         this.em = em;
         this.stripe = stripe;
         this.webhookEndpointSecret = webhookEndpointSecret;
+
+        // this.registerWebhook(stripe)
+        
+        
     }
+
+    // async registerWebhook(stripe: Stripe) {
+    //     console.log("Register webhook")
+    //     await stripe.webhookEndpoints.create({
+    //         url: '',
+    //         enabled_events: ['*'],
+    //         connect: true,
+    //         description: 'Auto registered webhook endpoint by express.',
+    //         metadata: {
+    //             created: new Date().toISOString()
+    //         }
+    //     })
+    // }
 
     getWebHookRouter(): express.IRouter {
         

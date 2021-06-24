@@ -270,6 +270,7 @@ input SendMessageInput {
 
 input StartConversationInput {
   listingId: String!
+  content: String!
 }
 
 input AccountLinkInput {

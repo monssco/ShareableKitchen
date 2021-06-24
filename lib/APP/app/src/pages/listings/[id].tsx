@@ -89,7 +89,10 @@ const ListingPage: NextPage<{listing: Listing}> = ({listing}) => {
             <li key={item}>{item.valueOf()}</li>
           )}</div>
 
-          <StartConversation {...listing}></StartConversation>
+          <div>
+            <p className="pt-8 pb-3 text-2xl">Hosted by {listing.author.first_name}</p>
+            <StartConversation {...listing}></StartConversation>
+          </div>
         </div>
 
         <div className="calendar-container flex-1">

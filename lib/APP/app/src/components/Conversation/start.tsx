@@ -64,9 +64,9 @@ const StartConversation = (listing: Listing) => {
                 null
             }
             <form
-                className={`w-full ${submission.success ? "hidden" : "block"} py-8`} onSubmit={formik.handleSubmit}>
+                className={`w-full ${submission.success ? "hidden" : "block"} `} onSubmit={formik.handleSubmit}>
 
-                <p className=" text-xl py-3">Message the host</p>
+                <p className=" pb-2 text-xl">Message the host</p>
                 <div className="flex flex-wrap -mx-3 mb-6">
                     <div className="w-full px-3">
                         <textarea name="content" onChange={formik.handleChange} className=" focus:ring-2 focus:ring-gray-600 no-resize appearance-none block w-full bg-white text-gray-700 border-2 border-gray-400 py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white h-48 resize-y" id="content"></textarea>

@@ -7,6 +7,7 @@ import Image from 'next/image'
 import Calendar from 'src/components/Calendar';
 import Map from 'src/components/Map';
 import { availabilityTypeToString, toDecimalCurrency } from 'src/utils/helpers';
+import StartConversation from 'src/components/Conversation/start';
 
 /**
  * Shows the detailed listing.
@@ -88,10 +89,7 @@ const ListingPage: NextPage<{listing: Listing}> = ({listing}) => {
             <li key={item}>{item.valueOf()}</li>
           )}</div>
 
-          <div className="py-3">
-            <p className="text-2xl">Hosted by</p>
-            <p>{listing.author.first_name}</p>
-          </div>
+          <StartConversation {...listing}></StartConversation>
         </div>
 
         <div className="calendar-container flex-1">

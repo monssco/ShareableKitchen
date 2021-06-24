@@ -1,0 +1,8 @@
+mutation startConversation($listingId: String!, $content: String!) {
+    startConversation(input: {
+        listingId: $listingId,
+        content: $content
+    }) {
+        id
+    }
+}

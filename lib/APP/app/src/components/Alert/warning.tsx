@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Warning:React.FC<{text:string}> = ({text}) => {
+const MonssWarning:React.FC<{text:string}> = ({text}) => {
     return (
         <div className="py-3">
             <div className="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative" role="alert">
@@ -13,4 +13,4 @@ const Warning:React.FC<{text:string}> = ({text}) => {
     )
 }
 
-export default Warning
+export default MonssWarning

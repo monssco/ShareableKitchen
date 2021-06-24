@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Info:React.FC<{text:string}> = ({ text}) => {
+const MonssInfo:React.FC<{text:string}> = ({ text}) => {
     return (
         <div className="py-3">
             <div className="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded relative" role="alert">
@@ -13,4 +13,4 @@ const Info:React.FC<{text:string}> = ({ text}) => {
     )
 }
 
-export default Info
+export default MonssInfo

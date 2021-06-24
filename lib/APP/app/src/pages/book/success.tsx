@@ -30,7 +30,7 @@ export const getServerSideProps = async ({res, query}: GetServerSidePropsContext
 }
 
 
-const Success = ({booking}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const SuccessBooking = ({booking}: InferGetServerSidePropsType<typeof getServerSideProps>) => {
 
     if (!booking) {
         return <ErrorPage statusCode={404} title={"We can't process your request, please try again"}/>;
@@ -51,4 +51,4 @@ const Success = ({booking}: InferGetServerSidePropsType<typeof getServerSideProp
     )
 }
 
-export default Success
+export default SuccessBooking

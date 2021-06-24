@@ -448,6 +448,7 @@ export type SendMessageInput = {
 
 export type StartConversationInput = {
   listingId: Scalars['String'];
+  content: Scalars['String'];
 };
 
 export type StateInput = {
@@ -549,6 +550,20 @@ export type CreateBookingMutation = (
         )> }
       ) }
     ) }
+  ) }
+);
+
+export type StartConversationMutationVariables = Exact<{
+  listingId: Scalars['String'];
+  content: Scalars['String'];
+}>;
+
+
+export type StartConversationMutation = (
+  { __typename?: 'Mutation' }
+  & { startConversation: (
+    { __typename?: 'Conversation' }
+    & Pick<Conversation, 'id'>
   ) }
 );
 
@@ -799,6 +814,13 @@ export const CreateBookingDocument = gql`
   }
 }
     `;
+export const StartConversationDocument = gql`
+    mutation startConversation($listingId: String!, $content: String!) {
+  startConversation(input: {listingId: $listingId, content: $content}) {
+    id
+  }
+}
+    `;
 export const GetBookingQuoteDocument = gql`
     query getBookingQuote($listingId: String!, $startDate: DateTime!, $endDate: DateTime!, $type: AvailabilityType!) {
   getBookingQuote(
@@ -1030,6 +1052,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
   return {
     createBooking(variables: CreateBookingMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<CreateBookingMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<CreateBookingMutation>(CreateBookingDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'createBooking');
+    },
+    startConversation(variables: StartConversationMutationVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<StartConversationMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<StartConversationMutation>(StartConversationDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'startConversation');
     },
     getBookingQuote(variables: GetBookingQuoteQueryVariables, requestHeaders?: Dom.RequestInit["headers"]): Promise<GetBookingQuoteQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetBookingQuoteQuery>(GetBookingQuoteDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getBookingQuote');

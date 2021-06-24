@@ -8,6 +8,15 @@ declare module '*/createBooking.graphql' {
 }
     
 
+declare module '*/startConversation.graphql' {
+  import { DocumentNode } from 'graphql';
+  const defaultDocument: DocumentNode;
+  export const startConversation: DocumentNode;
+
+  export default defaultDocument;
+}
+    
+
 declare module '*/getBookingQuote.graphql' {
   import { DocumentNode } from 'graphql';
   const defaultDocument: DocumentNode;

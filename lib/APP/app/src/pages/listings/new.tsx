@@ -1,36 +1,29 @@
 import React, { useState } from 'react'
 import { FormikErrors, useFormik } from 'formik';
-import axios from "axios";
+import MonssSuccess from 'src/components/Alert/success';
 
 // Shape of form values
 interface FormValues {
-    firstName: string,
-    lastName: string,
-    email: string,
+    title: string,
+    price: string,
     city: string,
     companyName: string,
     description: string,
     goodFit: string,
     startingDate: string,
-    referral: string,
+    type: string,
 }
 
 const validate = (values: FormValues) => {
     const errors: FormikErrors<FormValues> = {};
-    if (!values.firstName) {
-        errors.firstName = 'Required';
+    if (!values.title) {
+        errors.title = 'Required';
     } 
 
-    if (!values.lastName) {
-        errors.lastName = 'Required';
+    if (!values.price) {
+        errors.price = 'Required';
     }
     
-
-    if (!values.email) {
-        errors.email = 'Required';
-    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-        errors.email = 'Invalid email address';
-    }
 
     if(!values.city) {
         errors.city = 'Required';
@@ -48,8 +41,8 @@ const validate = (values: FormValues) => {
         errors.startingDate = 'Required'
     }
 
-    if (!values.referral) {
-        errors.referral = 'Required'
+    if (!values.type) {
+        errors.type = 'Required'
     }
 
     return errors;
@@ -65,61 +58,38 @@ const NewListing = () => {
 
     const formik = useFormik({
         initialValues: {
-            firstName: '',
-            lastName: '',
-            email: '',
+            title: '',
+            price: '',
             city: '',
             companyName: '',
             description: '',
             goodFit: '',
             startingDate: '',
-            referral: '',
+            type: '',
         },
         validate,
         onSubmit: values => {
-            // alert(JSON.stringify(values, null, 2));
-            axios({
-                method: "POST",
-                url: "https://formspree.io/f/xgepnnql",
-                data: values
-            })
-                .then(_ => {
-                    setSubmission({
-                        ...submission,
-                        success: true
-                    })
-                    // actions.setSubmitting(false);
-                    // actions.resetForm();
-                    // handleServerResponse(true, "Thanks!");
-                })
-                .catch(error => {
-                    setSubmission({
-                        ...submission,
-                        error: true,
-                        message: error.response.data.error
-                    })
-                    // actions.setSubmitting(false);
-                    // handleServerResponse(false, error.response.data.error);
-                });
+            alert(JSON.stringify(values, null, 2));
         },
     });
 
     return (
-        <>
-            {submission.success ? <div><p className="font-sans font-semibold text-4xl pt-5 pb-3">Thanks!</p>
-                <p className="text-2xl pb-10">We got your request, we'll be in touch shortly!</p></div>:null}
+        <div className="container mx-auto p-5">
+            {submission.success ? <div>
+                <MonssSuccess text={"Your listing is successfully created, it should be visible on the website shortly!"} ></MonssSuccess>
+                </div>
+                :null}
             <form
                 className={`w-full ${submission.success ? "hidden" : "block"} `} onSubmit={formik.handleSubmit}>
                 <input type="text" name="_gotcha" style={{display: "none"}} />
-                <p className="font-sans font-semibold text-4xl pt-5 pb-3">Project Inquiry</p>
-                <p className="text-2xl pb-10">We'll get back to you as soon as possible.</p>
+                <p className="font-sans font-semibold text-4xl pt-5 pb-3">New Listing</p>
                 <div className="flex flex-wrap -mx-3 mb-6">
                     <Input 
-                        name='firstName'
-                        htmlFor='grid-first-name'
-                        error={formik.errors.firstName? formik.errors.firstName : ''}
-                        touched={formik.touched.firstName? true : false}
-                        label='First Name'
+                        name='title'
+                        htmlFor='grid-title'
+                        error={formik.errors.title? formik.errors.title : ''}
+                        touched={formik.touched.title? true : false}
+                        label='Title'
                         placeholder=''
                         type='text'
                         className='w-full md:w-1/2 px-3 mb-6 md:mb-0'
@@ -128,34 +98,42 @@ const NewListing = () => {
                         
                     />
                         
-                    <Input
-                        name='lastName'
-                        htmlFor='grid-last-name'
-                        error={formik.errors.lastName ? formik.errors.lastName : ''}
-                        touched={formik.touched.lastName? true : false}
-                        label='Last Name'
-                        placeholder=''
-                        type='text'
-                        className='w-full md:w-1/2 px-3'
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-                    />
+                    <div className='flex-1 flex'>
+                        <Input
+                            name='price'
+                            htmlFor='grid-price'
+                            error={formik.errors.price ? formik.errors.price : ''}
+                            touched={formik.touched.price? true : false}
+                            label='Price'
+                            placeholder=''
+                            type='number'
+                            className='w-full px-3 flex-1'
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                        />
+                        <Select
+                            name='type'
+                            className='w-full px-3 mb-6 flex-1'
+                            label='Availability type'
+                            htmlFor='type'
+                            handleChange={formik.handleChange}
+                            options={['Choose type','Day', 'Week', 'Month']}
+                            error = {formik.errors.type ? formik.errors.type : ''}
+                            touched = {formik.touched.type ? true :  false}
+                            onBlur = {formik.handleBlur}
+                        />
+                    </div>
                 </div>
                 <div className="flex flex-wrap -mx-3 mb-6">
-
-                    <Input
-                        name='email'
-                        htmlFor='grid-email'
-                        error={formik.errors.email ? formik.errors.email : ''}
-                        touched={formik.touched.email ? true : false}
-                        label='Email Address'
-                        placeholder=''
-                        type='email'
-                        className='w-full md:w-1/2 px-3 mb-6 md:mb-0'
-                        onChange={formik.handleChange}
-                        onBlur={formik.handleBlur}
-
-                    />
+                    <div className="w-full px-3">
+                        <label className="block tracking-wide text-black text-base pb-2" htmlFor="description">
+                            Description
+                        </label>
+                        <textarea name="description" onChange={formik.handleChange} className=" no-resize appearance-none block w-full bg-white text-gray-700 border-2 border-gray-700 py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white h-48 resize-y" id="description"></textarea>
+                        <p className={`text-red-500 text-xs italic ${formik.errors.description && formik.touched.description ? `block` : `hidden`}`}>{formik.errors.description}</p>
+                    </div>
+                </div>
+                <div className="flex flex-wrap -mx-3 mb-6">
 
                     <Input
                         name='city'
@@ -187,15 +165,7 @@ const NewListing = () => {
                         
                     />
                 </div>
-                <div className="flex flex-wrap -mx-3 mb-6">
-                    <div className="w-full px-3">
-                        <label className="block tracking-wide text-black text-base pb-2" htmlFor="project-description">
-                            Project Description
-                        </label>
-                        <textarea name="description" onChange={formik.handleChange} className=" no-resize appearance-none block w-full bg-white text-gray-700 border-2 border-gray-700 py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white h-48 resize-y" id="project-description"></textarea>
-                        <p className={`text-red-500 text-xs italic ${formik.errors.description && formik.touched.description ? `block` : `hidden`}`}>{formik.errors.description}</p>
-                    </div>
-                </div>
+                
                 <div className="flex flex-wrap -mx-3 mb-6">
                     <div className="w-full px-3">
                         <label className="block tracking-wide text-black text-base pb-2" htmlFor="project-description">
@@ -216,18 +186,6 @@ const NewListing = () => {
                         touched={formik.touched.startingDate ? true : false}
                         onBlur={formik.handleBlur}
                     />
-
-                    <Select
-                        name='referral'
-                        className='w-full md:w-1/2 px-3 mb-6'
-                        label='How did you hear about us? '
-                        htmlFor='hear'
-                        handleChange={formik.handleChange}
-                        options={['Select one', 'A friend referred me', 'I know someone at monss', 'Attended an event', 'Startup Calgary', 'Clutch.co', 'Online', 'Dribble']}
-                        error = {formik.errors.referral ? formik.errors.referral : ''}
-                        touched = {formik.touched.referral ? true :  false}
-                        onBlur = {formik.handleBlur}
-                    />
                 </div>
                 <div className="md:flex md:items-center">
                     <div className="md:w-1/3">
@@ -240,7 +198,7 @@ const NewListing = () => {
                 </div>
                 <p className={`py-5 text-red-500 text-base italic ${submission.error ? `block` : `hidden`}`}>Sorry, there might be an error. Please check your fields and try again. If the problem persists, give us a call @ 587-703-1317!</p>
             </form>
-        </>
+        </div>
     )
 }
 
